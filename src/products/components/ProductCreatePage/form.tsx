@@ -70,6 +70,7 @@ export interface ProductCreateFormData extends MetadataFormData {
   chargeTaxes: boolean;
   collections: string[];
   description: OutputData;
+  longDescription: OutputData;
   isAvailable: boolean;
   name: string;
   productType: ProductType;
@@ -120,6 +121,7 @@ export interface ProductCreateHandlers
     Record<"reorderAttributeValue", FormsetChange<ReorderEvent>>,
     Record<"addStock" | "deleteStock", (id: string) => void> {
   changeDescription: RichTextEditorChange;
+  changeLongDescription: RichTextEditorChange;
   changePreorderEndDate: FormChange;
   fetchReferences: (value: string) => void;
   fetchMoreReferences: FetchMoreProps;
@@ -181,6 +183,7 @@ function useProductCreateForm(
     chargeTaxes: false,
     collections: [],
     description: null,
+    longDescription: null,
     isAvailable: false,
     metadata: [],
     name: "",
@@ -229,6 +232,11 @@ function useProductCreateForm(
   const attributesWithNewFileValue = useFormset<null, File>([]);
   const stocks = useFormset<ProductStockFormsetData>([]);
   const [description, changeDescription] = useRichText({
+    initial: null,
+    triggerChange
+  });
+
+  const [longDescription, changeLongDescription] = useRichText({
     initial: null,
     triggerChange
   });
@@ -341,6 +349,7 @@ function useProductCreateForm(
     ),
     attributesWithNewFileValue: attributesWithNewFileValue.data,
     description: description.current,
+    longDescription: longDescription.current,
     productType: opts.selectedProductType,
     stocks: stocks.data
   });
@@ -404,6 +413,7 @@ function useProductCreateForm(
       changeChannelPrice: handleChannelPriceChange,
       changeChannels: handleChannelsChange,
       changeDescription,
+      changeLongDescription,
       changeMetadata,
       changeStock: handleStockChange,
       changePreorderEndDate: handlePreorderEndDateChange,

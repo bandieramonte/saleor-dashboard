@@ -204,6 +204,7 @@ export const productFragmentDetails = gql`
     name
     slug
     description
+    longDescription
     seoTitle
     seoDescription
     rating

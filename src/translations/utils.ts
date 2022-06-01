@@ -21,6 +21,7 @@ export const getParsedTranslationInputData = ({
 }): Record<string, string | null> => {
   const fieldsToParse = [
     TranslationInputFieldName.description,
+    TranslationInputFieldName.longDescription,
     PageTranslationInputFieldName.content
   ];
 

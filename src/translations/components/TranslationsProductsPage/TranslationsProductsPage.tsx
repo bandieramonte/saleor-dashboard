@@ -92,6 +92,15 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
             translation: data?.translation?.description || null,
             type: "rich" as "rich",
             value: data?.product?.description
+          },
+          {
+            displayName: intl.formatMessage({
+              defaultMessage: "Long Description"
+            }),
+            name: TranslationInputFieldName.longDescription,
+            translation: data?.translation?.longDescription || null,
+            type: "rich" as "rich",
+            value: data?.product?.longDescription
           }
         ]}
         saveButtonState={saveButtonState}

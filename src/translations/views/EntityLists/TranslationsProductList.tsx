@@ -39,6 +39,7 @@ const TranslationsProductList: React.FC<TranslationsEntityListProps> = ({
             completion: {
               current: sumCompleted([
                 node.translation?.description,
+                node.translation?.longDescription,
                 node.translation?.name,
                 node.translation?.seoDescription,
                 node.translation?.seoTitle,

@@ -107,6 +107,7 @@ export interface FileAttributesSubmitData {
 export interface ProductUpdateData extends ProductUpdateFormData {
   attributes: AttributeInput[];
   description: OutputData;
+  longDescription: OutputData;
   stocks: ProductStockInput[];
 }
 export interface ProductUpdateSubmitData extends ProductUpdateFormData {
@@ -114,6 +115,7 @@ export interface ProductUpdateSubmitData extends ProductUpdateFormData {
   attributesWithNewFileValue: FormsetData<null, File>;
   collections: string[];
   description: OutputData;
+  longDescription: OutputData;
   addStocks: ProductStockInput[];
   updateStocks: ProductStockInput[];
   removeStocks: string[];
@@ -148,6 +150,7 @@ export interface ProductUpdateHandlers
     Record<"reorderAttributeValue", FormsetChange<ReorderEvent>>,
     Record<"addStock" | "deleteStock", (id: string) => void> {
   changeDescription: RichTextEditorChange;
+  changeLongDescription: RichTextEditorChange;
   changePreorderEndDate: FormChange;
   fetchReferences: (value: string) => void;
   fetchMoreReferences: FetchMoreProps;
@@ -256,6 +259,11 @@ function useProductUpdateForm(
   const stocks = useFormset(getStockInputFromProduct(product));
   const [description, changeDescription] = useRichText({
     initial: product?.description,
+    triggerChange
+  });
+
+  const [longDescription, changeLongDescription] = useRichText({
+    initial: product?.longDescription,
     triggerChange
   });
 
@@ -378,6 +386,7 @@ function useProductUpdateForm(
       opts.referenceProducts
     ),
     description: description.current,
+    longDescription: longDescription.current,
     stocks: stocks.data
   };
 
@@ -388,7 +397,8 @@ function useProductUpdateForm(
     ...getMetadata(data, isMetadataModified, isPrivateMetadataModified),
     attributes: attributes.data,
     attributesWithNewFileValue: attributesWithNewFileValue.data,
-    description: description.current
+    description: description.current,
+    longDescription: longDescription.current
   });
 
   const handleSubmit = async (data: ProductUpdateSubmitData) => {
@@ -455,6 +465,7 @@ function useProductUpdateForm(
       changeChannelPreorder: handleChannelPreorderChange,
       changeChannels: handleChannelsChange,
       changeDescription,
+      changeLongDescription,
       changeMetadata,
       changeStock: handleStockChange,
       changePreorderEndDate: handlePreorderEndDateChange,

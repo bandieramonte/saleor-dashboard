@@ -14,11 +14,13 @@ export const updateProductTranslations = gql`
         id
         name
         description
+        longDescription
         seoDescription
         seoTitle
         translation(languageCode: $language) {
           id
           description
+          longDescription
           language {
             code
             language

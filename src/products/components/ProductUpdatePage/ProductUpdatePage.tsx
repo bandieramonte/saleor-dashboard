@@ -137,6 +137,7 @@ export interface ProductUpdatePageSubmitData extends ProductUpdatePageFormData {
   attributesWithNewFileValue: FormsetData<null, File>;
   collections: string[];
   description: OutputData;
+  longDescription: OutputData;
   removeStocks: string[];
   updateStocks: ProductStockInput[];
 }
@@ -305,6 +306,7 @@ export const ProductUpdatePage: React.FC<ProductUpdatePageProps> = ({
                   disabled={disabled}
                   errors={errors}
                   onDescriptionChange={handlers.changeDescription}
+                  onLongDescriptionChange={handlers.changeLongDescription}
                   onChange={change}
                 />
                 <CardSpacer />

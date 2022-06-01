@@ -63512,6 +63512,18 @@
             "deprecationReason": null
           },
           {
+            "name": "longDescription",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "productType",
             "description": null,
             "args": [],
@@ -65281,6 +65293,18 @@
             "deprecationReason": null
           },
           {
+            "name": "longDescription",
+            "description": "Product long description (JSON).",
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "name",
             "description": "Product name.",
             "type": {
@@ -65777,6 +65801,12 @@
             "deprecationReason": null
           },
           {
+            "name": "LONG_DESCRIPTION",
+            "description": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "PRODUCT_TYPE",
             "description": null,
             "isDeprecated": false,
@@ -66255,6 +66285,18 @@
           {
             "name": "description",
             "description": "Product description (JSON).",
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "longDescription",
+            "description": "Product long description (JSON).",
             "type": {
               "kind": "SCALAR",
               "name": "JSONString",
@@ -67422,6 +67464,30 @@
             "deprecationReason": "This field will be removed in Saleor 4.0. Use the `description` field instead."
           },
           {
+            "name": "longDescription",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "longDescriptionJson",
+            "description": "Long description of the product (JSON).",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "This field will be removed in Saleor 4.0. Use the `longDescription` field instead."
+          },
+          {
             "name": "translation",
             "description": "Returns translated product fields for the given language code.",
             "args": [
@@ -67665,6 +67731,30 @@
             },
             "isDeprecated": true,
             "deprecationReason": "This field will be removed in Saleor 4.0. Use the `description` field instead."
+          },
+          {
+            "name": "longDescription",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "longDescriptionJson",
+            "description": "Translated description of the product (JSON).",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "This field will be removed in Saleor 4.0. Use the `longDescription` field instead."
           }
         ],
         "inputFields": null,
@@ -86548,6 +86638,18 @@
           },
           {
             "name": "description",
+            "description": null,
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "defaultValue": null,
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "longDescription",
             "description": null,
             "type": {
               "kind": "SCALAR",

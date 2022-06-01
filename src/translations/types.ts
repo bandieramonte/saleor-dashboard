@@ -5,6 +5,7 @@ import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 
 export enum TranslationInputFieldName {
   description = "description",
+  longDescription = "longDescription",
   name = "name",
   seoDescription = "seoDescription",
   seoTitle = "seoTitle",
