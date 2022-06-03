@@ -63676,6 +63676,18 @@
             "deprecationReason": "This field will be removed in Saleor 4.0. Use the `description` field instead."
           },
           {
+            "name": "longDescriptionJson",
+            "description": "Long description of the product (JSON).",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "JSONString",
+              "ofType": null
+            },
+            "isDeprecated": true,
+            "deprecationReason": "This field will be removed in Saleor 4.0. Use the `longDescription` field instead."
+          },
+          {
             "name": "thumbnail",
             "description": "The main thumbnail for a product.",
             "args": [
@@ -67746,7 +67758,7 @@
           },
           {
             "name": "longDescriptionJson",
-            "description": "Translated description of the product (JSON).",
+            "description": "Translated long description of the product (JSON).",
             "args": [],
             "type": {
               "kind": "SCALAR",

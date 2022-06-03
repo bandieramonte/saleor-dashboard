@@ -40,7 +40,7 @@ const useStyles = makeStyles(
 );
 
 const messages = defineMessages({
-  title: {
+  title2: {
     defaultMessage: "{zonesCount} / {totalCount} shipping zones",
     description: "title"
   }
@@ -62,7 +62,7 @@ const ShippingZonesListHeader: React.FC<ShippingZonesListHeaderProps> = ({
     <div className={classes.container}>
       <AccordionSummary expandIcon={<IconChevronDown />} classes={classes}>
         <Typography variant="subtitle2" color="textSecondary">
-          {intl.formatMessage(messages.title, {
+          {intl.formatMessage(messages.title2, {
             zonesCount: shippingZones.length,
             totalCount
           })}
