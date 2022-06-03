@@ -2933,7 +2933,7 @@
     "string": "Just to let you know... You're in demo mode. You can play around with the dashboard but can't save changes."
   },
   "src_dot_description": {
-    "string": "Description"
+    "string": "Short Description"
   },
   "src_dot_descriptionOptional": {
     "string": "Description (optional)"
@@ -4265,6 +4265,9 @@
   },
   "src_dot_limitReached": {
     "string": "Reached limit for this plan"
+  },
+  "src_dot_longDescription": {
+    "string": "Long Description"
   },
   "src_dot_manage": {
     "context": "button",
@@ -8009,6 +8012,9 @@
   },
   "src_dot_translations_dot_components_dot_TranslationsProductsPage_dot_3468022343": {
     "string": "Search Engine Preview"
+  },
+  "src_dot_translations_dot_components_dot_TranslationsProductsPage_dot_357341910": {
+    "string": "Long Description"
   },
   "src_dot_translations_dot_components_dot_TranslationsProductsPage_dot_4165966072": {
     "context": "attribute list",

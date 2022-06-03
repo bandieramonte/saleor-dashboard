@@ -12163,6 +12163,9 @@ type Product implements Node & ObjectWithMetadata {
   """Description of the product (JSON)."""
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
 
+  """Long description of the product (JSON)."""
+  longDescriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `longDescription` field instead.")
+
   """The main thumbnail for a product."""
   thumbnail(
     """Size of thumbnail."""
@@ -12931,7 +12934,7 @@ type ProductTranslation implements Node {
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
   longDescription: JSONString
 
-  """Translated description of the product (JSON)."""
+  """Translated long description of the product (JSON)."""
   longDescriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `longDescription` field instead.")
 }
 
