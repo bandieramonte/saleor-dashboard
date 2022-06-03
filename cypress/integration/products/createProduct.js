@@ -30,6 +30,7 @@ filterTests({ definedTags: ["all", "critical"] }, () => {
     const generalInfo = {
       name: `${startsWith}${faker.datatype.number()}`,
       description: faker.lorem.sentence(),
+      longDescription: faker.lorem.sentence(),
       rating: 2
     };
     const seo = {

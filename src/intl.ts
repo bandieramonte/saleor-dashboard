@@ -26,7 +26,10 @@ export const commonMessages = defineMessages({
     description: "notification message after log in"
   },
   description: {
-    defaultMessage: "Description"
+    defaultMessage: "Short Description"
+  },
+  longDescription: {
+    defaultMessage: "Long Description"
   },
   descriptionOptional: {
     defaultMessage: "Description (optional)"

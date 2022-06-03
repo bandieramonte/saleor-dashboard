@@ -1883,6 +1883,7 @@ export const ProductFragmentDoc = gql`
   name
   slug
   description
+  longDescription
   seoTitle
   seoDescription
   rating
@@ -2300,6 +2301,7 @@ export const ProductTranslationFragmentDoc = gql`
     id
     name
     description
+    longDescription
     seoDescription
     seoTitle
   }
@@ -2309,6 +2311,7 @@ export const ProductTranslationFragmentDoc = gql`
     seoDescription
     name
     description
+    longDescription
     language {
       code
       language
@@ -14697,11 +14700,13 @@ export const UpdateProductTranslationsDocument = gql`
       id
       name
       description
+      longDescription
       seoDescription
       seoTitle
       translation(languageCode: $language) {
         id
         description
+        longDescription
         language {
           code
           language

@@ -27,6 +27,7 @@ filterTests({ definedTags: ["all"] }, () => {
     const startsWith = "CyUpdateProducts-";
     const name = `${startsWith}${faker.datatype.number()}`;
     const description = faker.lorem.sentences(2);
+    const longDescription = faker.lorem.sentences(2);
 
     let defaultChannel;
     let collection;
@@ -55,7 +56,8 @@ filterTests({ definedTags: ["all"] }, () => {
             channelId: defaultChannel.id,
             name,
             collectionId: collection.id,
-            description
+            description,
+            longDescription
           });
         })
         .then(({ product: productResp }) => {
@@ -78,6 +80,7 @@ filterTests({ definedTags: ["all"] }, () => {
             generalInfo: {
               name: updatedName,
               description: faker.lorem.sentence(),
+              longDescription: faker.lorem.sentence(),
               rating: 3
             },
             seo: {

@@ -108,6 +108,9 @@ export function createHandler(
         chargeTaxes: formData.chargeTaxes,
         collections: formData.collections,
         description: getParsedDataForJsonStringField(formData.description),
+        longDescription: getParsedDataForJsonStringField(
+          formData.longDescription
+        ),
         name: formData.name,
         productType: formData.productType?.id,
         rating: formData.rating,

@@ -16,6 +16,7 @@ import { useIntl } from "react-intl";
 interface ProductDetailsFormProps {
   data: {
     description: OutputData;
+    longDescription: OutputData;
     name: string;
     rating: number;
   };
@@ -23,6 +24,7 @@ interface ProductDetailsFormProps {
   errors: ProductErrorFragment[];
 
   onDescriptionChange: RichTextEditorChange;
+  onLongDescriptionChange: RichTextEditorChange;
   onChange(event: any);
 }
 
@@ -31,11 +33,15 @@ export const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({
   disabled,
   errors,
   onDescriptionChange,
+  onLongDescriptionChange,
   onChange
 }) => {
   const intl = useIntl();
 
-  const formErrors = getFormErrors(["name", "description", "rating"], errors);
+  const formErrors = getFormErrors(
+    ["name", "description", "longDescription", "rating"],
+    errors
+  );
 
   return (
     <Card>
@@ -65,6 +71,16 @@ export const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({
           label={intl.formatMessage(commonMessages.description)}
           name="description"
           onChange={onDescriptionChange}
+        />
+        <FormSpacer />
+        <RichTextEditor
+          data={data.longDescription}
+          disabled={disabled}
+          error={!!formErrors.longDescription}
+          helperText={getProductErrorMessage(formErrors.longDescription, intl)}
+          label={intl.formatMessage(commonMessages.longDescription)}
+          name="longDescription"
+          onChange={onLongDescriptionChange}
         />
         <FormSpacer />
         <Hr />

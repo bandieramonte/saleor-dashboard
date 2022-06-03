@@ -49,6 +49,7 @@ export const productTranslationFragment = gql`
       id
       name
       description
+      longDescription
       seoDescription
       seoTitle
     }
@@ -58,6 +59,7 @@ export const productTranslationFragment = gql`
       seoDescription
       name
       description
+      longDescription
       language {
         code
         language

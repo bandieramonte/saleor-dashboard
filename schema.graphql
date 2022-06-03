@@ -12144,6 +12144,7 @@ type Product implements Node & ObjectWithMetadata {
   seoDescription: String
   name: String!
   description: JSONString
+  longDescription: JSONString
   productType: ProductType!
   slug: String!
   category: Category
@@ -12480,6 +12481,9 @@ input ProductCreateInput {
   """Product description (JSON)."""
   description: JSONString
 
+  """Product long description (JSON)."""
+  longDescription: JSONString
+
   """Product name."""
   name: String
 
@@ -12586,6 +12590,7 @@ enum ProductErrorCode {
 enum ProductFieldEnum {
   NAME
   DESCRIPTION
+  LONG_DESCRIPTION
   PRODUCT_TYPE
   CATEGORY
   PRODUCT_WEIGHT
@@ -12659,6 +12664,9 @@ input ProductInput {
 
   """Product description (JSON)."""
   description: JSONString
+
+  """Product long description (JSON)."""
+  longDescription: JSONString
 
   """Product name."""
   name: String
@@ -12882,6 +12890,10 @@ type ProductTranslatableContent implements Node {
 
   """Description of the product (JSON)."""
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
+  longDescription: JSONString
+
+  """Long description of the product (JSON)."""
+  longDescriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `longDescription` field instead.")
 
   """Returns translated product fields for the given language code."""
   translation(
@@ -12917,6 +12929,10 @@ type ProductTranslation implements Node {
 
   """Translated description of the product (JSON)."""
   descriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `description` field instead.")
+  longDescription: JSONString
+
+  """Translated description of the product (JSON)."""
+  longDescriptionJson: JSONString @deprecated(reason: "This field will be removed in Saleor 4.0. Use the `longDescription` field instead.")
 }
 
 """
@@ -16846,6 +16862,7 @@ input TranslationInput {
   seoDescription: String
   name: String
   description: JSONString
+  longDescription: JSONString
 }
 
 union TranslationTypes = ProductTranslation | CollectionTranslation | CategoryTranslation | AttributeTranslation | AttributeValueTranslation | ProductVariantTranslation | PageTranslation | ShippingMethodTranslation | SaleTranslation | VoucherTranslation | MenuItemTranslation

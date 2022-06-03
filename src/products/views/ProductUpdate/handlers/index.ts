@@ -122,6 +122,7 @@ export function createUpdateHandler(
         chargeTaxes: data.chargeTaxes,
         collections: data.collections,
         description: getParsedDataForJsonStringField(data.description),
+        longDescription: getParsedDataForJsonStringField(data.longDescription),
         name: data.name,
         rating: data.rating,
         seo: {

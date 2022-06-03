@@ -13,6 +13,7 @@ import { warehouseList } from "@saleor/warehouses/fixtures";
 import * as richTextEditorFixtures from "../components/RichTextEditor/fixtures.json";
 
 const content = richTextEditorFixtures.richTextEditor;
+const longContent = richTextEditorFixtures.richTextEditor;
 
 export const product: (
   placeholderImage: string
@@ -293,6 +294,7 @@ export const product: (
   ],
   defaultVariant: { __typename: "ProductVariant", id: "pv75934" },
   description: JSON.stringify(content),
+  longDescription: JSON.stringify(longContent),
   id: "p10171",
   isAvailable: false,
   isAvailableForPurchase: false,
