@@ -8,7 +8,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import Checkbox from "@saleor/components/Checkbox";
@@ -18,7 +18,7 @@ import Skeleton from "@saleor/components/Skeleton";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import {
   SearchProductsQuery,
-  ShippingPriceExcludeProductMutation
+  ShippingPriceExcludeProductMutation,
 } from "@saleor/graphql";
 import useSearchQuery from "@saleor/hooks/useSearchQuery";
 import { ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
@@ -32,36 +32,36 @@ const useStyles = makeStyles(
   theme => ({
     avatar: {
       paddingLeft: 0,
-      width: 64
+      width: 64,
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     content: {
       overflowY: "scroll",
-      height: 450
+      height: 450,
     },
     searchBar: {
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
     },
     loadMoreLoaderContainer: {
       alignItems: "center",
       display: "flex",
       height: theme.spacing(3),
       justifyContent: "center",
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
     },
     overflow: {
-      overflowY: "visible"
+      overflowY: "visible",
     },
     productCheckboxCell: {
       "&:first-child": {
         paddingLeft: 0,
-        paddingRight: 0
-      }
-    }
+        paddingRight: 0,
+      },
+    },
   }),
-  { name: "ShippingMethodProductsAddDialog" }
+  { name: "ShippingMethodProductsAddDialog" },
 );
 
 export interface ShippingMethodProductsAddDialogProps extends FetchMoreProps {
@@ -71,7 +71,7 @@ export interface ShippingMethodProductsAddDialogProps extends FetchMoreProps {
   onClose: () => void;
   onFetch: (query: string) => void;
   onSubmit: (
-    ids: string[]
+    ids: string[],
   ) => Promise<FetchResult<ShippingPriceExcludeProductMutation>>;
 }
 
@@ -80,14 +80,14 @@ const handleProductAssign = (
   isSelected: boolean,
   selectedProducts: RelayToFlat<SearchProductsQuery["search"]>,
   setSelectedProducts: (
-    data: RelayToFlat<SearchProductsQuery["search"]>
-  ) => void
+    data: RelayToFlat<SearchProductsQuery["search"]>,
+  ) => void,
 ) => {
   if (isSelected) {
     setSelectedProducts(
       selectedProducts.filter(
-        selectedProduct => selectedProduct.id !== product.id
-      )
+        selectedProduct => selectedProduct.id !== product.id,
+      ),
     );
   } else {
     setSelectedProducts([...selectedProducts, product]);
@@ -106,7 +106,7 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
     onFetch,
     onFetchMore,
     onClose,
-    onSubmit
+    onSubmit,
   } = props;
 
   const classes = useStyles(props);
@@ -133,6 +133,7 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
     <Dialog onClose={handleClose} open={open} fullWidth maxWidth="sm">
       <DialogTitle>
         <FormattedMessage
+          id="xZhxBJ"
           defaultMessage="Assign Products"
           description="dialog header"
         />
@@ -144,15 +145,17 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
             value={query}
             onChange={onQueryChange}
             label={intl.formatMessage({
-              defaultMessage: "Search Products"
+              id: "/TF6BZ",
+              defaultMessage: "Search Products",
             })}
             placeholder={intl.formatMessage({
-              defaultMessage: "Search Products"
+              id: "/TF6BZ",
+              defaultMessage: "Search Products",
             })}
             fullWidth
             InputProps={{
               autoComplete: "off",
-              endAdornment: loading && <CircularProgress size={16} />
+              endAdornment: loading && <CircularProgress size={16} />,
             }}
           />
         </div>
@@ -175,7 +178,7 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
                   products,
                   (product, productIndex) => {
                     const isSelected = selectedProducts.some(
-                      selectedProduct => selectedProduct.id === product.id
+                      selectedProduct => selectedProduct.id === product.id,
                     );
                     return (
                       <React.Fragment
@@ -195,7 +198,7 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
                                     product,
                                     isSelected,
                                     selectedProducts,
-                                    setSelectedProducts
+                                    setSelectedProducts,
                                   )
                                 }
                               />
@@ -215,10 +218,13 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
                   () => (
                     <TableRow>
                       <TableCell colSpan={4}>
-                        <FormattedMessage defaultMessage="No products matching given query" />
+                        <FormattedMessage
+                          id="5ZvuVw"
+                          defaultMessage="No products matching given query"
+                        />
                       </TableCell>
                     </TableRow>
-                  )
+                  ),
                 )}
               </TableBody>
             </ResponsiveTable>
@@ -234,6 +240,7 @@ const ShippingMethodProductsAddDialog: React.FC<ShippingMethodProductsAddDialogP
           onClick={handleSubmit}
         >
           <FormattedMessage
+            id="FzEew9"
             defaultMessage="Assign and save"
             description="assign products to shipping rate and save, button"
           />

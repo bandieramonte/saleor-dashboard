@@ -23,14 +23,14 @@ export interface VoucherSummaryProps extends ChannelProps {
 
 const VoucherSummary: React.FC<VoucherSummaryProps> = ({
   selectedChannelId,
-  voucher
+  voucher,
 }) => {
   const intl = useIntl();
   const classes = useStyles();
 
   const translatedVoucherTypes = translateVoucherTypes(intl);
   const channel = voucher?.channelListings?.find(
-    listing => listing.channel.id === selectedChannelId
+    listing => listing.channel.id === selectedChannelId,
   );
 
   return (
@@ -38,7 +38,11 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
       <CardTitle title={intl.formatMessage(commonMessages.summary)} />
       <CardContent>
         <Typography variant="caption">
-          <FormattedMessage defaultMessage="Code" description="voucher code" />
+          <FormattedMessage
+            id="JsPIOX"
+            defaultMessage="Code"
+            description="voucher code"
+          />
         </Typography>
         <Typography className={classes.ellipsis}>
           {maybe<React.ReactNode>(() => voucher.code, <Skeleton />)}
@@ -46,18 +50,23 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
         <FormSpacer />
 
         <Typography variant="caption">
-          <FormattedMessage defaultMessage="Applies to" description="voucher" />
+          <FormattedMessage
+            id="bcf60I"
+            defaultMessage="Applies to"
+            description="voucher"
+          />
         </Typography>
         <Typography>
           {maybe<React.ReactNode>(
             () => translatedVoucherTypes[voucher.type],
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
         <FormSpacer />
 
         <Typography variant="caption">
           <FormattedMessage
+            id="JV+EiM"
             defaultMessage="Value"
             description="voucher value"
           />
@@ -69,7 +78,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
               <Money
                 money={{
                   amount: channel?.discountValue,
-                  currency: channel?.channel.currencyCode
+                  currency: channel?.channel.currencyCode,
                 }}
               />
             ) : channel?.discountValue ? (
@@ -94,7 +103,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
             () => (
               <Date date={voucher.startDate} plain />
             ),
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
         <FormSpacer />
@@ -110,7 +119,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
               ) : (
                 <Date date={voucher.endDate} plain />
               ),
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
 
@@ -120,6 +129,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
 
         <Typography variant="caption">
           <FormattedMessage
+            id="FOa+Xd"
             defaultMessage="Min. Order Value"
             description="voucher value requirement"
           />
@@ -139,6 +149,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
 
         <Typography variant="caption">
           <FormattedMessage
+            id="HLqWXA"
             defaultMessage="Usage Limit"
             description="voucher value requirement"
           />
@@ -146,7 +157,7 @@ const VoucherSummary: React.FC<VoucherSummaryProps> = ({
         <Typography>
           {maybe<React.ReactNode>(
             () => (voucher.usageLimit === null ? "-" : voucher.usageLimit),
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
       </CardContent>

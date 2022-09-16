@@ -3,24 +3,27 @@ import {
   TableBody,
   TableCell,
   TableFooter,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { ShippingZoneFragment } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { maybe, renderCollection } from "@saleor/misc";
+import { shippingZoneAddUrl, shippingZoneUrl } from "@saleor/shipping/urls";
 import { ListActions, ListProps } from "@saleor/types";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 export interface ShippingZonesListProps extends ListProps, ListActions {
   shippingZones: ShippingZoneFragment[];
-  onAdd: () => void;
   onRemove: (id: string) => void;
 }
 
@@ -28,21 +31,21 @@ const useStyles = makeStyles(
   theme => ({
     colAction: {
       "&:last-child": {
-        paddingRight: theme.spacing(1)
+        paddingRight: theme.spacing(1),
       },
-      width: 92
+      width: 92,
     },
     colCountries: {
-      width: 180
+      width: 180,
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     row: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "ShippingZonesList" }
+  { name: "ShippingZonesList" },
 );
 
 const numberOfColumns = 4;
@@ -51,19 +54,14 @@ const ShippingZonesList: React.FC<ShippingZonesListProps> = props => {
   const {
     disabled,
     settings,
-    onAdd,
-    onNextPage,
-    onPreviousPage,
     onRemove,
     onUpdateListSettings,
-    onRowClick,
-    pageInfo,
     shippingZones,
     isChecked,
     selected,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
 
   const classes = useStyles(props);
@@ -74,12 +72,14 @@ const ShippingZonesList: React.FC<ShippingZonesListProps> = props => {
       <CardTitle
         height="const"
         title={intl.formatMessage({
+          id: "h5r9+x",
           defaultMessage: "Shipping By Zone",
-          description: "sort shipping methods by zone, section header"
+          description: "sort shipping methods by zone, section header",
         })}
         toolbar={
-          <Button onClick={onAdd} data-test-id="add-shipping-zone">
+          <Button href={shippingZoneAddUrl} data-test-id="add-shipping-zone">
             <FormattedMessage
+              id="mIUNgR"
               defaultMessage="Create shipping zone"
               description="button"
             />
@@ -103,27 +103,23 @@ const ShippingZonesList: React.FC<ShippingZonesListProps> = props => {
         >
           <TableCell className={classes.colName}>
             <FormattedMessage
+              id="gRa/TS"
               defaultMessage="Name"
               description="shipping zone"
             />
           </TableCell>
           <TableCell className={classes.colCountries}>
-            <FormattedMessage defaultMessage="Countries" />
+            <FormattedMessage id="aMwxYb" defaultMessage="Countries" />
           </TableCell>
           <TableCell className={classes.colAction} />
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
+            <TablePaginationWithContext
               colSpan={numberOfColumns}
               settings={settings}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
+              disabled={disabled}
               onUpdateListSettings={onUpdateListSettings}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
             />
           </TableRow>
         </TableFooter>
@@ -136,11 +132,11 @@ const ShippingZonesList: React.FC<ShippingZonesListProps> = props => {
                 : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   className={classes.row}
                   hover={!!shippingZone}
                   key={shippingZone ? shippingZone.id : "skeleton"}
-                  onClick={shippingZone && onRowClick(shippingZone.id)}
+                  href={shippingZone && shippingZoneUrl(shippingZone.id)}
                   selected={isSelected}
                 >
                   <TableCell padding="checkbox">
@@ -158,38 +154,43 @@ const ShippingZonesList: React.FC<ShippingZonesListProps> = props => {
                   >
                     {maybe<React.ReactNode>(
                       () => shippingZone.name,
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCell>
                   <TableCell className={classes.colCountries}>
                     {maybe<React.ReactNode>(
                       () => shippingZone.countries.length,
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCell>
                   <TableCell className={classes.colAction}>
-                    <IconButton
-                      variant="secondary"
-                      color="primary"
-                      disabled={disabled}
-                      onClick={event => {
-                        event.stopPropagation();
-                        onRemove(shippingZone.id);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <TableButtonWrapper>
+                      <IconButton
+                        variant="secondary"
+                        color="primary"
+                        disabled={disabled}
+                        onClick={event => {
+                          event.stopPropagation();
+                          onRemove(shippingZone.id);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableButtonWrapper>
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No shipping zones found" />
+                  <FormattedMessage
+                    id="IhK1F3"
+                    defaultMessage="No shipping zones found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

@@ -1,6 +1,6 @@
 import {
   useCreateShippingZoneMutation,
-  useShopCountriesQuery
+  useShopCountriesQuery,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -12,9 +12,9 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import ShippingZoneCreatePage, {
-  ShippingZoneCreateFormData
+  ShippingZoneCreateFormData,
 } from "../components/ShippingZoneCreatePage";
-import { shippingZonesListUrl, shippingZoneUrl } from "../urls";
+import { shippingZoneUrl } from "../urls";
 
 const ShippingZoneCreate: React.FC<{}> = () => {
   const navigate = useNavigator();
@@ -25,33 +25,33 @@ const ShippingZoneCreate: React.FC<{}> = () => {
   const { data: restWorldCountries } = useShopCountriesQuery({
     variables: {
       filter: {
-        attachedToShippingZones: false
-      }
-    }
+        attachedToShippingZones: false,
+      },
+    },
   });
 
   const [
     createShippingZone,
-    createShippingZoneOpts
+    createShippingZoneOpts,
   ] = useCreateShippingZoneMutation({
     onCompleted: data => {
       if (data.shippingZoneCreate.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate(shippingZoneUrl(data.shippingZoneCreate.shippingZone.id));
       }
-    }
+    },
   });
 
   const handleSubmit = (data: ShippingZoneCreateFormData) =>
     extractMutationErrors(
       createShippingZone({
         variables: {
-          input: data
-        }
-      })
+          input: data,
+        },
+      }),
     );
 
   return (
@@ -62,7 +62,6 @@ const ShippingZoneCreate: React.FC<{}> = () => {
       }
       disabled={createShippingZoneOpts.loading}
       errors={createShippingZoneOpts.data?.shippingZoneCreate.errors || []}
-      onBack={() => navigate(shippingZonesListUrl())}
       onSubmit={handleSubmit}
       saveButtonBarState={createShippingZoneOpts.status}
     />

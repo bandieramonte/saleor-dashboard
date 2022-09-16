@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import CountryList from "@saleor/components/CountryList";
@@ -13,11 +14,13 @@ import {
   ShippingErrorFragment,
   ShippingMethodTypeEnum,
   ShippingZoneDetailsFragment,
-  ShippingZoneQuery
+  ShippingZoneQuery,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import useStateFromProps from "@saleor/hooks/useStateFromProps";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { shippingZonesListUrl } from "@saleor/shipping/urls";
 import createMultiAutocompleteSelectHandler from "@saleor/utils/handlers/multiAutocompleteSelectChangeHandler";
 import { mapNodeToChoice } from "@saleor/utils/maps";
 import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTrigger";
@@ -34,17 +37,20 @@ import { getInitialFormData } from "./utils";
 
 const messages = defineMessages({
   countries: {
+    id: "55LMJv",
     defaultMessage: "Countries",
-    description: "country list header"
+    description: "country list header",
   },
   noCountriesAssigned: {
+    id: "y7mfbl",
     defaultMessage:
-      "Currently, there are no countries assigned to this shipping zone"
+      "Currently, there are no countries assigned to this shipping zone",
   },
   shipping: {
+    id: "G0+gAp",
     defaultMessage: "Shipping",
-    description: "shipping section header"
-  }
+    description: "shipping section header",
+  },
 });
 
 export interface ShippingZoneDetailsPageProps
@@ -56,26 +62,25 @@ export interface ShippingZoneDetailsPageProps
   saveButtonBarState: ConfirmButtonTransitionState;
   shippingZone: ShippingZoneQuery["shippingZone"];
   warehouses: ShippingZoneDetailsFragment["warehouses"];
-  onBack: () => void;
   onCountryAdd: () => void;
   onCountryRemove: (code: string) => void;
   onDelete: () => void;
   onPriceRateAdd: () => void;
-  onPriceRateEdit: (id: string) => void;
+  getPriceRateEditHref: (id: string) => string;
   onRateRemove: (rateId: string) => void;
   onSubmit: (data: ShippingZoneUpdateFormData) => SubmitPromise;
   onWarehouseAdd: () => void;
   onWeightRateAdd: () => void;
-  onWeightRateEdit: (id: string) => void;
+  getWeightRateEditHref: (id: string) => string;
   allChannels?: ChannelFragment[];
 }
 
 function warehouseToChoice(
-  warehouse: Record<"id" | "name", string>
+  warehouse: Record<"id" | "name", string>,
 ): SingleAutocompleteChoiceType {
   return {
     label: warehouse.name,
-    value: warehouse.id
+    value: warehouse.id,
   };
 }
 
@@ -84,26 +89,26 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
   errors,
   hasMore,
   loading,
-  onBack,
   onCountryAdd,
   onCountryRemove,
   onDelete,
   onFetchMore,
   onPriceRateAdd,
-  onPriceRateEdit,
+  getPriceRateEditHref,
   onRateRemove,
   onSearchChange,
   onSubmit,
   onWarehouseAdd,
   onWeightRateAdd,
-  onWeightRateEdit,
+  getWeightRateEditHref,
   saveButtonBarState,
   selectedChannelId,
   shippingZone,
   warehouses,
-  allChannels
+  allChannels,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
 
   const initialForm = getInitialFormData(shippingZone);
 
@@ -120,7 +125,7 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
   >(mapNodeToChoice(shippingZone?.channels));
 
   const {
-    makeChangeHandler: makeMetadataChangeHandler
+    makeChangeHandler: makeMetadataChangeHandler,
   } = useMetadataChangeTrigger();
 
   return (
@@ -135,21 +140,21 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
           toggleValue,
           setWarehouseDisplayValues,
           warehouseDisplayValues,
-          warehouseChoices
+          warehouseChoices,
         );
 
         const handleChannelChange = createMultiAutocompleteSelectHandler(
           toggleValue,
           setChannelDisplayValues,
           channelsDisplayValues,
-          channelChoices
+          channelChoices,
         );
 
         const changeMetadata = makeMetadataChangeHandler(change);
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={shippingZonesListUrl()}>
               <FormattedMessage {...messages.shipping} />
             </Backlink>
             <PageHeader title={shippingZone?.name} />
@@ -167,7 +172,7 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
                   disabled={disabled}
                   emptyText={getStringOrPlaceholder(
                     shippingZone &&
-                      intl.formatMessage(messages.noCountriesAssigned)
+                      intl.formatMessage(messages.noCountriesAssigned),
                   )}
                   onCountryAssign={onCountryAdd}
                   onCountryUnassign={onCountryRemove}
@@ -177,10 +182,10 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
                 <ShippingZoneRates
                   disabled={disabled}
                   onRateAdd={onPriceRateAdd}
-                  onRateEdit={onPriceRateEdit}
+                  getRateEditHref={getPriceRateEditHref}
                   onRateRemove={onRateRemove}
                   rates={shippingZone?.shippingMethods?.filter(
-                    method => method.type === ShippingMethodTypeEnum.PRICE
+                    method => method.type === ShippingMethodTypeEnum.PRICE,
                   )}
                   variant="price"
                   selectedChannelId={selectedChannelId}
@@ -190,10 +195,10 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
                 <ShippingZoneRates
                   disabled={disabled}
                   onRateAdd={onWeightRateAdd}
-                  onRateEdit={onWeightRateEdit}
+                  getRateEditHref={getWeightRateEditHref}
                   onRateRemove={onRateRemove}
                   rates={shippingZone?.shippingMethods?.filter(
-                    method => method.type === ShippingMethodTypeEnum.WEIGHT
+                    method => method.type === ShippingMethodTypeEnum.WEIGHT,
                   )}
                   variant="weight"
                   selectedChannelId={selectedChannelId}
@@ -221,7 +226,7 @@ const ShippingZoneDetailsPage: React.FC<ShippingZoneDetailsPageProps> = ({
             </Grid>
             <Savebar
               disabled={isSaveDisabled}
-              onCancel={onBack}
+              onCancel={() => navigate(shippingZonesListUrl())}
               onDelete={onDelete}
               onSubmit={submit}
               state={saveButtonBarState}

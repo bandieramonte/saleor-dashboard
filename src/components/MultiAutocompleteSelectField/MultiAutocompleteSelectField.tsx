@@ -1,4 +1,9 @@
-import { Popper, TextField, Typography } from "@material-ui/core";
+import {
+  Popper,
+  PopperPlacementType,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import CloseIcon from "@material-ui/icons/Close";
 import Debounce, { DebounceProps } from "@saleor/components/Debounce";
@@ -11,27 +16,27 @@ import React from "react";
 
 import MultiAutocompleteSelectFieldContent, {
   MultiAutocompleteActionType,
-  MultiAutocompleteChoiceType
+  MultiAutocompleteChoiceType,
 } from "./MultiAutocompleteSelectFieldContent";
 
 const useStyles = makeStyles(
   theme => ({
     chip: {
-      width: "100%"
+      width: "100%",
     },
     chipClose: {
       height: 32,
       padding: 0,
-      width: 32
+      width: 32,
     },
     chipContainer: {
       display: "flex",
       flexDirection: "column",
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     chipInner: {
       "& svg": {
-        color: theme.palette.primary.contrastText
+        color: theme.palette.primary.contrastText,
       },
       alignItems: "center",
       background: fade(theme.palette.primary.main, 0.8),
@@ -41,18 +46,18 @@ const useStyles = makeStyles(
       justifyContent: "space-between",
       margin: theme.spacing(1, 0),
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
     },
     chipLabel: {
-      color: theme.palette.primary.contrastText
+      color: theme.palette.primary.contrastText,
     },
     container: {
       flexGrow: 1,
-      position: "relative"
+      position: "relative",
     },
     disabledChipInner: {
       "& svg": {
-        color: theme.palette.grey[200]
+        color: theme.palette.grey[200],
       },
       alignItems: "center",
       background: fade(theme.palette.grey[400], 0.8),
@@ -62,7 +67,7 @@ const useStyles = makeStyles(
       justifyContent: "space-between",
       margin: theme.spacing(1, 0),
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
     },
     adornment: {
       color: theme.palette.saleor.main[3],
@@ -71,16 +76,16 @@ const useStyles = makeStyles(
       display: "flex",
       alignItems: "center",
       "& svg": {
-        transition: theme.transitions.duration.shorter + "ms"
-      }
+        transition: theme.transitions.duration.shorter + "ms",
+      },
     },
     adornmentRotate: {
       "& svg": {
-        transform: "rotate(180deg)"
-      }
-    }
+        transform: "rotate(180deg)",
+      },
+    },
   }),
-  { name: "MultiAutocompleteSelectField" }
+  { name: "MultiAutocompleteSelectField" },
 );
 
 export interface MultiAutocompleteSelectFieldProps
@@ -103,6 +108,7 @@ export interface MultiAutocompleteSelectFieldProps
   onBlur?: () => void;
   fetchOnFocus?: boolean;
   endAdornment?: React.ReactNode;
+  popperPlacement?: PopperPlacementType;
 }
 
 const DebounceAutocomplete: React.ComponentType<DebounceProps<
@@ -131,6 +137,7 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
     onFetchMore,
     fetchOnFocus,
     endAdornment,
+    popperPlacement = "bottom-end",
     ...rest
   } = props;
   const classes = useStyles(props);
@@ -138,13 +145,13 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
 
   const handleSelect = (
     item: string,
-    downshiftOpts?: ControllerStateAndHelpers<string>
+    downshiftOpts?: ControllerStateAndHelpers<string>,
   ) => {
     if (downshiftOpts) {
       downshiftOpts.reset({ inputValue: "", isOpen: true });
     }
     onChange({
-      target: { name, value: item }
+      target: { name, value: item },
     } as any);
   };
 
@@ -174,7 +181,7 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
               getMenuProps,
               highlightedIndex,
               inputValue,
-              getToggleButtonProps
+              getToggleButtonProps,
             }) => {
               const displayCustomValue =
                 inputValue &&
@@ -182,7 +189,7 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
                 allowCustomValues &&
                 !choices.find(
                   choice =>
-                    choice.label.toLowerCase() === inputValue.toLowerCase()
+                    choice.label.toLowerCase() === inputValue.toLowerCase(),
                 );
 
               return (
@@ -193,7 +200,7 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
                         <div
                           {...getToggleButtonProps()}
                           className={classNames(classes.adornment, {
-                            [classes.adornmentRotate]: isOpen
+                            [classes.adornmentRotate]: isOpen,
                           })}
                         >
                           {endAdornment}
@@ -205,14 +212,15 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
                         if (fetchOnFocus) {
                           fetchChoices(inputValue);
                         }
-                      }
+                      },
                     }}
                     inputProps={{
                       ...getInputProps({
                         placeholder,
-                        onClick: toggleMenu
+                        testId,
+                        onClick: toggleMenu,
                       }),
-                      ...getMenuProps()
+                      ...getMenuProps(),
                     }}
                     error={error}
                     helperText={helperText}
@@ -227,9 +235,9 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
                       open={isOpen}
                       style={{
                         width: anchor.current.clientWidth,
-                        zIndex: 1301
+                        zIndex: 1301,
                       }}
-                      placement="bottom-end"
+                      placement={popperPlacement}
                     >
                       <MultiAutocompleteSelectFieldContent
                         add={
@@ -238,11 +246,11 @@ const MultiAutocompleteSelectFieldComponent: React.FC<MultiAutocompleteSelectFie
                             onClick: () => {
                               add.onClick();
                               closeMenu();
-                            }
+                            },
                           }
                         }
                         choices={choices?.filter(
-                          choice => !value.includes(choice.value)
+                          choice => !value.includes(choice.value),
                         )}
                         displayCustomValue={displayCustomValue}
                         displayValues={displayValues}
@@ -314,7 +322,7 @@ const MultiAutocompleteSelectField: React.FC<MultiAutocompleteSelectFieldProps> 
     <MultiAutocompleteSelectFieldComponent
       fetchChoices={q => setQuery(q || "")}
       choices={filter(choices, query, {
-        key: "label"
+        key: "label",
       })}
       {...props}
     />

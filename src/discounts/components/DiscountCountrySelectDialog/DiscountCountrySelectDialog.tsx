@@ -7,7 +7,7 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import Checkbox from "@saleor/components/Checkbox";
@@ -48,7 +48,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
     countries,
     open,
     initial,
-    onConfirm
+    onConfirm,
   } = props;
   const classes = useStyles(props);
   const scrollableDialogClasses = useScrollableDialogStyle();
@@ -58,7 +58,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
   const initialForm: FormData = {
     allCountries: true,
     countries: initial,
-    query: ""
+    query: "",
   };
   return (
     <Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
@@ -70,7 +70,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
         {({ data, change }) => {
           const countrySelectionMap = countries.reduce((acc, country) => {
             acc[country.code] = !!data.countries.find(
-              selectedCountries => selectedCountries === country.code
+              selectedCountries => selectedCountries === country.code,
             );
             return acc;
           }, {});
@@ -79,13 +79,17 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
             <>
               <DialogTitle>
                 <FormattedMessage
+                  id="cvVIV/"
                   defaultMessage="Assign Countries"
                   description="dialog header"
                 />
               </DialogTitle>
               <DialogContent>
                 <Typography>
-                  <FormattedMessage defaultMessage="Choose countries, you want voucher to be limited to, from the list below" />
+                  <FormattedMessage
+                    id="dWK/Ck"
+                    defaultMessage="Choose countries, you want voucher to be limited to, from the list below"
+                  />
                 </Typography>
                 <FormSpacer />
                 <TextField
@@ -95,12 +99,14 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
                     change(event /* TO BE CHECKED: () => fetch(data.query)*/)
                   }
                   label={intl.formatMessage({
+                    id: "8EGagh",
                     defaultMessage: "Filter Countries",
-                    description: "search box label"
+                    description: "search box label",
                   })}
                   placeholder={intl.formatMessage({
+                    id: "dGqEJ9",
                     defaultMessage: "Search by country name",
-                    description: "search box placeholder"
+                    description: "search box placeholder",
                   })}
                   fullWidth
                 />
@@ -109,6 +115,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
                 <FormSpacer />
                 <Typography variant="subtitle1">
                   <FormattedMessage
+                    id="wgA48T"
                     defaultMessage="Countries A to Z"
                     description="country selection"
                   />
@@ -118,7 +125,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
                 <ResponsiveTable>
                   <TableBody>
                     {filter(countries, data.query, {
-                      key: "country"
+                      key: "country",
                     }).map(country => {
                       const isChecked = countrySelectionMap[country.code];
 
@@ -140,15 +147,18 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
                                         name: "countries" as keyof FormData,
                                         value: data.countries.filter(
                                           selectedCountries =>
-                                            selectedCountries !== country.code
-                                        )
-                                      }
+                                            selectedCountries !== country.code,
+                                        ),
+                                      },
                                     } as any)
                                   : change({
                                       target: {
                                         name: "countries" as keyof FormData,
-                                        value: [...data.countries, country.code]
-                                      }
+                                        value: [
+                                          ...data.countries,
+                                          country.code,
+                                        ],
+                                      },
                                     } as any)
                               }
                             />
@@ -166,6 +176,7 @@ const DiscountCountrySelectDialog: React.FC<DiscountCountrySelectDialogProps> = 
                   type="submit"
                 >
                   <FormattedMessage
+                    id="zZCCqz"
                     defaultMessage="Assign countries"
                     description="button"
                   />

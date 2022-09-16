@@ -3,7 +3,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import ConfirmButton from "@saleor/components/ConfirmButton";
@@ -15,13 +15,13 @@ const useStyles = makeStyles(
   theme => ({
     deleteButton: {
       "&:hover": {
-        backgroundColor: theme.palette.error.main
+        backgroundColor: theme.palette.error.main,
       },
       backgroundColor: theme.palette.error.main,
-      color: theme.palette.error.contrastText
-    }
+      color: theme.palette.error.contrastText,
+    },
   }),
-  { name: "ProductVariantDeleteDialog" }
+  { name: "ProductVariantDeleteDialog" },
 );
 
 export interface ProductVariantDeleteDialogProps {
@@ -41,6 +41,7 @@ const ProductVariantDeleteDialog: React.FC<ProductVariantDeleteDialogProps> = pr
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>
         <FormattedMessage
+          id="GFJabu"
           defaultMessage="Delete Variant"
           description="dialog header"
         />
@@ -48,10 +49,11 @@ const ProductVariantDeleteDialog: React.FC<ProductVariantDeleteDialogProps> = pr
       <DialogContent>
         <DialogContentText>
           <FormattedMessage
+            id="WwNtFn"
             defaultMessage="Are you sure you want to delete {name}?"
             description="delete product variant"
             values={{
-              name
+              name,
             }}
           />
         </DialogContentText>
@@ -64,6 +66,7 @@ const ProductVariantDeleteDialog: React.FC<ProductVariantDeleteDialogProps> = pr
           onClick={onConfirm}
         >
           <FormattedMessage
+            id="rbkmfG"
             defaultMessage="Delete variant"
             description="button"
           />

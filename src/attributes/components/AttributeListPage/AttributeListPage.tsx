@@ -1,9 +1,14 @@
 import { Card } from "@material-ui/core";
-import { AttributeListUrlSortField } from "@saleor/attributes/urls";
+import {
+  attributeAddUrl,
+  AttributeListUrlSortField,
+} from "@saleor/attributes/urls";
+import { Backlink } from "@saleor/components/Backlink";
+import { Button } from "@saleor/components/Button";
 import FilterBar from "@saleor/components/FilterBar";
+import { configurationMenuUrl } from "@saleor/configuration";
 import { AttributeFragment } from "@saleor/graphql";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, Button } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -14,13 +19,13 @@ import {
   ListActions,
   PageListProps,
   SortPage,
-  TabPageProps
+  TabPageProps,
 } from "../../../types";
 import AttributeList from "../AttributeList/AttributeList";
 import {
   AttributeFilterKeys,
   AttributeListFilterOpts,
-  createFilterStructure
+  createFilterStructure,
 } from "./filters";
 
 export interface AttributeListPageProps
@@ -30,14 +35,11 @@ export interface AttributeListPageProps
     SortPage<AttributeListUrlSortField>,
     TabPageProps {
   attributes: AttributeFragment[];
-  onBack: () => void;
 }
 
 const AttributeListPage: React.FC<AttributeListPageProps> = ({
   filterOpts,
   initialSearch,
-  onAdd,
-  onBack,
   onFilterChange,
   onSearchChange,
   currentTab,
@@ -54,16 +56,17 @@ const AttributeListPage: React.FC<AttributeListPageProps> = ({
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink href={configurationMenuUrl}>
         <FormattedMessage {...sectionNames.configuration} />
       </Backlink>
       <PageHeader title={intl.formatMessage(sectionNames.attributes)}>
         <Button
-          onClick={onAdd}
+          href={attributeAddUrl()}
           variant="primary"
           data-test-id="create-attribute-button"
         >
           <FormattedMessage
+            id="IGvQ8k"
             defaultMessage="Create attribute"
             description="button"
           />
@@ -72,14 +75,16 @@ const AttributeListPage: React.FC<AttributeListPageProps> = ({
       <Card>
         <FilterBar
           allTabLabel={intl.formatMessage({
+            id: "dKPMyh",
             defaultMessage: "All Attributes",
-            description: "tab name"
+            description: "tab name",
           })}
           currentTab={currentTab}
           filterStructure={structure}
           initialSearch={initialSearch}
           searchPlaceholder={intl.formatMessage({
-            defaultMessage: "Search Attribute"
+            id: "1div9r",
+            defaultMessage: "Search Attribute",
           })}
           tabs={tabs}
           onAll={onAll}

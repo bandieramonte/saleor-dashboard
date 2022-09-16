@@ -3,12 +3,14 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { CountryListQuery } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
+import { countryTaxRatesUrl } from "@saleor/taxes/urls";
 import classNames from "classnames";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -18,22 +20,21 @@ import { maybe, renderCollection } from "../../../misc";
 const useStyles = makeStyles(
   {
     tableRow: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     textRight: {
-      textAlign: "right"
-    }
+      textAlign: "right",
+    },
   },
-  { name: "CountryList" }
+  { name: "CountryList" },
 );
 
 interface CountryListProps {
   countries: CountryListQuery["shop"]["countries"];
-  onRowClick: (code: string) => void;
 }
 
 const CountryList: React.FC<CountryListProps> = props => {
-  const { onRowClick, countries } = props;
+  const { countries } = props;
 
   const classes = useStyles(props);
 
@@ -43,13 +44,16 @@ const CountryList: React.FC<CountryListProps> = props => {
         <TableHead>
           <TableRow>
             <TableCell>
-              <FormattedMessage defaultMessage="Country Code" />
+              <FormattedMessage id="07KB2d" defaultMessage="Country Code" />
             </TableCell>
             <TableCell>
-              <FormattedMessage defaultMessage="Country Name" />
+              <FormattedMessage id="0GJfWd" defaultMessage="Country Name" />
             </TableCell>
             <TableCell className={classes.textRight}>
-              <FormattedMessage defaultMessage="Reduced Tax Rates" />
+              <FormattedMessage
+                id="/JENWS"
+                defaultMessage="Reduced Tax Rates"
+              />
             </TableCell>
           </TableRow>
         </TableHead>
@@ -57,12 +61,12 @@ const CountryList: React.FC<CountryListProps> = props => {
           {renderCollection(
             countries,
             country => (
-              <TableRow
+              <TableRowLink
                 className={classNames({
-                  [classes.tableRow]: !!country
+                  [classes.tableRow]: !!country,
                 })}
                 hover={!!country}
-                onClick={!!country ? () => onRowClick(country.code) : undefined}
+                href={country && countryTaxRatesUrl(country.code)}
                 key={country ? country.code : "skeleton"}
               >
                 <TableCell>
@@ -74,18 +78,21 @@ const CountryList: React.FC<CountryListProps> = props => {
                 <TableCell className={classes.textRight}>
                   {maybe<React.ReactNode>(
                     () => country.vat.reducedRates.length,
-                    <Skeleton />
+                    <Skeleton />,
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             ),
             () => (
               <TableRow>
                 <TableCell colSpan={3}>
-                  <FormattedMessage defaultMessage="No countries found" />
+                  <FormattedMessage
+                    id="3BTtL2"
+                    defaultMessage="No countries found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

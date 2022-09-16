@@ -2,7 +2,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import CustomerAddressListPage, {
-  CustomerAddressListPageProps
+  CustomerAddressListPageProps,
 } from "../../../customers/components/CustomerAddressListPage";
 import { customer } from "../../../customers/fixtures";
 import Decorator from "../../Decorator";
@@ -11,10 +11,9 @@ const props: CustomerAddressListPageProps = {
   customer,
   disabled: false,
   onAdd: () => undefined,
-  onBack: () => undefined,
   onEdit: () => undefined,
   onRemove: () => undefined,
-  onSetAsDefault: () => undefined
+  onSetAsDefault: () => undefined,
 };
 
 storiesOf("Views / Customers / Address Book", module)

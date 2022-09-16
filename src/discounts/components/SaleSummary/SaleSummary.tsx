@@ -22,20 +22,24 @@ export interface SaleSummaryProps extends ChannelProps {
 
 const SaleSummary: React.FC<SaleSummaryProps> = ({
   selectedChannelId,
-  sale
+  sale,
 }) => {
   const classes = useStyles();
   const intl = useIntl();
 
   const channel = sale?.channelListings?.find(
-    listing => listing.channel.id === selectedChannelId
+    listing => listing.channel.id === selectedChannelId,
   );
   return (
     <Card>
       <CardTitle title={intl.formatMessage(commonMessages.summary)} />
       <CardContent>
         <Typography variant="caption">
-          <FormattedMessage defaultMessage="Name" description="sale name" />
+          <FormattedMessage
+            id="F56hOz"
+            defaultMessage="Name"
+            description="sale name"
+          />
         </Typography>
         <Typography className={classes.ellipsis}>
           {maybe<React.ReactNode>(() => sale.name, <Skeleton />)}
@@ -43,7 +47,11 @@ const SaleSummary: React.FC<SaleSummaryProps> = ({
         <FormSpacer />
 
         <Typography variant="caption">
-          <FormattedMessage defaultMessage="Value" description="sale value" />
+          <FormattedMessage
+            id="XZR590"
+            defaultMessage="Value"
+            description="sale value"
+          />
         </Typography>
         <Typography>
           {sale ? (
@@ -51,7 +59,7 @@ const SaleSummary: React.FC<SaleSummaryProps> = ({
               <Money
                 money={{
                   amount: channel?.discountValue,
-                  currency: channel?.currency
+                  currency: channel?.currency,
                 }}
               />
             ) : channel?.discountValue ? (
@@ -76,7 +84,7 @@ const SaleSummary: React.FC<SaleSummaryProps> = ({
             () => (
               <Date date={sale.startDate} plain />
             ),
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
         <FormSpacer />
@@ -88,7 +96,7 @@ const SaleSummary: React.FC<SaleSummaryProps> = ({
           {maybe<React.ReactNode>(
             () =>
               sale.endDate === null ? "-" : <Date date={sale.endDate} plain />,
-            <Skeleton />
+            <Skeleton />,
           )}
         </Typography>
       </CardContent>

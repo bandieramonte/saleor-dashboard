@@ -1,4 +1,5 @@
 import {
+  ChannelUsabilityDataQuery,
   CountryWithCodeFragment,
   FulfillmentStatus,
   InvoiceFragment,
@@ -8,14 +9,16 @@ import {
   OrderDetailsQuery,
   OrderEventsEmailsEnum,
   OrderEventsEnum,
+  OrderFulfillLineFragment,
   OrderListQuery,
   OrderSettingsFragment,
   OrderStatus,
   PaymentChargeStatusEnum,
   SearchCustomersQuery,
   SearchOrderVariantQuery,
+  SearchWarehousesQuery,
   ShopOrderSettingsFragment,
-  WeightUnitsEnum
+  WeightUnitsEnum,
 } from "@saleor/graphql";
 import { RelayToFlat } from "@saleor/types";
 import { warehouseForPickup, warehouseList } from "@saleor/warehouses/fixtures";
@@ -28,14 +31,14 @@ export const countries: CountryWithCodeFragment[] = [
   { __typename: "CountryDisplay", code: "AX", country: "Åland Islands" },
   { __typename: "CountryDisplay", code: "AL", country: "Albania" },
   { __typename: "CountryDisplay", code: "DZ", country: "Algeria" },
-  { __typename: "CountryDisplay", code: "AS", country: "American Samoa" }
+  { __typename: "CountryDisplay", code: "AS", country: "American Samoa" },
 ];
 export const shop: OrderDetailsQuery["shop"] = {
   __typename: "Shop",
   countries,
   defaultWeightUnit: WeightUnitsEnum.KG,
   fulfillmentAllowUnpaid: true,
-  fulfillmentAutoApprove: true
+  fulfillmentAutoApprove: true,
 };
 
 export const clients: RelayToFlat<SearchCustomersQuery["search"]> = [
@@ -44,29 +47,29 @@ export const clients: RelayToFlat<SearchCustomersQuery["search"]> = [
     email: "test.client1@example.com",
     firstName: "John",
     id: "c1",
-    lastName: "Doe"
+    lastName: "Doe",
   },
   {
     __typename: "User" as "User",
     email: "test.client2@example.com",
     firstName: "Dough",
     id: "c2",
-    lastName: "Jones"
+    lastName: "Jones",
   },
   {
     __typename: "User" as "User",
     email: "test.client3@example.com",
     firstName: "Jonas",
     id: "c3",
-    lastName: "Dough"
+    lastName: "Dough",
   },
   {
     __typename: "User" as "User",
     email: "test.client4@example.com",
     firstName: "Bill",
     id: "c4",
-    lastName: "Jonas"
-  }
+    lastName: "Jonas",
+  },
 ];
 export const orders: RelayToFlat<OrderListQuery["orders"]> = [
   {
@@ -79,7 +82,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "BE",
-        country: "Belgia"
+        country: "Belgia",
       },
       countryArea: "",
       firstName: "Laura",
@@ -88,7 +91,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "88741",
       streetAddress1: "3678 John Course",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:30.376876+00:00",
     id: "T3JkZXI6MjA=",
@@ -100,10 +103,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 305.17,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "laura.stone@example.com"
+    userEmail: "laura.stone@example.com",
   },
   {
     __typename: "Order",
@@ -115,7 +118,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "SE",
-        country: "Szwecja"
+        country: "Szwecja",
       },
       countryArea: "",
       firstName: "Elizabeth",
@@ -124,7 +127,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "52203",
       streetAddress1: "419 Ruiz Orchard Apt. 199",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:30.124154+00:00",
     id: "T3JkZXI6MTk=",
@@ -136,10 +139,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 1215.89,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "elizabeth.vaughn@example.com"
+    userEmail: "elizabeth.vaughn@example.com",
   },
   {
     __typename: "Order",
@@ -154,10 +157,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 321.71,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "david.lawson@example.com"
+    userEmail: "david.lawson@example.com",
   },
   {
     __typename: "Order",
@@ -169,7 +172,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "GR",
-        country: "Grecja"
+        country: "Grecja",
       },
       countryArea: "",
       firstName: "Aaron",
@@ -178,7 +181,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "30356",
       streetAddress1: "326 Palmer Rapids Apt. 717",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:29.864391+00:00",
     id: "T3JkZXI6MTc=",
@@ -190,10 +193,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 271.95,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "aaron.randall@example.com"
+    userEmail: "aaron.randall@example.com",
   },
   {
     __typename: "Order",
@@ -205,7 +208,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "UG",
-        country: "Uganda"
+        country: "Uganda",
       },
       countryArea: "",
       firstName: "Laura",
@@ -214,7 +217,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "77693",
       streetAddress1: "01504 Olson Springs Suite 920",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:29.610339+00:00",
     id: "T3JkZXI6MTY=",
@@ -226,10 +229,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 335.84,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "laura.jensen@example.com"
+    userEmail: "laura.jensen@example.com",
   },
   {
     __typename: "Order",
@@ -241,7 +244,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "PW",
-        country: "Palau"
+        country: "Palau",
       },
       countryArea: "",
       firstName: "Jenna",
@@ -250,7 +253,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "65613",
       streetAddress1: "2031 Mcdonald Mill",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:29.336209+00:00",
     id: "T3JkZXI6MTU=",
@@ -262,10 +265,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 1042.15,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "jenna.villa@example.com"
+    userEmail: "jenna.villa@example.com",
   },
   {
     __typename: "Order",
@@ -277,7 +280,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "VA",
-        country: "Watykan"
+        country: "Watykan",
       },
       countryArea: "",
       firstName: "Wesley",
@@ -286,7 +289,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "66203",
       streetAddress1: "667 Joseph Lights",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:29.103651+00:00",
     id: "T3JkZXI6MTQ=",
@@ -298,10 +301,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 213.69,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "wesley.davis@example.com"
+    userEmail: "wesley.davis@example.com",
   },
   {
     __typename: "Order",
@@ -313,7 +316,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "NL",
-        country: "Holandia"
+        country: "Holandia",
       },
       countryArea: "",
       firstName: "Anthony",
@@ -322,7 +325,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "78701",
       streetAddress1: "402 Mason Viaduct Suite 592",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:28.921956+00:00",
     id: "T3JkZXI6MTM=",
@@ -334,10 +337,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 367.03,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "anthony.gonzalez@example.com"
+    userEmail: "anthony.gonzalez@example.com",
   },
   {
     __typename: "Order",
@@ -349,7 +352,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "TN",
-        country: "Tunezja"
+        country: "Tunezja",
       },
       countryArea: "",
       firstName: "Denise",
@@ -358,7 +361,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "27744",
       streetAddress1: "8376 Linda Valley Apt. 934",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:28.750718+00:00",
     id: "T3JkZXI6MTI=",
@@ -370,10 +373,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 298.76,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "denise.freeman@example.com"
+    userEmail: "denise.freeman@example.com",
   },
   {
     __typename: "Order",
@@ -385,7 +388,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "DJ",
-        country: "Dżibuti"
+        country: "Dżibuti",
       },
       countryArea: "",
       firstName: "James",
@@ -394,7 +397,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "70958",
       streetAddress1: "60049 Fisher Grove",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:28.598246+00:00",
     id: "T3JkZXI6MTE=",
@@ -406,10 +409,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 663.69,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "james.ball@example.com"
+    userEmail: "james.ball@example.com",
   },
   {
     __typename: "Order",
@@ -421,7 +424,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "MK",
-        country: "Macedonia"
+        country: "Macedonia",
       },
       countryArea: "",
       firstName: "Michael",
@@ -430,7 +433,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "11343",
       streetAddress1: "843 Allen Ramp Suite 194",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:28.409836+00:00",
     id: "T3JkZXI6MTA=",
@@ -442,10 +445,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 280.41,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "michael.martinez@example.com"
+    userEmail: "michael.martinez@example.com",
   },
   {
     __typename: "Order",
@@ -457,7 +460,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "SB",
-        country: "Wyspy Salomona"
+        country: "Wyspy Salomona",
       },
       countryArea: "",
       firstName: "Melissa",
@@ -466,7 +469,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "66272",
       streetAddress1: "487 Roberto Shores",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:28.185874+00:00",
     id: "T3JkZXI6OQ==",
@@ -478,10 +481,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 234.93,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "melissa.simon@example.com"
+    userEmail: "melissa.simon@example.com",
   },
   {
     __typename: "Order",
@@ -493,7 +496,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "CL",
-        country: "Chile"
+        country: "Chile",
       },
       countryArea: "",
       firstName: "Justin",
@@ -502,7 +505,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "03826",
       streetAddress1: "74416 Jensen Gateway Suite 140",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:27.953588+00:00",
     id: "T3JkZXI6OA==",
@@ -514,10 +517,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 485.19,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "justin.mccoy@example.com"
+    userEmail: "justin.mccoy@example.com",
   },
   {
     __typename: "Order",
@@ -529,7 +532,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "NL",
-        country: "Holandia"
+        country: "Holandia",
       },
       countryArea: "",
       firstName: "Anthony",
@@ -538,7 +541,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "78701",
       streetAddress1: "402 Mason Viaduct Suite 592",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:27.828033+00:00",
     id: "T3JkZXI6Nw==",
@@ -550,10 +553,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 223.54,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "anthony.gonzalez@example.com"
+    userEmail: "anthony.gonzalez@example.com",
   },
   {
     __typename: "Order",
@@ -565,7 +568,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "SN",
-        country: "Senegal"
+        country: "Senegal",
       },
       countryArea: "",
       firstName: "Bradley",
@@ -574,7 +577,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "88661",
       streetAddress1: "56414 Ashley Gardens",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:27.636741+00:00",
     id: "T3JkZXI6Ng==",
@@ -586,10 +589,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 237.55,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "bradley.ford@example.com"
+    userEmail: "bradley.ford@example.com",
   },
   {
     __typename: "Order",
@@ -601,7 +604,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "CG",
-        country: "Kongo"
+        country: "Kongo",
       },
       countryArea: "",
       firstName: "David",
@@ -610,7 +613,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "87510",
       streetAddress1: "151 Huang Pines",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:27.420590+00:00",
     id: "T3JkZXI6NQ==",
@@ -622,10 +625,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 453.55,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "david.lawson@example.com"
+    userEmail: "david.lawson@example.com",
   },
   {
     __typename: "Order",
@@ -637,7 +640,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "NA",
-        country: "Namibia"
+        country: "Namibia",
       },
       countryArea: "",
       firstName: "Lauren",
@@ -646,7 +649,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "22102",
       streetAddress1: "340 Amanda Tunnel Suite 869",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:27.230990+00:00",
     id: "T3JkZXI6NA==",
@@ -658,10 +661,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 812.67,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "lauren.watson@example.com"
+    userEmail: "lauren.watson@example.com",
   },
   {
     __typename: "Order",
@@ -673,7 +676,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "CO",
-        country: "Kolumbia"
+        country: "Kolumbia",
       },
       countryArea: "",
       firstName: "Mark",
@@ -682,7 +685,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "18829",
       streetAddress1: "34480 Daniel Centers Apt. 642",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:26.972507+00:00",
     id: "T3JkZXI6Mw==",
@@ -694,10 +697,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 481.41,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "mark.lee@example.com"
+    userEmail: "mark.lee@example.com",
   },
   {
     __typename: "Order",
@@ -709,7 +712,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "BJ",
-        country: "Benin"
+        country: "Benin",
       },
       countryArea: "",
       firstName: "Kara",
@@ -718,7 +721,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "88138",
       streetAddress1: "0674 Kent Station Suite 395",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:26.751359+00:00",
     id: "T3JkZXI6Mg==",
@@ -730,10 +733,10 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 569.19,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "kara.murphy@example.com"
+    userEmail: "kara.murphy@example.com",
   },
   {
     __typename: "Order",
@@ -745,7 +748,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       country: {
         __typename: "CountryDisplay",
         code: "CV",
-        country: "Republika Zielonego Przylądka"
+        country: "Republika Zielonego Przylądka",
       },
       countryArea: "",
       firstName: "Curtis",
@@ -754,7 +757,7 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       phone: "",
       postalCode: "84525",
       streetAddress1: "839 Scott Lake",
-      streetAddress2: ""
+      streetAddress2: "",
     },
     created: "2018-09-11T09:37:26.314968+00:00",
     id: "T3JkZXI6MQ==",
@@ -766,11 +769,11 @@ export const orders: RelayToFlat<OrderListQuery["orders"]> = [
       gross: {
         __typename: "Money",
         amount: 557,
-        currency: "USD"
-      }
+        currency: "USD",
+      },
     },
-    userEmail: "curtis.bailey@example.com"
-  }
+    userEmail: "curtis.bailey@example.com",
+  },
 ];
 export const order = (placeholder: string): OrderDetailsFragment => ({
   __typename: "Order",
@@ -779,7 +782,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     OrderAction.CAPTURE,
     OrderAction.MARK_AS_PAID,
     OrderAction.REFUND,
-    OrderAction.VOID
+    OrderAction.VOID,
   ],
   shippingMethods: [
     {
@@ -789,10 +792,10 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       price: {
         __typename: "Money",
         amount: 12.41,
-        currency: "USD"
+        currency: "USD",
       },
       active: false,
-      message: "shipping method is disactive"
+      message: "shipping method is disactive",
     },
     {
       __typename: "ShippingMethod",
@@ -801,10 +804,10 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       price: {
         __typename: "Money",
         amount: 9.12,
-        currency: "USD"
+        currency: "USD",
       },
       active: true,
-      message: null
+      message: null,
     },
     {
       __typename: "ShippingMethod",
@@ -813,11 +816,11 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       price: {
         __typename: "Money",
         amount: 7.6,
-        currency: "USD"
+        currency: "USD",
       },
       active: true,
-      message: null
-    }
+      message: null,
+    },
   ],
   billingAddress: {
     __typename: "Address",
@@ -827,7 +830,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     country: {
       __typename: "CountryDisplay",
       code: "SB",
-      country: "Wyspy Salomona"
+      country: "Wyspy Salomona",
     },
     countryArea: "",
     firstName: "Melissa",
@@ -836,7 +839,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     phone: "",
     postalCode: "66272",
     streetAddress1: "487 Roberto Shores",
-    streetAddress2: ""
+    streetAddress2: "",
   },
   canFinalize: true,
   channel: {
@@ -848,8 +851,8 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     name: "Default Channel",
     defaultCountry: {
       code: "CA",
-      __typename: "CountryDisplay"
-    }
+      __typename: "CountryDisplay",
+    },
   },
   created: "2018-09-11T09:37:28.185874+00:00",
   customerNote: "Lorem ipsum dolor sit amet",
@@ -875,15 +878,15 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         id: "ZXCkcmVasdwoxTW==",
         __typename: "App",
         name: "Testapp",
-        appUrl: "https://www.google.com/"
+        appUrl: "https://www.google.com/",
       },
       user: {
         __typename: "User",
         email: "admin@example.com",
         firstName: "John",
         id: "QWRkcmVzczoxNQ==",
-        lastName: "Doe"
-      }
+        lastName: "Doe",
+      },
     },
     {
       __typename: "OrderEvent",
@@ -903,9 +906,9 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
             __typename: "OrderLine",
             id: "h47gfncfgwegfehfhj",
             productName: "Milk",
-            variantName: "Cow's milk"
+            variantName: "Cow's milk",
           },
-          quantity: 4
+          quantity: 4,
         },
         {
           __typename: "OrderEventOrderLineObject",
@@ -915,10 +918,10 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
             __typename: "OrderLine",
             id: "7846f857t4t84y8fgh",
             productName: "Milk",
-            variantName: "Goat's milk"
+            variantName: "Goat's milk",
           },
-          quantity: 4
-        }
+          quantity: 4,
+        },
       ],
       message: null,
       quantity: 1,
@@ -930,15 +933,15 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         id: "ZXCkcmVasdwoxTW==",
         __typename: "App",
         name: "Testapp",
-        appUrl: "https://www.google.com/"
+        appUrl: "https://www.google.com/",
       },
       user: {
         __typename: "User",
         email: "admin@example.com",
         firstName: "Jane",
         id: "QWRkcmVzczoxNQ==",
-        lastName: "Doe"
-      }
+        lastName: "Doe",
+      },
     },
     {
       __typename: "OrderEvent",
@@ -957,7 +960,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "124",
       type: OrderEventsEnum.NOTE_ADDED,
       user: null,
-      app: null
+      app: null,
     },
     {
       __typename: "OrderEvent",
@@ -976,7 +979,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "125",
       type: OrderEventsEnum.NOTE_ADDED,
       user: null,
-      app: null
+      app: null,
     },
     {
       __typename: "OrderEvent",
@@ -995,7 +998,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "126",
       type: OrderEventsEnum.EXTERNAL_SERVICE_NOTIFICATION,
       user: null,
-      app: null
+      app: null,
     },
     {
       __typename: "OrderEvent",
@@ -1014,7 +1017,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "127",
       type: OrderEventsEnum.EMAIL_SENT,
       user: null,
-      app: null
+      app: null,
     },
     {
       __typename: "OrderEvent",
@@ -1033,7 +1036,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "128",
       type: OrderEventsEnum.EMAIL_SENT,
       user: null,
-      app: null
+      app: null,
     },
     {
       __typename: "OrderEvent",
@@ -1052,8 +1055,8 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       transactionReference: "129",
       type: OrderEventsEnum.PAYMENT_AUTHORIZED,
       user: null,
-      app: null
-    }
+      app: null,
+    },
   ],
   fulfillments: [
     {
@@ -1073,9 +1076,22 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
             quantity: 2,
             quantityFulfilled: 2,
             quantityToFulfill: 0,
+            allocations: [
+              {
+                id: "allocation_test_id",
+                warehouse: {
+                  name: "US Warehouse",
+                  id:
+                    "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+                  __typename: "Warehouse",
+                },
+                quantity: 1,
+                __typename: "Allocation",
+              },
+            ],
             thumbnail: {
               __typename: "Image" as "Image",
-              url: placeholder
+              url: placeholder,
             },
             undiscountedUnitPrice: {
               __typename: "TaxedMoney",
@@ -1083,18 +1099,18 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
               gross: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
+                currency: "USD",
               },
               net: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
-              }
+                currency: "USD",
+              },
             },
             unitDiscount: {
               __typename: "Money",
               amount: 79.71,
-              currency: "USD"
+              currency: "USD",
             },
             unitDiscountReason: null,
             unitDiscountType: null,
@@ -1104,27 +1120,58 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
               gross: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
+                currency: "USD",
               },
               net: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
-              }
+                currency: "USD",
+              },
             },
             variant: {
               __typename: "ProductVariant",
               id: "dsfsfuhb",
               quantityAvailable: 10,
-              preorder: null
-            }
+              preorder: null,
+              product: {
+                __typename: "Product",
+                id: "UHJvZHVjdDo1",
+                isAvailableForPurchase: true,
+              },
+              stocks: [
+                {
+                  id: "stock_test_id1",
+                  warehouse: {
+                    name: "stock_warehouse1",
+                    id:
+                      "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+                    __typename: "Warehouse",
+                  },
+                  quantity: 166,
+                  quantityAllocated: 0,
+                  __typename: "Stock",
+                },
+                {
+                  id: "stock_test_id2",
+                  warehouse: {
+                    name: "stock_warehouse2",
+                    id:
+                      "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+                    __typename: "Warehouse",
+                  },
+                  quantity: 166,
+                  quantityAllocated: 0,
+                  __typename: "Stock",
+                },
+              ],
+            },
           },
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ],
       status: FulfillmentStatus.FULFILLED,
       trackingNumber: "",
-      warehouse: warehouseList[1]
+      warehouse: warehouseList[1],
     },
     {
       __typename: "Fulfillment",
@@ -1143,9 +1190,22 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
             quantity: 2,
             quantityFulfilled: 2,
             quantityToFulfill: 0,
+            allocations: [
+              {
+                id: "allocation_test_id",
+                warehouse: {
+                  name: "US Warehouse",
+                  id:
+                    "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+                  __typename: "Warehouse",
+                },
+                quantity: 1,
+                __typename: "Allocation",
+              },
+            ],
             thumbnail: {
               __typename: "Image" as "Image",
-              url: placeholder
+              url: placeholder,
             },
             undiscountedUnitPrice: {
               __typename: "TaxedMoney",
@@ -1153,18 +1213,18 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
               gross: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
+                currency: "USD",
               },
               net: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
-              }
+                currency: "USD",
+              },
             },
             unitDiscount: {
               __typename: "Money",
               amount: 79.71,
-              currency: "USD"
+              currency: "USD",
             },
             unitDiscountReason: null,
             unitDiscountType: null,
@@ -1174,28 +1234,59 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
               gross: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
+                currency: "USD",
               },
               net: {
                 __typename: "Money",
                 amount: 79.71,
-                currency: "USD"
-              }
+                currency: "USD",
+              },
             },
             variant: {
               __typename: "ProductVariant",
               id: "dsfsfuhb",
               quantityAvailable: 10,
-              preorder: null
-            }
+              preorder: null,
+              product: {
+                __typename: "Product",
+                id: "UHJvZHVjdDo1",
+                isAvailableForPurchase: true,
+              },
+              stocks: [
+                {
+                  id: "stock_test_id1",
+                  warehouse: {
+                    name: "stock_warehouse1",
+                    id:
+                      "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+                    __typename: "Warehouse",
+                  },
+                  quantity: 166,
+                  quantityAllocated: 0,
+                  __typename: "Stock",
+                },
+                {
+                  id: "stock_test_id2",
+                  warehouse: {
+                    name: "stock_warehouse2",
+                    id:
+                      "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+                    __typename: "Warehouse",
+                  },
+                  quantity: 166,
+                  quantityAllocated: 0,
+                  __typename: "Stock",
+                },
+              ],
+            },
           },
-          quantity: 1
-        }
+          quantity: 1,
+        },
       ],
       status: FulfillmentStatus.FULFILLED,
       trackingNumber: "01nn12399su12nndfsy",
-      warehouse: warehouseList[0]
-    }
+      warehouse: warehouseList[0],
+    },
   ],
   id: "T3JkZXI6OQ==",
   token: "e5cfc543-6a62-472f-8b80-6a2311f9ff14",
@@ -1206,8 +1297,8 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       id: "SW52b2ljZTox",
       number: "1",
       status: JobStatusEnum.SUCCESS,
-      url: "invoice1"
-    }
+      url: "invoice1",
+    },
   ],
   isPaid: true,
   isShippingRequired: false,
@@ -1221,9 +1312,22 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       quantity: 3,
       quantityFulfilled: 0,
       quantityToFulfill: 3,
+      allocations: [
+        {
+          id: "allocation_test_id",
+          warehouse: {
+            name: "US Warehouse",
+            id:
+              "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+            __typename: "Warehouse",
+          },
+          quantity: 1,
+          __typename: "Allocation",
+        },
+      ],
       thumbnail: {
         __typename: "Image" as "Image",
-        url: placeholder
+        url: placeholder,
       },
       undiscountedUnitPrice: {
         __typename: "TaxedMoney",
@@ -1231,18 +1335,18 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 18.51,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 18.51,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       unitDiscount: {
         __typename: "Money",
         amount: 79.71,
-        currency: "USD"
+        currency: "USD",
       },
       unitDiscountReason: null,
       unitDiscountType: null,
@@ -1252,20 +1356,51 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 18.51,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 18.51,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       variant: {
         __typename: "ProductVariant",
         id: "dsfsfuhb",
         quantityAvailable: 10,
-        preorder: null
-      }
+        preorder: null,
+        product: {
+          __typename: "Product",
+          id: "UHJvZHVjdDo1",
+          isAvailableForPurchase: true,
+        },
+        stocks: [
+          {
+            id: "stock_test_id1",
+            warehouse: {
+              name: "stock_warehouse1",
+              id:
+                "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+          {
+            id: "stock_test_id2",
+            warehouse: {
+              name: "stock_warehouse2",
+              id:
+                "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+        ],
+      },
     },
     {
       __typename: "OrderLine",
@@ -1276,9 +1411,22 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
       quantity: 2,
       quantityFulfilled: 2,
       quantityToFulfill: 0,
+      allocations: [
+        {
+          id: "allocation_test_id",
+          warehouse: {
+            name: "US Warehouse",
+            id:
+              "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+            __typename: "Warehouse",
+          },
+          quantity: 1,
+          __typename: "Allocation",
+        },
+      ],
       thumbnail: {
         __typename: "Image" as "Image",
-        url: placeholder
+        url: placeholder,
       },
 
       undiscountedUnitPrice: {
@@ -1287,18 +1435,18 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       unitDiscount: {
         __typename: "Money",
         amount: 79.71,
-        currency: "USD"
+        currency: "USD",
       },
       unitDiscountReason: null,
       unitDiscountType: null,
@@ -1308,28 +1456,59 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       variant: {
         __typename: "ProductVariant",
         id: "dsfsfuhb",
         quantityAvailable: 10,
-        preorder: null
-      }
-    }
+        preorder: null,
+        product: {
+          __typename: "Product",
+          id: "UHJvZHVjdDo1",
+          isAvailableForPurchase: true,
+        },
+        stocks: [
+          {
+            id: "stock_test_id1",
+            warehouse: {
+              name: "stock_warehouse1",
+              id:
+                "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+          {
+            id: "stock_test_id2",
+            warehouse: {
+              name: "stock_warehouse2",
+              id:
+                "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+        ],
+      },
+    },
   ],
   metadata: [
     {
       __typename: "MetadataItem",
       key: "integration.key",
-      value: "some-value"
-    }
+      value: "some-value",
+    },
   ],
   number: "9",
   paymentStatus: PaymentChargeStatusEnum.NOT_CHARGED,
@@ -1342,7 +1521,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     country: {
       __typename: "CountryDisplay",
       code: "SB",
-      country: "Wyspy Salomona"
+      country: "Wyspy Salomona",
     },
     countryArea: "",
     firstName: "Melissa",
@@ -1351,7 +1530,7 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     phone: "",
     postalCode: "66272",
     streetAddress1: "487 Roberto Shores",
-    streetAddress2: ""
+    streetAddress2: "",
   },
   shippingMethod: null,
   shippingMethodName: "Registred priority",
@@ -1362,8 +1541,8 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     gross: {
       __typename: "Money",
       amount: 19.98,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   status: OrderStatus.PARTIALLY_FULFILLED,
   subtotal: {
@@ -1371,63 +1550,63 @@ export const order = (placeholder: string): OrderDetailsFragment => ({
     gross: {
       __typename: "Money",
       amount: 214.95,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money",
       amount: 214.95,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   total: {
     __typename: "TaxedMoney",
     gross: {
       __typename: "Money",
       amount: 234.93,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money",
       amount: 234.93,
-      currency: "USD"
+      currency: "USD",
     },
     tax: {
       __typename: "Money",
       amount: 0,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   totalAuthorized: {
     __typename: "Money",
     amount: 234.93,
-    currency: "USD"
+    currency: "USD",
   },
   totalCaptured: {
     __typename: "Money",
     amount: 0,
-    currency: "USD"
+    currency: "USD",
   },
   undiscountedTotal: {
     __typename: "TaxedMoney",
     gross: {
       __typename: "Money",
       amount: 79.71,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money",
       amount: 79.71,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   user: null,
-  userEmail: "melissa.simon@example.com"
+  userEmail: "melissa.simon@example.com",
 });
 export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
   __typename: "Order" as "Order",
   giftCards: [],
   actions: [OrderAction.CAPTURE],
-  shippingMethods: null,
+  shippingMethods: [],
   billingAddress: null,
   canFinalize: true,
   channel: {
@@ -1439,8 +1618,8 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
     name: "Default Channel",
     defaultCountry: {
       code: "CA",
-      __typename: "CountryDisplay"
-    }
+      __typename: "CountryDisplay",
+    },
   },
   created: "2018-09-20T23:23:39.811428+00:00",
   customerNote: "Lorem ipsum dolor sit",
@@ -1456,8 +1635,8 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
       id: "SW52b2ljZTox",
       number: "1",
       status: JobStatusEnum.SUCCESS,
-      url: "invoice1"
-    }
+      url: "invoice1",
+    },
   ],
   isPaid: false,
   isShippingRequired: false,
@@ -1471,9 +1650,22 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
       quantity: 2,
       quantityFulfilled: 0,
       quantityToFulfill: 2,
+      allocations: [
+        {
+          id: "allocation_test_id",
+          warehouse: {
+            name: "US Warehouse",
+            id:
+              "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+            __typename: "Warehouse",
+          },
+          quantity: 1,
+          __typename: "Allocation",
+        },
+      ],
       thumbnail: {
         __typename: "Image" as "Image",
-        url: placeholder
+        url: placeholder,
       },
       undiscountedUnitPrice: {
         __typename: "TaxedMoney",
@@ -1481,18 +1673,18 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       unitDiscount: {
         __typename: "Money",
         amount: 79.71,
-        currency: "USD"
+        currency: "USD",
       },
       unitDiscountReason: null,
       unitDiscountType: null,
@@ -1502,20 +1694,51 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money" as "Money",
           amount: 65.95,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money" as "Money",
           amount: 65.95,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       variant: {
         __typename: "ProductVariant",
         id: "dsfsfuhb",
         quantityAvailable: 10,
-        preorder: null
-      }
+        preorder: null,
+        product: {
+          __typename: "Product",
+          id: "UHJvZHVjdDo1",
+          isAvailableForPurchase: true,
+        },
+        stocks: [
+          {
+            id: "stock_test_id1",
+            warehouse: {
+              name: "stock_warehouse1",
+              id:
+                "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+          {
+            id: "stock_test_id2",
+            warehouse: {
+              name: "stock_warehouse2",
+              id:
+                "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+        ],
+      },
     },
     {
       __typename: "OrderLine" as "OrderLine",
@@ -1526,9 +1749,22 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
       quantity: 2,
       quantityFulfilled: 0,
       quantityToFulfill: 2,
+      allocations: [
+        {
+          id: "allocation_test_id",
+          warehouse: {
+            name: "US Warehouse",
+            id:
+              "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+            __typename: "Warehouse",
+          },
+          quantity: 1,
+          __typename: "Allocation",
+        },
+      ],
       thumbnail: {
         __typename: "Image" as "Image",
-        url: placeholder
+        url: placeholder,
       },
       undiscountedUnitPrice: {
         __typename: "TaxedMoney",
@@ -1536,18 +1772,18 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money",
           amount: 79.71,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       unitDiscount: {
         __typename: "Money",
         amount: 79.71,
-        currency: "USD"
+        currency: "USD",
       },
       unitDiscountReason: null,
       unitDiscountType: null,
@@ -1557,21 +1793,52 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
         gross: {
           __typename: "Money" as "Money",
           amount: 68.2,
-          currency: "USD"
+          currency: "USD",
         },
         net: {
           __typename: "Money" as "Money",
           amount: 68.2,
-          currency: "USD"
-        }
+          currency: "USD",
+        },
       },
       variant: {
         __typename: "ProductVariant",
         id: "dsfsfuhb",
         quantityAvailable: 10,
-        preorder: null
-      }
-    }
+        preorder: null,
+        product: {
+          __typename: "Product",
+          id: "UHJvZHVjdDo1",
+          isAvailableForPurchase: true,
+        },
+        stocks: [
+          {
+            id: "stock_test_id1",
+            warehouse: {
+              name: "stock_warehouse1",
+              id:
+                "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+          {
+            id: "stock_test_id2",
+            warehouse: {
+              name: "stock_warehouse2",
+              id:
+                "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+              __typename: "Warehouse",
+            },
+            quantity: 166,
+            quantityAllocated: 0,
+            __typename: "Stock",
+          },
+        ],
+      },
+    },
   ],
   metadata: [],
   number: "24",
@@ -1587,8 +1854,8 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
     gross: {
       __typename: "Money" as "Money",
       amount: 0,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   status: "DRAFT" as OrderStatus.DRAFT,
   subtotal: {
@@ -1596,31 +1863,31 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
     gross: {
       __typename: "Money" as "Money",
       amount: 168.3,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money" as "Money",
       amount: 168.3,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   total: {
     __typename: "TaxedMoney" as "TaxedMoney",
     gross: {
       __typename: "Money" as "Money",
       amount: 168.3,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money" as "Money",
       amount: 100,
-      currency: "USD"
+      currency: "USD",
     },
     tax: {
       __typename: "Money" as "Money",
       amount: 68.3,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   totalAuthorized: null,
   totalCaptured: null,
@@ -1629,26 +1896,91 @@ export const draftOrder = (placeholder: string): OrderDetailsFragment => ({
     gross: {
       __typename: "Money",
       amount: 79.71,
-      currency: "USD"
+      currency: "USD",
     },
     net: {
       __typename: "Money",
       amount: 79.71,
-      currency: "USD"
-    }
+      currency: "USD",
+    },
   },
   user: null,
-  userEmail: null
+  userEmail: null,
 });
+
 export const flatOrders = orders.map(order => ({
   ...order,
   orderStatus: transformOrderStatus(order.status, {
-    formatMessage: (message: MessageDescriptor) => message.defaultMessage
+    formatMessage: (message: MessageDescriptor) => message.defaultMessage,
   } as any),
   paymentStatus: transformPaymentStatus(order.paymentStatus, {
-    formatMessage: (message: MessageDescriptor) => message.defaultMessage
-  } as any)
+    formatMessage: (message: MessageDescriptor) => message.defaultMessage,
+  } as any),
 }));
+
+export const fulfillOrderLine = (
+  placeholderImage: string,
+): OrderFulfillLineFragment => ({
+  __typename: "OrderLine",
+  id: "T3JkZXJMaW5lOjIz",
+  isShippingRequired: false,
+  productName: "Williams, Garcia and Walker (XS)",
+  quantity: 2,
+  quantityFulfilled: 2,
+  quantityToFulfill: 0,
+  allocations: [
+    {
+      id: "allocation_test_id",
+      warehouse: {
+        name: "US Warehouse",
+        id: "V2FyZWhvdXNlOjk1NWY0ZDk2LWRmNTAtNGY0Zi1hOTM4LWM5MTYzYTA4YTViNg==",
+        __typename: "Warehouse",
+      },
+      quantity: 1,
+      __typename: "Allocation",
+    },
+  ],
+  thumbnail: {
+    __typename: "Image" as "Image",
+    url: placeholderImage,
+  },
+  variant: {
+    __typename: "ProductVariant",
+    id: "dsfsfuhb",
+    name: "Williams, Garcia and Walker (XS)",
+    sku: "5-1337",
+    attributes: [],
+    trackInventory: true,
+    preorder: null,
+    stocks: [
+      {
+        id: "stock_test_id1",
+        warehouse: {
+          name: "stock_warehouse1",
+          id:
+            "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+          __typename: "Warehouse",
+        },
+        quantity: 166,
+        quantityAllocated: 0,
+        __typename: "Stock",
+      },
+      {
+        id: "stock_test_id2",
+        warehouse: {
+          name: "stock_warehouse2",
+          id:
+            "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+          __typename: "Warehouse",
+        },
+        quantity: 166,
+        quantityAllocated: 0,
+        __typename: "Stock",
+      },
+    ],
+  },
+});
+
 export const variants = [
   { id: "p1", name: "Product 1: variant 1", sku: "12345", stockQuantity: 3 },
   { id: "p2", name: "Product 1: variant 2", sku: "12346", stockQuantity: 1 },
@@ -1656,15 +1988,15 @@ export const variants = [
   { id: "p4", name: "Product 3: variant 1", sku: "12445", stockQuantity: 12 },
   { id: "p5", name: "Product 3: variant 2", sku: "12545", stockQuantity: 7 },
   { id: "p6", name: "Product 5: variant 1", sku: "13345", stockQuantity: 3 },
-  { id: "p7", name: "Product 5: variant 2", sku: "14345", stockQuantity: 11 }
+  { id: "p7", name: "Product 5: variant 2", sku: "14345", stockQuantity: 11 },
 ];
 export const prefixes = ["01", "02", "41", "49"];
 export const shippingMethods = [
   { country: "whole world", id: "s1", name: "DHL", price: {} },
-  { country: "Afghanistan", id: "s2", name: "UPS" }
+  { country: "Afghanistan", id: "s2", name: "UPS" },
 ];
 export const orderLineSearch = (
-  placeholderImage: string
+  placeholderImage: string,
 ): RelayToFlat<SearchOrderVariantQuery["search"]> => [
   {
     __typename: "Product" as "Product",
@@ -1672,43 +2004,11 @@ export const orderLineSearch = (
     name: "Apple Juice",
     thumbnail: {
       __typename: "Image" as "Image",
-      url: placeholderImage
+      url: placeholderImage,
     },
     variants: [
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjAy",
         name: "500ml",
         sku: "93855755",
@@ -1720,53 +2020,21 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
+              __typename: "Money",
+            },
+          },
+        },
       },
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjAz",
         name: "1l",
         sku: "43226647",
@@ -1778,53 +2046,21 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
+              __typename: "Money",
+            },
+          },
+        },
       },
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjA0",
         name: "2l",
         sku: "80884671",
@@ -1836,20 +2072,20 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
-      }
-    ]
+              __typename: "Money",
+            },
+          },
+        },
+      },
+    ],
   },
   {
     __typename: "Product" as "Product",
@@ -1857,43 +2093,11 @@ export const orderLineSearch = (
     name: "Pineapple Juice",
     thumbnail: {
       __typename: "Image" as "Image",
-      url: placeholderImage
+      url: placeholderImage,
     },
     variants: [
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjEx",
         name: "500ml",
         sku: "43200242",
@@ -1905,53 +2109,21 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
+              __typename: "Money",
+            },
+          },
+        },
       },
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjEy",
         name: "1l",
         sku: "79129513",
@@ -1963,53 +2135,21 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
+              __typename: "Money",
+            },
+          },
+        },
       },
       {
         __typename: "ProductVariant" as "ProductVariant",
-        channelListings: [
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "123",
-              isActive: true,
-              name: "Channel1"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          },
-          {
-            __typename: "ProductVariantChannelListing",
-            channel: {
-              __typename: "Channel",
-              currencyCode: "USD",
-              id: "124",
-              isActive: true,
-              name: "Channel2"
-            },
-            price: {
-              __typename: "Money",
-              amount: 1,
-              currency: "USD"
-            }
-          }
-        ],
         id: "UHJvZHVjdFZhcmlhbnQ6MjEz",
         name: "2l",
         sku: "75799450",
@@ -2021,21 +2161,21 @@ export const orderLineSearch = (
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
+              __typename: "Money",
+            },
           },
           priceUndiscounted: {
             __typename: "TaxedMoney",
             gross: {
               amount: 1,
               currency: "USD",
-              __typename: "Money"
-            }
-          }
-        }
-      }
-    ]
-  }
+              __typename: "Money",
+            },
+          },
+        },
+      },
+    ],
+  },
 ];
 
 export const invoices: InvoiceFragment[] = [
@@ -2046,7 +2186,7 @@ export const invoices: InvoiceFragment[] = [
     number: "1/07/2020",
     status: JobStatusEnum.PENDING,
     url:
-      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-1fef611b-7514-4dc6-aee3-09a8232b1d6a.pdf"
+      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-1fef611b-7514-4dc6-aee3-09a8232b1d6a.pdf",
   },
   {
     __typename: "Invoice",
@@ -2055,7 +2195,7 @@ export const invoices: InvoiceFragment[] = [
     number: "1/07/2020",
     status: JobStatusEnum.SUCCESS,
     url:
-      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-8df26967-ad21-4075-a446-cef44ae05197.pdf"
+      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-8df26967-ad21-4075-a446-cef44ae05197.pdf",
   },
   {
     __typename: "Invoice",
@@ -2064,7 +2204,7 @@ export const invoices: InvoiceFragment[] = [
     number: "1/07/2020",
     status: JobStatusEnum.SUCCESS,
     url:
-      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-5ebc85e0-e587-4386-8292-9b85839281e6.pdf"
+      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-5ebc85e0-e587-4386-8292-9b85839281e6.pdf",
   },
   {
     __typename: "Invoice",
@@ -2073,18 +2213,129 @@ export const invoices: InvoiceFragment[] = [
     number: "1/07/2020",
     status: JobStatusEnum.SUCCESS,
     url:
-      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-0e449e10-ef4b-4066-bebe-361f670b6820.pdf"
-  }
+      "http://localhost:8000/media/invoices/invoice-1/07/2020-order-20-0e449e10-ef4b-4066-bebe-361f670b6820.pdf",
+  },
 ];
 
 export const orderSettings: OrderSettingsFragment = {
   __typename: "OrderSettings",
   automaticallyConfirmAllNewOrders: true,
-  automaticallyFulfillNonShippableGiftCard: false
+  automaticallyFulfillNonShippableGiftCard: false,
 };
 
 export const shopOrderSettings: ShopOrderSettingsFragment = {
   __typename: "Shop",
   fulfillmentAutoApprove: true,
-  fulfillmentAllowUnpaid: true
+  fulfillmentAllowUnpaid: true,
+};
+
+export const warehouseSearch: SearchWarehousesQuery["search"] = {
+  totalCount: 20,
+  edges: [
+    {
+      node: {
+        id: "V2FyZWhvdXNlOmJiZTEwZjk1LTQyYjAtNDRlMS04Yjc5LWU5MjllMmViYTRjMQ==",
+        name: "CyVou-97803",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjdhOGViNThhLTYwN2QtNGMxNC04ODVmLTBiMWU3ZDcyMTIyNQ==",
+        name: "CyWarehouse72715",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjY2NWIxZWFmLTU5MDYtNGE0Mi1iYWVkLTc1ODQ3YWNhMWI1NQ==",
+        name: "CyWarehouseCheckout70441",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjdkNmVmNmFkLWY4NTMtNGVmNS1iMzQ5LTUyY2I2N2U3NmIwZQ==",
+        name: "CyWeightRates-78849",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjcwZjMyYTUyLWVlODQtNGExYi1iMjgzLTgwYjllMzgyNDlkNg==",
+        name: "EditShipping-82885",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjczYzI0OGNmLTliNzAtNDlmMi1hMDRlLTM4ZTYxMmQ5MDYwMQ==",
+        name: "Europe for click and collect",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjc4OGUyMGRlLTlmYTAtNDI5My1iZDk2LWUwM2RjY2RhMzc0ZQ==",
+        name: "Oceania",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjNiZDM0YjEyLTllNDktNDMwZC1iM2QyLTRkYmRhMjM1MGUyOQ==",
+        name: "ProductsWithoutSkuInOrder",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOmU4M2U2NjQ2LTFhYjctNGNmNC05N2M4LTFiZjI2NGE2NjQ4Yw==",
+        name: "StocksThreshold",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOmJkMmQ1NDFjLWQwMjMtNDAwNi05YmRjLWZhZTA4OWZlNzZiYg==",
+        name: "UpdateProductsSku59844",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+    {
+      node: {
+        id: "V2FyZWhvdXNlOjgzNDMwMzI4LTI2YWItNDNkZS1hNzdhLTVmNGNhMTljMDJhNg==",
+        name: "WithoutShipmentCheckout-4505",
+        __typename: "Warehouse",
+      },
+      __typename: "WarehouseCountableEdge",
+    },
+  ],
+  pageInfo: {
+    endCursor:
+      "WyJXaXRob3V0U2hpcG1lbnRDaGVja291dC00NTA1IiwgIldpdGhvdXRTaGlwbWVudENoZWNrb3V0LTQ1MDUiXQ==",
+    hasNextPage: false,
+    hasPreviousPage: true,
+    startCursor: "WyJDeVZvdS05NzgwMyIsICJDeVZvdS05NzgwMyJd",
+    __typename: "PageInfo",
+  },
+  __typename: "WarehouseCountableConnection",
+};
+
+export const channelUsabilityData: ChannelUsabilityDataQuery = {
+  __typename: "Query",
+  products: {
+    __typename: "ProductCountableConnection",
+    totalCount: 50,
+  },
 };

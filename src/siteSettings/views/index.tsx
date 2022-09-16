@@ -1,21 +1,18 @@
 import { WindowTitle } from "@saleor/components/WindowTitle";
-import { IS_CLOUD_INSTANCE } from "@saleor/config";
 import {
   CountryCode,
   useShopSettingsUpdateMutation,
-  useSiteSettingsQuery
+  useSiteSettingsQuery,
 } from "@saleor/graphql";
-import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { configurationMenuUrl } from "../../configuration";
 import { extractMutationErrors, findInEnum } from "../../misc";
 import SiteSettingsPage, {
   areAddressInputFieldsModified,
-  SiteSettingsPageFormData
+  SiteSettingsPageFormData,
 } from "../components/SiteSettingsPage";
 import { SiteSettingsUrlQueryParams } from "../urls";
 
@@ -24,17 +21,16 @@ export interface SiteSettingsProps {
 }
 
 export const SiteSettings: React.FC<SiteSettingsProps> = () => {
-  const navigate = useNavigator();
   const notify = useNotifier();
   const intl = useIntl();
 
   const siteSettings = useSiteSettingsQuery({
-    displayLoader: true
+    displayLoader: true,
   });
 
   const [
     updateShopSettings,
-    updateShopSettingsOpts
+    updateShopSettingsOpts,
   ] = useShopSettingsUpdateMutation({
     onCompleted: data => {
       if (
@@ -43,15 +39,15 @@ export const SiteSettings: React.FC<SiteSettingsProps> = () => {
       ) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const errors = [
     ...(updateShopSettingsOpts.data?.shopSettingsUpdate.errors || []),
-    ...(updateShopSettingsOpts.data?.shopAddressUpdate.errors || [])
+    ...(updateShopSettingsOpts.data?.shopAddressUpdate.errors || []),
   ];
   const loading = siteSettings.loading || updateShopSettingsOpts.loading;
 
@@ -65,10 +61,10 @@ export const SiteSettings: React.FC<SiteSettingsProps> = () => {
           phone: data.phone,
           postalCode: data.postalCode,
           streetAddress1: data.streetAddress1,
-          streetAddress2: data.streetAddress2
+          streetAddress2: data.streetAddress2,
         }
       : {
-          companyName: data.companyName
+          companyName: data.companyName,
         };
 
     return extractMutationErrors(
@@ -80,11 +76,10 @@ export const SiteSettings: React.FC<SiteSettingsProps> = () => {
             reserveStockDurationAnonymousUser:
               data.reserveStockDurationAnonymousUser || null,
             reserveStockDurationAuthenticatedUser:
-              data.reserveStockDurationAuthenticatedUser || null
+              data.reserveStockDurationAuthenticatedUser || null,
           },
-          isCloudInstance: IS_CLOUD_INSTANCE
-        }
-      })
+        },
+      }),
     );
   };
 
@@ -95,7 +90,6 @@ export const SiteSettings: React.FC<SiteSettingsProps> = () => {
         disabled={loading}
         errors={errors}
         shop={siteSettings.data?.shop}
-        onBack={() => navigate(configurationMenuUrl)}
         onSubmit={handleUpdateShopSettings}
         saveButtonBarState={updateShopSettingsOpts.status}
       />

@@ -18,7 +18,7 @@ const WebhookDeleteDialog: React.FC<WebhookDeleteDialogProps> = ({
   open,
   name,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
 
@@ -29,23 +29,26 @@ const WebhookDeleteDialog: React.FC<WebhookDeleteDialogProps> = ({
       onClose={onClose}
       onConfirm={onConfirm}
       title={intl.formatMessage({
+        id: "X90ElB",
         defaultMessage: "Delete Webhook",
-        description: "dialog header"
+        description: "dialog header",
       })}
       variant="delete"
     >
       <DialogContentText>
         {["", null].includes(name) ? (
           <FormattedMessage
+            id="hS+ZjH"
             defaultMessage="Are you sure you want to delete this webhook?"
             description="delete webhook"
           />
         ) : (
           <FormattedMessage
+            id="o5KXAN"
             defaultMessage="Are you sure you want to delete {name}?"
             description="delete webhook"
             values={{
-              name: <strong>{getStringOrPlaceholder(name)}</strong>
+              name: <strong>{getStringOrPlaceholder(name)}</strong>,
             }}
           />
         )}

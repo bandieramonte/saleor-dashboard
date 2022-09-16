@@ -3,12 +3,7 @@ import React from "react";
 
 import { FormId } from "./ExitFormDialogProvider";
 
-export type FormDataWithOpts<TData> = TData &
-  Pick<UseFormResult<TData>, "hasChanged">;
-
-export type CheckIfSaveIsDisabledFnType<T> = (
-  data: FormDataWithOpts<T>
-) => boolean;
+export type CheckIfSaveIsDisabledFnType<T> = (data: T) => boolean;
 
 export interface FormProps<TData, TErrors>
   extends Omit<React.HTMLProps<HTMLFormElement>, "onSubmit"> {
@@ -36,7 +31,7 @@ function Form<TData, Terrors>({
     confirmLeave,
     formId,
     checkIfSaveIsDisabled,
-    disabled
+    disabled,
   });
 
   function handleSubmit(event?: React.FormEvent<any>, cb?: () => void) {

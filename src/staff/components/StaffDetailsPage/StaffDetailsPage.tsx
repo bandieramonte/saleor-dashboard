@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography } from "@material-ui/core";
 import AccountPermissionGroups from "@saleor/components/AccountPermissionGroups";
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import CardTitle from "@saleor/components/CardTitle";
 import Container from "@saleor/components/Container";
@@ -11,15 +12,17 @@ import Savebar from "@saleor/components/Savebar";
 import {
   SearchPermissionGroupsQuery,
   StaffErrorFragment,
-  StaffMemberDetailsFragment
+  StaffMemberDetailsFragment,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
 import useLocale from "@saleor/hooks/useLocale";
+import useNavigator from "@saleor/hooks/useNavigator";
 import useStateFromProps from "@saleor/hooks/useStateFromProps";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { getUserName } from "@saleor/misc";
 import UserStatus from "@saleor/staff/components/UserStatus";
+import { staffListUrl } from "@saleor/staff/urls";
 import { FetchMoreProps, RelayToFlat, SearchPageProps } from "@saleor/types";
 import createMultiAutocompleteSelectHandler from "@saleor/utils/handlers/multiAutocompleteSelectChangeHandler";
 import React from "react";
@@ -50,7 +53,6 @@ export interface StaffDetailsPageProps extends SearchPageProps {
   saveButtonBarState: ConfirmButtonTransitionState;
   staffMember: StaffMemberDetailsFragment;
   errors: StaffErrorFragment[];
-  onBack: () => void;
   onChangePassword: () => void;
   onDelete: () => void;
   onImageDelete: () => void;
@@ -68,7 +70,6 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
   errors,
   fetchMorePermissionGroups,
   initialSearch,
-  onBack,
   onChangePassword,
   onDelete,
   onImageDelete,
@@ -76,20 +77,23 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
   onSearchChange,
   onSubmit,
   saveButtonBarState,
-  staffMember
+  staffMember,
 }: StaffDetailsPageProps) => {
   const intl = useIntl();
   const classes = useStyles();
+  const navigate = useNavigator();
+
   const { locale, setLocale } = useLocale();
+
   const [
     permissionGroupsDisplayValues,
-    setPermissionGroupsDisplayValues
+    setPermissionGroupsDisplayValues,
   ] = useStateFromProps<MultiAutocompleteChoiceType[]>(
     (staffMember?.permissionGroups || []).map(group => ({
       disabled: !group.userCanManage,
       label: group.name,
-      value: group.id
-    })) || []
+      value: group.id,
+    })) || [],
   );
 
   const initialForm: StaffDetailsFormData = {
@@ -97,7 +101,7 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
     firstName: staffMember?.firstName || "",
     isActive: !!staffMember?.isActive,
     lastName: staffMember?.lastName || "",
-    permissionGroups: staffMember?.permissionGroups.map(pg => pg.id) || []
+    permissionGroups: staffMember?.permissionGroups.map(pg => pg.id) || [],
   };
 
   return (
@@ -114,13 +118,13 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
           permissionGroupsDisplayValues,
           availablePermissionGroups?.map(group => ({
             label: group.name,
-            value: group.id
-          })) || []
+            value: group.id,
+          })) || [],
         );
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={staffListUrl()}>
               {intl.formatMessage(sectionNames.staff)}
             </Backlink>
             <PageHeader title={getUserName(staffMember)} />
@@ -162,15 +166,17 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
                     <Card>
                       <CardTitle
                         title={intl.formatMessage({
+                          id: "Fbr4Vp",
                           defaultMessage: "Permissions",
-                          description: "dialog header"
+                          description: "dialog header",
                         })}
                       />
                       <CardContent>
                         <Typography>
                           {intl.formatMessage({
+                            id: "P+kVxW",
                             defaultMessage: "User is assigned to:",
-                            description: "card description"
+                            description: "card description",
                           })}
                         </Typography>
 
@@ -194,7 +200,7 @@ const StaffDetailsPage: React.FC<StaffDetailsPageProps> = ({
             <Savebar
               disabled={isSaveDisabled}
               state={saveButtonBarState}
-              onCancel={onBack}
+              onCancel={() => navigate(staffListUrl())}
               onSubmit={submit}
               onDelete={canRemove ? onDelete : undefined}
             />

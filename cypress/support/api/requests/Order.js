@@ -3,12 +3,19 @@ import { getDefaultAddress, getValueWithDefault } from "./utils/Utils";
 export function markOrderAsPaid(orderId) {
   const mutation = `mutation{
     orderMarkAsPaid(id:"${orderId}"){
-      orderErrors{
+      errors{
         message
+      }
+      order{
+        id
+        number
+        lines{
+          id
+        }
       }
     }
   }`;
-  return cy.sendRequestWithQuery(mutation);
+  return cy.sendRequestWithQuery(mutation).its("body.data.orderMarkAsPaid");
 }
 
 export function updateOrdersSettings(automaticallyConfirmAllNewOrders = true) {
@@ -31,7 +38,7 @@ export function addProductToOrder(orderId, variantId, quantity = 1) {
       quantity:${quantity}
       variantId: "${variantId}"
     }){
-      orderErrors{
+      errors{
         message
       }
     }
@@ -43,12 +50,12 @@ export function createDraftOrder({
   customerId,
   shippingMethodId,
   channelId,
-  address
+  address,
 }) {
   const user = getValueWithDefault(customerId, `user:"${customerId}"`);
   const shippingMethod = getValueWithDefault(
     shippingMethodId,
-    `shippingMethod:"${shippingMethodId}"`
+    `shippingMethod:"${shippingMethodId}"`,
   );
 
   const mutation = `mutation{

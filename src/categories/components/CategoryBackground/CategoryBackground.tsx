@@ -1,4 +1,5 @@
 import { Card, CardContent, TextField } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Hr from "@saleor/components/Hr";
 import ImageUpload from "@saleor/components/ImageUpload";
@@ -6,7 +7,7 @@ import MediaTile from "@saleor/components/MediaTile";
 import Skeleton from "@saleor/components/Skeleton";
 import { CategoryDetailsFragment } from "@saleor/graphql";
 import { commonMessages } from "@saleor/intl";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -15,13 +16,13 @@ import { CategoryUpdateData } from "../CategoryUpdatePage/form";
 const useStyles = makeStyles(
   theme => ({
     fileField: {
-      display: "none"
+      display: "none",
     },
     image: {
       height: "100%",
       objectFit: "contain",
       userSelect: "none",
-      width: "100%"
+      width: "100%",
     },
     imageContainer: {
       background: "#ffffff",
@@ -32,10 +33,10 @@ const useStyles = makeStyles(
       overflow: "hidden",
       padding: theme.spacing(2),
       position: "relative",
-      width: 148
-    }
+      width: 148,
+    },
   }),
-  { name: "CategoryBackground" }
+  { name: "CategoryBackground" },
 );
 
 export interface CategoryBackgroundProps {
@@ -59,8 +60,9 @@ const CategoryBackground: React.FC<CategoryBackgroundProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "DP6b8U",
           defaultMessage: "Background Image (optional)",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
           <>
@@ -102,8 +104,9 @@ const CategoryBackground: React.FC<CategoryBackgroundProps> = props => {
               name="backgroundImageAlt"
               label={intl.formatMessage(commonMessages.description)}
               helperText={intl.formatMessage({
+                id: "0iMYc+",
                 defaultMessage: "(Optional)",
-                description: "field is optional"
+                description: "field is optional",
               })}
               value={data.backgroundImageAlt}
               onChange={onChange}

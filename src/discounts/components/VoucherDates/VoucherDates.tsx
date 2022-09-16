@@ -22,7 +22,7 @@ const VoucherDates = ({
   data,
   disabled,
   errors,
-  onChange
+  onChange,
 }: VoucherDatesProps) => {
   const intl = useIntl();
 
@@ -32,8 +32,9 @@ const VoucherDates = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "YjcN9w",
           defaultMessage: "Active Dates",
-          description: "time during voucher is active, header"
+          description: "time during voucher is active, header",
         })}
       />
       <CardContent>
@@ -48,7 +49,7 @@ const VoucherDates = ({
             value={data.startDate}
             type="date"
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
             fullWidth
           />
@@ -62,7 +63,7 @@ const VoucherDates = ({
             value={data.startTime}
             type="time"
             InputLabelProps={{
-              shrink: true
+              shrink: true,
             }}
             fullWidth
           />
@@ -70,8 +71,9 @@ const VoucherDates = ({
         <ControlledCheckbox
           checked={data.hasEndDate}
           label={intl.formatMessage({
+            id: "AVF5T5",
             defaultMessage: "Set end date",
-            description: "voucher end date, switch button"
+            description: "voucher end date, switch button",
           })}
           name={"hasEndDate" as keyof VoucherDetailsPageFormData}
           onChange={onChange}
@@ -88,7 +90,7 @@ const VoucherDates = ({
               value={data.endDate}
               type="date"
               InputLabelProps={{
-                shrink: true
+                shrink: true,
               }}
               fullWidth
             />
@@ -102,7 +104,7 @@ const VoucherDates = ({
               value={data.endTime}
               type="time"
               InputLabelProps={{
-                shrink: true
+                shrink: true,
               }}
               fullWidth
             />

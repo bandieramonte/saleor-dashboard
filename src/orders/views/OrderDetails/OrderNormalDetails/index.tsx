@@ -1,18 +1,23 @@
 import { WindowTitle } from "@saleor/components/WindowTitle";
 import {
+  FulfillmentFragment,
   FulfillmentStatus,
+  OrderDetailsQueryResult,
   OrderFulfillmentApproveMutation,
   OrderFulfillmentApproveMutationVariables,
   OrderUpdateMutation,
   OrderUpdateMutationVariables,
   useCustomerAddressesQuery,
-  useWarehouseListQuery
+  useWarehouseListQuery,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import OrderCannotCancelOrderDialog from "@saleor/orders/components/OrderCannotCancelOrderDialog";
 import { OrderCustomerAddressesEditDialogOutput } from "@saleor/orders/components/OrderCustomerAddressesEditDialog/types";
 import OrderFulfillmentApproveDialog from "@saleor/orders/components/OrderFulfillmentApproveDialog";
+import OrderFulfillStockExceededDialog from "@saleor/orders/components/OrderFulfillStockExceededDialog";
 import OrderInvoiceEmailSendDialog from "@saleor/orders/components/OrderInvoiceEmailSendDialog";
+import { getById } from "@saleor/orders/components/OrderReturnPage/utils";
+import { transformFuflillmentLinesToStockFormsetData } from "@saleor/orders/utils/data";
 import { PartialMutationProviderOutput } from "@saleor/types";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import React from "react";
@@ -22,7 +27,7 @@ import { customerUrl } from "../../../../customers/urls";
 import {
   extractMutationErrors,
   getMutationState,
-  getStringOrPlaceholder
+  getStringOrPlaceholder,
 } from "../../../../misc";
 import { productUrl } from "../../../../products/urls";
 import OrderAddressFields from "../../../components/OrderAddressFields/OrderAddressFields";
@@ -35,18 +40,17 @@ import OrderPaymentDialog from "../../../components/OrderPaymentDialog";
 import OrderPaymentVoidDialog from "../../../components/OrderPaymentVoidDialog";
 import {
   orderFulfillUrl,
-  orderListUrl,
   orderRefundUrl,
   orderReturnUrl,
   orderUrl,
-  OrderUrlQueryParams
+  OrderUrlQueryParams,
 } from "../../../urls";
 import { isAnyAddressEditModalOpen } from "../OrderDraftDetails";
 
 interface OrderNormalDetailsProps {
   id: string;
   params: OrderUrlQueryParams;
-  data: any;
+  data: OrderDetailsQueryResult["data"];
   orderAddNote: any;
   orderInvoiceRequest: any;
   handleSubmit: any;
@@ -70,6 +74,10 @@ interface OrderNormalDetailsProps {
   openModal: any;
   closeModal: any;
 }
+interface ApprovalState {
+  fulfillment: FulfillmentFragment;
+  notifyCustomer: boolean;
+}
 
 export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
   id,
@@ -90,52 +98,71 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
   updateMetadataOpts,
   updatePrivateMetadataOpts,
   openModal,
-  closeModal
+  closeModal,
 }) => {
   const order = data?.order;
   const shop = data?.shop;
   const navigate = useNavigator();
 
-  const warehouses = useWarehouseListQuery({
+  const { data: warehousesData } = useWarehouseListQuery({
     displayLoader: true,
     variables: {
-      first: 30
-    }
+      first: 30,
+    },
   });
+
+  const warehouses = mapEdgesToItems(warehousesData?.warehouses);
 
   const {
     data: customerAddresses,
-    loading: customerAddressesLoading
+    loading: customerAddressesLoading,
   } = useCustomerAddressesQuery({
     variables: {
-      id: order?.user?.id
+      id: order?.user?.id,
     },
-    skip: !order?.user?.id || !isAnyAddressEditModalOpen(params.action)
+    skip: !order?.user?.id || !isAnyAddressEditModalOpen(params.action),
   });
   const handleCustomerChangeAddresses = async (
-    data: Partial<OrderCustomerAddressesEditDialogOutput>
+    data: Partial<OrderCustomerAddressesEditDialogOutput>,
   ): Promise<any> =>
     orderUpdate.mutate({
       id,
-      input: data
+      input: data,
     });
 
   const intl = useIntl();
   const [transactionReference, setTransactionReference] = React.useState("");
 
-  const handleBack = () => navigate(orderListUrl());
+  const [
+    currentApproval,
+    setCurrentApproval,
+  ] = React.useState<ApprovalState | null>(null);
+  const [stockExceeded, setStockExceeded] = React.useState(false);
+  const approvalErrors =
+    orderFulfillmentApprove.opts.data?.orderFulfillmentApprove.errors || [];
+  React.useEffect(() => {
+    if (
+      approvalErrors.length &&
+      approvalErrors.every(err => err.code === "INSUFFICIENT_STOCK")
+    ) {
+      setStockExceeded(true);
+    }
+  }, [approvalErrors]);
+
+  const errors = orderUpdate.opts.data?.orderUpdate.errors || [];
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage(
           {
+            id: "GbBCmr",
             defaultMessage: "Order #{orderNumber}",
-            description: "window title"
+            description: "window title",
           },
           {
-            orderNumber: getStringOrPlaceholder(data?.order?.number)
-          }
+            orderNumber: getStringOrPlaceholder(data?.order?.number),
+          },
         )}
       />
       <OrderDetailsPage
@@ -143,15 +170,15 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         disabled={
           updateMetadataOpts.loading || updatePrivateMetadataOpts.loading
         }
+        errors={errors}
         onNoteAdd={variables =>
           extractMutationErrors(
             orderAddNote.mutate({
               input: variables,
-              order: id
-            })
+              order: id,
+            }),
           )
         }
-        onBack={handleBack}
         order={order}
         shop={shop}
         saveButtonBarState={getMutationState(
@@ -163,8 +190,8 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
             ...(updatePrivateMetadataOpts.data?.deletePrivateMetadata.errors ||
               []),
             ...(updatePrivateMetadataOpts.data?.updatePrivateMetadata.errors ||
-              [])
-          ]
+              []),
+          ],
         )}
         shippingMethods={data?.order?.shippingMethods || []}
         onOrderCancel={() => openModal("cancel")}
@@ -173,24 +200,24 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
           navigate(
             orderUrl(id, {
               action: "approve-fulfillment",
-              id: fulfillmentId
-            })
+              id: fulfillmentId,
+            }),
           )
         }
         onFulfillmentCancel={fulfillmentId =>
           navigate(
             orderUrl(id, {
               action: "cancel-fulfillment",
-              id: fulfillmentId
-            })
+              id: fulfillmentId,
+            }),
           )
         }
         onFulfillmentTrackingNumberUpdate={fulfillmentId =>
           navigate(
             orderUrl(id, {
               action: "edit-fulfillment",
-              id: fulfillmentId
-            })
+              id: fulfillmentId,
+            }),
           )
         }
         onPaymentCapture={() => openModal("capture")}
@@ -204,12 +231,12 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         onInvoiceClick={id =>
           window.open(
             order.invoices.find(invoice => invoice.id === id)?.url,
-            "_blank"
+            "_blank",
           )
         }
         onInvoiceGenerate={() =>
           orderInvoiceRequest.mutate({
-            orderId: id
+            orderId: id,
           })
         }
         onInvoiceSend={id => openModal("invoice-send", { id })}
@@ -220,7 +247,7 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         open={
           params.action === "cancel" &&
           order?.fulfillments.some(
-            fulfillment => fulfillment.status === FulfillmentStatus.FULFILLED
+            fulfillment => fulfillment.status === FulfillmentStatus.FULFILLED,
           )
         }
       />
@@ -232,7 +259,7 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         onClose={closeModal}
         onSubmit={() =>
           orderCancel.mutate({
-            id
+            id,
           })
         }
       />
@@ -243,7 +270,7 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         onConfirm={() =>
           orderPaymentMarkAsPaid.mutate({
             id,
-            transactionReference
+            transactionReference,
           })
         }
         open={params.action === "mark-paid"}
@@ -268,7 +295,7 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         onSubmit={variables =>
           orderPaymentCapture.mutate({
             ...variables,
-            id
+            id,
           })
         }
       />
@@ -279,13 +306,35 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
           []
         }
         open={params.action === "approve-fulfillment"}
-        onConfirm={({ notifyCustomer }) =>
-          orderFulfillmentApprove.mutate({
+        onConfirm={({ notifyCustomer }) => {
+          setCurrentApproval({
+            fulfillment: order?.fulfillments.find(getById(params.id)),
+            notifyCustomer,
+          });
+          return orderFulfillmentApprove.mutate({
             id: params.id,
-            notifyCustomer
-          })
-        }
+            notifyCustomer,
+          });
+        }}
         onClose={closeModal}
+      />
+      <OrderFulfillStockExceededDialog
+        lines={currentApproval?.fulfillment.lines}
+        formsetData={transformFuflillmentLinesToStockFormsetData(
+          currentApproval?.fulfillment.lines,
+          currentApproval?.fulfillment.warehouse,
+        )}
+        open={stockExceeded}
+        onClose={() => setStockExceeded(false)}
+        confirmButtonState="default"
+        onSubmit={() => {
+          setStockExceeded(false);
+          return orderFulfillmentApprove.mutate({
+            id: params.id,
+            notifyCustomer: currentApproval?.notifyCustomer,
+            allowStockToBeExceeded: true,
+          });
+        }}
       />
       <OrderFulfillmentCancelDialog
         confirmButtonState={orderFulfillmentCancel.opts.status}
@@ -293,11 +342,11 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
           orderFulfillmentCancel.opts.data?.orderFulfillmentCancel.errors || []
         }
         open={params.action === "cancel-fulfillment"}
-        warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}
+        warehouses={warehouses || []}
         onConfirm={variables =>
           orderFulfillmentCancel.mutate({
             id: params.id,
-            input: variables
+            input: variables,
           })
         }
         onClose={closeModal}
@@ -311,7 +360,7 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
         open={params.action === "edit-fulfillment"}
         trackingNumber={
           data?.order?.fulfillments.find(
-            fulfillment => fulfillment.id === params.id
+            fulfillment => fulfillment.id === params.id,
           )?.trackingNumber
         }
         onConfirm={variables =>
@@ -319,8 +368,8 @@ export const OrderNormalDetails: React.FC<OrderNormalDetailsProps> = ({
             id: params.id,
             input: {
               ...variables,
-              notifyCustomer: true
-            }
+              notifyCustomer: true,
+            },
           })
         }
         onClose={closeModal}

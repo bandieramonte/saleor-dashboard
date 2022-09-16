@@ -20,16 +20,17 @@ export const DemoBanner: React.FC = () => {
           <ExternalLink className={classes.link} href={SALEOR_STOREFRONT_URL}>
             {isMdUp ? (
               <FormattedMessage
+                id="4gZl/n"
                 defaultMessage="See <emphasis>DEMO STOREFRONT</emphasis>"
                 values={{
                   emphasis: (children: any) => (
                     <em className={classes.textEmphasis}>{children}</em>
-                  )
+                  ),
                 }}
               />
             ) : (
               <div className={classes.textEmphasis}>
-                <FormattedMessage defaultMessage="Storefront" />
+                <FormattedMessage id="LmKz3g" defaultMessage="Storefront" />
               </div>
             )}
           </ExternalLink>
@@ -37,16 +38,17 @@ export const DemoBanner: React.FC = () => {
           <ExternalLink className={classes.link} href={SALEOR_GRAPHQL_URL}>
             {isMdUp ? (
               <FormattedMessage
+                id="/X8Mjx"
                 defaultMessage="Play with <emphasis>GraphQL API</emphasis>"
                 values={{
                   emphasis: (children: any) => (
                     <em className={classes.textEmphasis}>{children}</em>
-                  )
+                  ),
                 }}
               />
             ) : (
               <div className={classes.textEmphasis}>
-                <FormattedMessage defaultMessage="API" />
+                <FormattedMessage id="xwEc8K" defaultMessage="API" />
               </div>
             )}
           </ExternalLink>

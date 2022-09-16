@@ -130,44 +130,7 @@ export const orderFulfillData = gql`
         }
       }
       lines {
-        id
-        isShippingRequired
-        productName
-        quantity
-        allocations {
-          quantity
-          warehouse {
-            id
-          }
-        }
-        quantityFulfilled
-        quantityToFulfill
-        variant {
-          id
-          name
-          sku
-          preorder {
-            endDate
-          }
-          attributes {
-            values {
-              id
-              name
-            }
-          }
-          stocks {
-            id
-            warehouse {
-              ...Warehouse
-            }
-            quantity
-            quantityAllocated
-          }
-          trackInventory
-        }
-        thumbnail(size: 64) {
-          url
-        }
+        ...OrderFulfillLine
       }
       number
     }
@@ -226,6 +189,14 @@ export const orderRefundData = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const channelUsabilityData = gql`
+  query ChannelUsabilityData($channel: String!) {
+    products(channel: $channel) {
+      totalCount
     }
   }
 `;

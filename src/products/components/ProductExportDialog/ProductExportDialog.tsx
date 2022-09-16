@@ -3,8 +3,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import ConfirmButton from "@saleor/components/ConfirmButton";
 import makeCreatorSteps, { Step } from "@saleor/components/CreatorSteps";
 import { MultiAutocompleteChoiceType } from "@saleor/components/MultiAutocompleteSelectField";
@@ -13,14 +14,14 @@ import {
   ExportErrorFragment,
   ExportProductsInput,
   SearchAttributesQuery,
-  WarehouseFragment
+  WarehouseFragment,
 } from "@saleor/graphql";
 import useForm, { FormChange } from "@saleor/hooks/useForm";
 import useModalDialogErrors from "@saleor/hooks/useModalDialogErrors";
 import useModalDialogOpen from "@saleor/hooks/useModalDialogOpen";
 import useWizard from "@saleor/hooks/useWizard";
 import { buttonMessages } from "@saleor/intl";
-import { Button, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { DialogProps, FetchMoreProps, RelayToFlat } from "@saleor/types";
 import getExportErrorMessage from "@saleor/utils/errors/export";
 import { toggle } from "@saleor/utils/lists";
@@ -29,18 +30,18 @@ import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import ExportDialogSettings, {
-  ExportItemsQuantity
+  ExportItemsQuantity,
 } from "./ExportDialogSettings";
 import { productExportDialogMessages as messages } from "./messages";
 import ProductExportDialogInfo, {
   attributeNamePrefix,
-  warehouseNamePrefix
+  warehouseNamePrefix,
 } from "./ProductExportDialogInfo";
 import { exportSettingsInitialFormData } from "./types";
 
 export enum ProductExportStep {
   INFO,
-  SETTINGS
+  SETTINGS,
 }
 
 function useSteps(): Array<Step<ProductExportStep>> {
@@ -49,18 +50,20 @@ function useSteps(): Array<Step<ProductExportStep>> {
   return [
     {
       label: intl.formatMessage({
+        id: "/68iG8",
         defaultMessage: "Information exported",
-        description: "product export to csv file, header"
+        description: "product export to csv file, header",
       }),
-      value: ProductExportStep.INFO
+      value: ProductExportStep.INFO,
     },
     {
       label: intl.formatMessage({
+        id: "ki7Mr8",
         defaultMessage: "Export Settings",
-        description: "product export to csv file, header"
+        description: "product export to csv file, header",
       }),
-      value: ProductExportStep.SETTINGS
-    }
+      value: ProductExportStep.SETTINGS,
+    },
   ];
 }
 
@@ -69,9 +72,9 @@ const initialForm: ExportProductsInput = {
     attributes: [],
     channels: [],
     fields: [],
-    warehouses: []
+    warehouses: [],
   },
-  ...exportSettingsInitialFormData
+  ...exportSettingsInitialFormData,
 };
 
 const ProductExportSteps = makeCreatorSteps<ProductExportStep>();
@@ -103,7 +106,7 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
 }) => {
   const [step, { next, prev, set: setStep }] = useWizard(
     ProductExportStep.INFO,
-    [ProductExportStep.INFO, ProductExportStep.SETTINGS]
+    [ProductExportStep.INFO, ProductExportStep.SETTINGS],
   );
   const steps = useSteps();
   const dialogErrors = useModalDialogErrors(errors, open);
@@ -119,7 +122,7 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
     onClose: () => {
       reset();
       setStep(ProductExportStep.INFO);
-    }
+    },
   });
 
   const attributeChoices = mapNodeToChoice(attributes);
@@ -133,15 +136,15 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
         name: "exportInfo",
         value: {
           ...data.exportInfo,
-          attributes: toggle(id, data.exportInfo.attributes, (a, b) => a === b)
-        }
-      }
+          attributes: toggle(id, data.exportInfo.attributes, (a, b) => a === b),
+        },
+      },
     });
 
     const choice = attributeChoices.find(choice => choice.value === id);
 
     setSelectedAttributes(
-      toggle(choice, selectedAttributes, (a, b) => a.value === b.value)
+      toggle(choice, selectedAttributes, (a, b) => a.value === b.value),
     );
   };
 
@@ -154,21 +157,21 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
           channels: toggle(
             option.id,
             data.exportInfo.channels,
-            (a, b) => a === b
-          )
-        }
-      }
+            (a, b) => a === b,
+          ),
+        },
+      },
     });
     const choice = channels.find(choice => choice.id === option.id);
 
     setSelectedChannels(
-      toggle(choice, selectedChannels, (a, b) => a.id === b.id)
+      toggle(choice, selectedChannels, (a, b) => a.id === b.id),
     );
   };
 
   const handleToggleAllChannels = (
     items: ChannelFragment[],
-    selected: number
+    selected: number,
   ) => {
     setSelectedChannels(selected === items.length ? [] : channels);
 
@@ -178,9 +181,11 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
         value: {
           ...data.exportInfo,
           channels:
-            selected === items.length ? [] : channels.map(channel => channel.id)
-        }
-      }
+            selected === items.length
+              ? []
+              : channels.map(channel => channel.id),
+        },
+      },
     });
   };
 
@@ -193,10 +198,10 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
           warehouses: toggle(
             event.target.name.substr(warehouseNamePrefix.length),
             data.exportInfo.warehouses,
-            (a, b) => a === b
-          )
-        }
-      }
+            (a, b) => a === b,
+          ),
+        },
+      },
     });
 
   const handleToggleAllWarehouses: FormChange = () =>
@@ -208,30 +213,32 @@ const ProductExportDialog: React.FC<ProductExportDialogProps> = ({
           warehouses:
             data.exportInfo.warehouses.length === warehouses.length
               ? []
-              : warehouses.map(warehouse => warehouse.id)
-        }
-      }
+              : warehouses.map(warehouse => warehouse.id),
+        },
+      },
     });
 
   const exportScopeLabels = {
     allItems: intl.formatMessage(
       {
+        id: "xtUXnK",
         defaultMessage: "All products ({number})",
-        description: "export all items to csv file"
+        description: "export all items to csv file",
       },
       {
-        number: productQuantity.all || "..."
-      }
+        number: productQuantity.all || "...",
+      },
     ),
     selectedItems: intl.formatMessage(
       {
+        id: "qEZ463",
         defaultMessage: "Selected products ({number})",
-        description: "export selected items to csv file"
+        description: "export selected items to csv file",
       },
       {
-        number: selectedProducts
-      }
-    )
+        number: selectedProducts,
+      },
+    ),
   };
 
   return (

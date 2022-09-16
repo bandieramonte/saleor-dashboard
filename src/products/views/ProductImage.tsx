@@ -4,7 +4,7 @@ import NotFoundPage from "@saleor/components/NotFoundPage";
 import {
   useProductMediaByIdQuery,
   useProductMediaDeleteMutation,
-  useProductMediaUpdateMutation
+  useProductMediaUpdateMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -17,7 +17,7 @@ import {
   productImageUrl,
   ProductImageUrlQueryParams,
   productListUrl,
-  productUrl
+  productUrl,
 } from "../urls";
 
 interface ProductMediaProps {
@@ -29,7 +29,7 @@ interface ProductMediaProps {
 export const ProductImage: React.FC<ProductMediaProps> = ({
   mediaId,
   productId,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -41,8 +41,8 @@ export const ProductImage: React.FC<ProductMediaProps> = ({
     displayLoader: true,
     variables: {
       mediaId,
-      productId
-    }
+      productId,
+    },
   });
 
   const [updateImage, updateResult] = useProductMediaUpdateMutation({
@@ -50,14 +50,14 @@ export const ProductImage: React.FC<ProductMediaProps> = ({
       if (data.productMediaUpdate.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const [deleteImage, deleteResult] = useProductMediaDeleteMutation({
-    onCompleted: handleBack
+    onCompleted: handleBack,
   });
 
   const product = data?.product;
@@ -73,8 +73,8 @@ export const ProductImage: React.FC<ProductMediaProps> = ({
     updateImage({
       variables: {
         alt: formData.description,
-        id: mediaId
-      }
+        id: mediaId,
+      },
     });
   };
   const mediaObj = data?.product?.mainImage;
@@ -82,16 +82,16 @@ export const ProductImage: React.FC<ProductMediaProps> = ({
   return (
     <>
       <ProductMediaPage
+        productId={productId}
         disabled={loading}
         product={data?.product?.name}
         mediaObj={mediaObj || null}
         media={data?.product?.media}
-        onBack={handleBack}
         onDelete={() =>
           navigate(
             productImageUrl(productId, mediaId, {
-              action: "remove"
-            })
+              action: "remove",
+            }),
           )
         }
         onRowClick={handleImageClick}
@@ -105,14 +105,18 @@ export const ProductImage: React.FC<ProductMediaProps> = ({
         onConfirm={handleDelete}
         open={params.action === "remove"}
         title={intl.formatMessage({
+          id: "uCn/rd",
           defaultMessage: "Delete Image",
-          description: "dialog header"
+          description: "dialog header",
         })}
         variant="delete"
         confirmButtonState={deleteResult.status}
       >
         <DialogContentText>
-          <FormattedMessage defaultMessage="Are you sure you want to delete this image?" />
+          <FormattedMessage
+            id="VEext+"
+            defaultMessage="Are you sure you want to delete this image?"
+          />
         </DialogContentText>
       </ActionDialog>
     </>

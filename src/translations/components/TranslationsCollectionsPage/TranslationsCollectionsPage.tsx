@@ -1,18 +1,23 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import LanguageSwitch from "@saleor/components/LanguageSwitch";
 import PageHeader from "@saleor/components/PageHeader";
 import {
   CollectionTranslationFragment,
-  LanguageCodeEnum
+  LanguageCodeEnum,
 } from "@saleor/graphql";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import {
   TranslationInputFieldName,
-  TranslationsEntitiesPageProps
+  TranslationsEntitiesPageProps,
 } from "@saleor/translations/types";
+import {
+  languageEntitiesUrl,
+  languageEntityUrl,
+  TranslatableEntities,
+} from "@saleor/translations/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -24,42 +29,52 @@ export interface TranslationsCollectionsPageProps
 }
 
 const TranslationsCollectionsPage: React.FC<TranslationsCollectionsPageProps> = ({
+  translationId,
   activeField,
   disabled,
   languageCode,
   languages,
   data,
   saveButtonState,
-  onBack,
   onDiscard,
   onEdit,
-  onLanguageChange,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink
+        href={languageEntitiesUrl(languageCode, {
+          tab: TranslatableEntities.collections,
+        })}
+      >
         {intl.formatMessage(sectionNames.translations)}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "Bphmwe",
             defaultMessage:
               'Translation Collection "{collectionName}" - {languageCode}',
-            description: "header"
+            description: "header",
           },
           {
             collectionName: getStringOrPlaceholder(data?.collection?.name),
-            languageCode
-          }
+            languageCode,
+          },
         )}
       >
         <LanguageSwitch
           currentLanguage={LanguageCodeEnum[languageCode]}
           languages={languages}
-          onLanguageChange={onLanguageChange}
+          getLanguageUrl={lang =>
+            languageEntityUrl(
+              lang,
+              TranslatableEntities.collections,
+              translationId,
+            )
+          }
         />
       </PageHeader>
       <TranslationFields
@@ -70,20 +85,21 @@ const TranslationsCollectionsPage: React.FC<TranslationsCollectionsPageProps> = 
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Collection Name"
+              id: "VZsE96",
+              defaultMessage: "Collection Name",
             }),
             name: TranslationInputFieldName.name,
             translation: data?.translation?.name || null,
             type: "short" as "short",
-            value: data?.collection?.name
+            value: data?.collection?.name,
           },
           {
             displayName: intl.formatMessage(commonMessages.description),
             name: TranslationInputFieldName.description,
             translation: data?.translation?.description || null,
             type: "rich" as "rich",
-            value: data?.collection?.description
-          }
+            value: data?.collection?.description,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}
@@ -97,27 +113,30 @@ const TranslationsCollectionsPage: React.FC<TranslationsCollectionsPageProps> = 
         disabled={disabled}
         initialState={true}
         title={intl.formatMessage({
-          defaultMessage: "Search Engine Preview"
+          id: "TGX4T1",
+          defaultMessage: "Search Engine Preview",
         })}
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Search Engine Title"
+              id: "HlEpii",
+              defaultMessage: "Search Engine Title",
             }),
             name: TranslationInputFieldName.seoTitle,
             translation: data?.translation?.seoTitle || null,
             type: "short" as "short",
-            value: data?.collection?.seoTitle
+            value: data?.collection?.seoTitle,
           },
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Search Engine Description"
+              id: "US3IPU",
+              defaultMessage: "Search Engine Description",
             }),
             name: TranslationInputFieldName.seoDescription,
             translation: data?.translation?.seoDescription || null,
             type: "long" as "long",
-            value: data?.collection?.seoDescription
-          }
+            value: data?.collection?.seoDescription,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}

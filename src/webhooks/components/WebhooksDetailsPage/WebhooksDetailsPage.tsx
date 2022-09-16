@@ -1,3 +1,5 @@
+import { customAppUrl } from "@saleor/apps/urls";
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
 import FormSpacer from "@saleor/components/FormSpacer";
@@ -8,20 +10,21 @@ import {
   WebhookDetailsQuery,
   WebhookErrorFragment,
   WebhookEventTypeAsyncEnum,
-  WebhookEventTypeSyncEnum
+  WebhookEventTypeSyncEnum,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import useNavigator from "@saleor/hooks/useNavigator";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import WebhookEvents from "@saleor/webhooks/components/WebhookEvents";
 import WebhookInfo from "@saleor/webhooks/components/WebhookInfo";
 import WebhookStatus from "@saleor/webhooks/components/WebhookStatus";
 import {
   createAsyncEventsSelectHandler,
-  createSyncEventsSelectHandler
+  createSyncEventsSelectHandler,
 } from "@saleor/webhooks/handlers";
 import {
   mapAsyncEventsToChoices,
-  mapSyncEventsToChoices
+  mapSyncEventsToChoices,
 } from "@saleor/webhooks/utils";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -43,7 +46,6 @@ export interface WebhookDetailsPageProps {
   errors: WebhookErrorFragment[];
   webhook?: WebhookDetailsQuery["webhook"];
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: WebhookFormData) => SubmitPromise<any[]>;
 }
 
@@ -53,10 +55,10 @@ const WebhookDetailsPage: React.FC<WebhookDetailsPageProps> = ({
   errors,
   webhook,
   saveButtonBarState,
-  onBack,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
 
   const initialForm: WebhookFormData = {
     syncEvents: webhook?.syncEvents?.map(event => event.eventType) || [],
@@ -64,12 +66,12 @@ const WebhookDetailsPage: React.FC<WebhookDetailsPageProps> = ({
     isActive: !!webhook?.isActive,
     name: webhook?.name || "",
     secretKey: webhook?.secretKey || "",
-    targetUrl: webhook?.targetUrl || ""
+    targetUrl: webhook?.targetUrl || "",
   };
 
   return (
     <Form confirmLeave initial={initialForm} onSubmit={onSubmit}>
-      {({ data, hasChanged, submit, change }) => {
+      {({ data, submit, change }) => {
         const syncEventsChoices = disabled
           ? []
           : mapSyncEventsToChoices(Object.values(WebhookEventTypeSyncEnum));
@@ -77,21 +79,21 @@ const WebhookDetailsPage: React.FC<WebhookDetailsPageProps> = ({
           ? []
           : mapAsyncEventsToChoices(
               Object.values(WebhookEventTypeAsyncEnum),
-              data.asyncEvents
+              data.asyncEvents,
             );
 
         const handleSyncEventsSelect = createSyncEventsSelectHandler(
           change,
-          data.syncEvents
+          data.syncEvents,
         );
         const handleAsyncEventsSelect = createAsyncEventsSelectHandler(
           change,
-          data.asyncEvents
+          data.asyncEvents,
         );
 
         return (
           <Container>
-            <Backlink onClick={onBack}>{appName}</Backlink>
+            <Backlink href={customAppUrl(webhook?.app?.id)}>{appName}</Backlink>
             <PageHeader title={getHeaderTitle(intl, webhook)} />
             <Grid>
               <div>
@@ -119,9 +121,9 @@ const WebhookDetailsPage: React.FC<WebhookDetailsPageProps> = ({
               </div>
             </Grid>
             <Savebar
-              disabled={disabled || !hasChanged}
+              disabled={disabled}
               state={saveButtonBarState}
-              onCancel={onBack}
+              onCancel={() => navigate(customAppUrl(webhook.app.id))}
               onSubmit={submit}
             />
           </Container>

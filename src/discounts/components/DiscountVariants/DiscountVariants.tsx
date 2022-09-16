@@ -3,17 +3,21 @@ import {
   TableBody,
   TableCell,
   TableFooter,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { SaleDetailsFragment } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { productVariantEditPath } from "@saleor/products/urls";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -21,12 +25,10 @@ import { maybe, renderCollection } from "../../../misc";
 import { ListActions, ListProps, RelayToFlat } from "../../../types";
 import { messages } from "./messages";
 import { useStyles } from "./styles";
-export interface SaleVariantsProps
-  extends Omit<ListProps, "onRowClick">,
-    ListActions {
+
+export interface SaleVariantsProps extends ListProps, ListActions {
   variants: RelayToFlat<SaleDetailsFragment["variants"]> | null;
   onVariantAssign: () => void;
-  onRowClick: (productId: string, variantId: string) => () => void;
   onVariantUnassign: (id: string) => void;
 }
 
@@ -36,17 +38,13 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
   const {
     variants,
     disabled,
-    pageInfo,
-    onRowClick,
-    onPreviousPage,
     onVariantAssign,
     onVariantUnassign,
-    onNextPage,
     isChecked,
     selected,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
   const classes = useStyles(props);
 
@@ -99,15 +97,7 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
-              colSpan={numberOfColumns}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
-            />
+            <TablePaginationWithContext colSpan={numberOfColumns} />
           </TableRow>
         </TableFooter>
         <TableBody>
@@ -117,11 +107,12 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
               const isSelected = variant ? isChecked(variant.id) : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   hover={!!variant}
                   key={variant ? variant.id : "skeleton"}
-                  onClick={
-                    variant && onRowClick(variant.product.id, variant.id)
+                  href={
+                    variant &&
+                    productVariantEditPath(variant.product.id, variant.id)
                   }
                   className={classes.tableRow}
                   selected={isSelected}
@@ -140,7 +131,7 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
                   >
                     {maybe<React.ReactNode>(
                       () => variant.product.name,
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCellAvatar>
                   <TableCell className={classes.colType}>
@@ -149,22 +140,24 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
                   <TableCell className={classes.colType}>
                     {maybe<React.ReactNode>(
                       () => variant.product.productType.name,
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCell>
                   <TableCell className={classes.colActions}>
-                    <IconButton
-                      variant="secondary"
-                      disabled={!variant || disabled}
-                      onClick={event => {
-                        event.stopPropagation();
-                        onVariantUnassign(variant.id);
-                      }}
-                    >
-                      <DeleteIcon color="primary" />
-                    </IconButton>
+                    <TableButtonWrapper>
+                      <IconButton
+                        variant="secondary"
+                        disabled={!variant || disabled}
+                        onClick={event => {
+                          event.stopPropagation();
+                          onVariantUnassign(variant.id);
+                        }}
+                      >
+                        <DeleteIcon color="primary" />
+                      </IconButton>
+                    </TableButtonWrapper>
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
@@ -173,7 +166,7 @@ const DiscountVariants: React.FC<SaleVariantsProps> = props => {
                   <FormattedMessage {...messages.discountVariantsNotFound} />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

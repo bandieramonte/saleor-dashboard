@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import SiteSettingsPage, {
-  SiteSettingsPageProps
+  SiteSettingsPageProps,
 } from "../../../siteSettings/components/SiteSettingsPage";
 import { shop } from "../../../siteSettings/fixtures";
 import Decorator from "../../Decorator";
@@ -11,10 +11,9 @@ import Decorator from "../../Decorator";
 const props: Omit<SiteSettingsPageProps, "classes"> = {
   disabled: false,
   errors: [],
-  onBack: () => undefined,
   onSubmit: () => undefined,
   saveButtonBarState: "default",
-  shop
+  shop,
 };
 
 storiesOf("Views / Site settings / Page", module)
@@ -32,12 +31,12 @@ storiesOf("Views / Site settings / Page", module)
         "name",
         "defaultMailSenderAddress",
         "defaultMailSenderName",
-        "customerSetPasswordUrl"
+        "customerSetPasswordUrl",
       ].map(field => ({
         __typename: "ShopError",
         code: ShopErrorCode.INVALID,
         field,
-        message: "Shop form invalid"
+        message: "Shop form invalid",
       }))}
     />
   ));

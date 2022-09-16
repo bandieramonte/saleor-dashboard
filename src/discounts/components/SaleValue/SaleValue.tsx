@@ -5,7 +5,7 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import CardTitle from "@saleor/components/CardTitle";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
@@ -35,7 +35,7 @@ const SaleValue: React.FC<SaleValueProps> = ({
   data,
   disabled,
   errors,
-  onChange
+  onChange,
 }) => {
   const { type } = data;
   const intl = useIntl();
@@ -46,13 +46,15 @@ const SaleValue: React.FC<SaleValueProps> = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "wHdMAX",
           defaultMessage: "Value",
-          description: "sale value, header"
+          description: "sale value, header",
         })}
       />
       <CardContent className={classes.card}>
         <Typography variant="caption" className={classes.info}>
           <FormattedMessage
+            id="cehiWu"
             defaultMessage="Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency"
             description="channels sale info"
           />
@@ -67,6 +69,7 @@ const SaleValue: React.FC<SaleValueProps> = ({
           <TableCell className={classes.colName}>
             <span>
               <FormattedMessage
+                id="Hj3T7P"
                 defaultMessage="Channel name"
                 description="column title"
               />
@@ -75,6 +78,7 @@ const SaleValue: React.FC<SaleValueProps> = ({
           <TableCell className={classes.colType}>
             <span>
               <FormattedMessage
+                id="wHdMAX"
                 defaultMessage="Value"
                 description="sale value, header"
               />
@@ -86,7 +90,7 @@ const SaleValue: React.FC<SaleValueProps> = ({
             data.channelListings,
             (listing, index) => {
               const error = formErrors.value?.channels?.find(
-                id => id === listing.id
+                id => id === listing.id,
               );
               return (
                 <TableRow
@@ -119,10 +123,13 @@ const SaleValue: React.FC<SaleValueProps> = ({
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No channels found" />
+                  <FormattedMessage
+                    id="/glQgs"
+                    defaultMessage="No channels found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

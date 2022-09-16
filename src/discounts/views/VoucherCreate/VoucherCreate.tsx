@@ -1,7 +1,7 @@
 import { ChannelsAction } from "@saleor/channels/urls";
 import {
   ChannelVoucherData,
-  createSortedVoucherData
+  createSortedVoucherData,
 } from "@saleor/channels/utils";
 import useAppChannel from "@saleor/components/AppLayout/AppChannelContext";
 import ChannelsAvailabilityDialog from "@saleor/components/ChannelsAvailabilityDialog";
@@ -10,7 +10,7 @@ import {
   useUpdateMetadataMutation,
   useUpdatePrivateMetadataMutation,
   useVoucherChannelListingUpdateMutation,
-  useVoucherCreateMutation
+  useVoucherCreateMutation,
 } from "@saleor/graphql";
 import useChannels from "@saleor/hooks/useChannels";
 import useNavigator from "@saleor/hooks/useNavigator";
@@ -25,8 +25,7 @@ import VoucherCreatePage from "../../components/VoucherCreatePage";
 import {
   voucherAddUrl,
   VoucherCreateUrlQueryParams,
-  voucherListUrl,
-  voucherUrl
+  voucherUrl,
 } from "../../urls";
 import { createHandler } from "./handlers";
 import { VOUCHER_CREATE_FORM_ID } from "./types";
@@ -49,7 +48,7 @@ export const VoucherCreateView: React.FC<VoucherCreateProps> = ({ params }) => {
 
   const { availableChannels } = useAppChannel(false);
   const allChannels: ChannelVoucherData[] = createSortedVoucherData(
-    availableChannels
+    availableChannels,
   );
 
   const {
@@ -62,17 +61,17 @@ export const VoucherCreateView: React.FC<VoucherCreateProps> = ({ params }) => {
     isChannelSelected,
     isChannelsModalOpen,
     setCurrentChannels,
-    toggleAllChannels
+    toggleAllChannels,
   } = useChannels(
     allChannels,
     params?.action,
     { closeModal, openModal },
-    { formId: VOUCHER_CREATE_FORM_ID }
+    { formId: VOUCHER_CREATE_FORM_ID },
   );
 
   const [
     updateChannels,
-    updateChannelsOpts
+    updateChannelsOpts,
   ] = useVoucherChannelListingUpdateMutation({});
 
   const [voucherCreate, voucherCreateOpts] = useVoucherCreateMutation({
@@ -81,22 +80,23 @@ export const VoucherCreateView: React.FC<VoucherCreateProps> = ({ params }) => {
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Successfully created voucher"
-          })
+            id: "Q8mpW3",
+            defaultMessage: "Successfully created voucher",
+          }),
         });
         navigate(voucherUrl(data.voucherCreate.voucher.id), { replace: true });
       }
-    }
+    },
   });
 
   const handleCreate = createHandler(
     variables => voucherCreate({ variables }),
-    updateChannels
+    updateChannels,
   );
   const handleSubmit = createMetadataCreateHandler(
     handleCreate,
     updateMetadata,
-    updatePrivateMetadata
+    updatePrivateMetadata,
   );
 
   return (
@@ -110,7 +110,8 @@ export const VoucherCreateView: React.FC<VoucherCreateProps> = ({ params }) => {
           onClose={handleChannelsModalClose}
           open={isChannelsModalOpen}
           title={intl.formatMessage({
-            defaultMessage: "Manage Products Channel Availability"
+            id: "Eau5AV",
+            defaultMessage: "Manage Products Channel Availability",
           })}
           confirmButtonState="default"
           selected={channelListElements.length}
@@ -122,13 +123,12 @@ export const VoucherCreateView: React.FC<VoucherCreateProps> = ({ params }) => {
       <VoucherCreatePage
         allChannelsCount={allChannels?.length}
         channelListings={currentChannels}
-        hasChannelChanged={allChannels?.length !== currentChannels?.length}
         disabled={voucherCreateOpts.loading || updateChannelsOpts.loading}
         errors={[
           ...(voucherCreateOpts.data?.voucherCreate.errors || []),
-          ...(updateChannelsOpts.data?.voucherChannelListingUpdate.errors || [])
+          ...(updateChannelsOpts.data?.voucherChannelListingUpdate.errors ||
+            []),
         ]}
-        onBack={() => navigate(voucherListUrl())}
         onSubmit={handleSubmit}
         saveButtonBarState={voucherCreateOpts.status}
         openChannelsModal={handleChannelsModalOpen}

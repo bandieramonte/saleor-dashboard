@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
@@ -8,12 +9,14 @@ import {
   ConfigurationItemInput,
   PluginConfigurationExtendedFragment,
   PluginErrorFragment,
-  PluginsDetailsFragment
+  PluginsDetailsFragment,
 } from "@saleor/graphql";
 import { ChangeEvent, SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
+import { pluginListUrl } from "@saleor/plugins/urls";
 import { isSecretField } from "@saleor/plugins/utils";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -33,7 +36,6 @@ export interface PluginsDetailsPageProps {
   errors: PluginErrorFragment[];
   plugin?: PluginsDetailsFragment;
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onClear: (field: string) => void;
   onEdit: (field: string) => void;
   onSubmit: (data: PluginDetailsPageFormData) => SubmitPromise;
@@ -46,25 +48,26 @@ const PluginsDetailsPage: React.FC<PluginsDetailsPageProps> = ({
   errors,
   plugin,
   saveButtonBarState,
-  onBack,
   onClear,
   onEdit,
   onSubmit,
   selectedConfig,
-  setSelectedChannelId
+  setSelectedChannelId,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
 
   const initialFormData: PluginDetailsPageFormData = {
     active: selectedConfig?.active,
     configuration: selectedConfig?.configuration
       ?.filter(
-        field => !isSecretField(selectedConfig?.configuration || [], field.name)
+        field =>
+          !isSecretField(selectedConfig?.configuration || [], field.name),
       )
       .map(field => ({
         ...field,
-        value: field.value || ""
-      }))
+        value: field.value || "",
+      })),
   };
 
   const selectedChannelId = selectedConfig?.channel?.id;
@@ -86,28 +89,29 @@ const PluginsDetailsPage: React.FC<PluginsDetailsPageProps> = ({
               configItem.name === name
                 ? {
                     ...configItem,
-                    value
+                    value,
                   }
-                : configItem
-            )
+                : configItem,
+            ),
           };
 
           set(newData);
         };
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={pluginListUrl()}>
               {intl.formatMessage(sectionNames.plugins)}
             </Backlink>
             <PageHeader
               title={intl.formatMessage(
                 {
+                  id: "EtGDeK",
                   defaultMessage: "{pluginName} Details",
-                  description: "header"
+                  description: "header",
                 },
                 {
-                  pluginName: getStringOrPlaceholder(plugin?.name)
-                }
+                  pluginName: getStringOrPlaceholder(plugin?.name),
+                },
               )}
             />
             <Grid variant="inverted">
@@ -137,7 +141,7 @@ const PluginsDetailsPage: React.FC<PluginsDetailsPageProps> = ({
                       onChange={onChange}
                     />
                     {selectedConfig?.configuration.some(field =>
-                      isSecretField(selectedConfig?.configuration, field.name)
+                      isSecretField(selectedConfig?.configuration, field.name),
                     ) && (
                       <>
                         <CardSpacer />
@@ -155,7 +159,7 @@ const PluginsDetailsPage: React.FC<PluginsDetailsPageProps> = ({
             <Savebar
               disabled={isSaveDisabled}
               state={saveButtonBarState}
-              onCancel={onBack}
+              onCancel={() => navigate(pluginListUrl())}
               onSubmit={submit}
             />
           </Container>

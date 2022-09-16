@@ -1,5 +1,5 @@
+import { Button } from "@saleor/components/Button";
 import { buttonMessages } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -14,7 +14,7 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
   onClick,
   label,
   testId,
-  disabled = false
+  disabled = false,
 }) => {
   const intl = useIntl();
 

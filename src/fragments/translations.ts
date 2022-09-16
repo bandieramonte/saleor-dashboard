@@ -48,8 +48,8 @@ export const productTranslationFragment = gql`
     product {
       id
       name
+      shortDescription
       description
-      longDescription
       seoDescription
       seoTitle
     }
@@ -58,8 +58,8 @@ export const productTranslationFragment = gql`
       seoTitle
       seoDescription
       name
+      shortDescription
       description
-      longDescription
       language {
         code
         language
@@ -311,6 +311,22 @@ export const attributeValueTranslatableContentFragment = gql`
       ) {
         ...AttributeChoicesTranslation
       }
+    }
+  }
+`;
+
+export const menuItemTranslationFragment = gql`
+  fragment MenuItemTranslation on MenuItemTranslatableContent {
+    translation(languageCode: $language) {
+      id
+      language {
+        language
+      }
+      name
+    }
+    menuItem {
+      id
+      name
     }
   }
 `;

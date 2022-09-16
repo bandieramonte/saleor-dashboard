@@ -4,7 +4,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { ChannelShippingData } from "@saleor/channels/utils";
 import CardTitle from "@saleor/components/CardTitle";
@@ -14,7 +14,7 @@ import TableHead from "@saleor/components/TableHead";
 import { ShippingChannelsErrorFragment } from "@saleor/graphql";
 import {
   getFormChannelError,
-  getFormChannelErrors
+  getFormChannelErrors,
 } from "@saleor/utils/errors";
 import getShippingErrorMessage from "@saleor/utils/errors/shipping";
 import React from "react";
@@ -41,7 +41,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
   channels,
   disabled,
   errors,
-  onChange
+  onChange,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();
@@ -51,16 +51,18 @@ export const PricingCard: React.FC<PricingCardProps> = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "TnTi/a",
           defaultMessage: "Pricing",
-          description: "pricing card title"
+          description: "pricing card title",
         })}
       />
       <CardContent className={classes.pricingContent}>
         <Typography variant="caption" className={classes.caption}>
           {intl.formatMessage({
+            id: "VvA7ai",
             defaultMessage:
               "Channels that don’t have assigned prices will use their parent channel to define the price. Price will be converted to channel’s currency",
-            description: "info text"
+            description: "info text",
           })}
         </Typography>
         <ResponsiveTable className={classes.table}>
@@ -68,6 +70,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             <TableCell className={classes.colName}>
               <span>
                 <FormattedMessage
+                  id="Hj3T7P"
                   defaultMessage="Channel name"
                   description="column title"
                 />
@@ -76,6 +79,7 @@ export const PricingCard: React.FC<PricingCardProps> = ({
             <TableCell className={classes.colType}>
               <span>
                 <FormattedMessage
+                  id="1shOIS"
                   defaultMessage="Price"
                   description="column title"
                 />
@@ -96,15 +100,16 @@ export const PricingCard: React.FC<PricingCardProps> = ({
                       disabled={disabled}
                       error={!!error}
                       label={intl.formatMessage({
+                        id: "1shOIS",
                         defaultMessage: "Price",
-                        description: "column title"
+                        description: "column title",
                       })}
                       name="price"
                       value={channel.price}
                       onChange={e =>
                         onChange(channel.id, {
                           ...channel,
-                          price: e.target.value
+                          price: e.target.value,
                         })
                       }
                       currencySymbol={channel.currency}

@@ -3,20 +3,25 @@ import {
   TableCell,
   TableFooter,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableCellHeader from "@saleor/components/TableCellHeader";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { WarehouseWithShippingFragment } from "@saleor/graphql";
 import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { maybe, renderCollection, stopPropagation } from "@saleor/misc";
 import { ListProps, SortPage } from "@saleor/types";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import { getArrowDirection } from "@saleor/utils/sort";
-import { WarehouseListUrlSortField } from "@saleor/warehouses/urls";
+import {
+  WarehouseListUrlSortField,
+  warehouseUrl,
+} from "@saleor/warehouses/urls";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -24,43 +29,42 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colActions: {
-        width: 160
+        width: 160,
       },
       colName: {
-        width: 400
+        width: 400,
       },
       colZones: {
-        width: "auto"
-      }
+        width: "auto",
+      },
     },
     actions: {
       alignItems: "center",
       display: "flex",
       justifyContent: "flex-end",
       position: "relative",
-      right: theme.spacing(-1.5)
+      right: theme.spacing(-1.5),
     },
     colActions: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colZones: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     tableRow: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "WarehouseList" }
+  { name: "WarehouseList" },
 );
 
 interface WarehouseListProps
   extends ListProps,
     SortPage<WarehouseListUrlSortField> {
   warehouses: WarehouseWithShippingFragment[];
-  onAdd: () => void;
   onRemove: (id: string) => void;
 }
 
@@ -72,13 +76,9 @@ const WarehouseList: React.FC<WarehouseListProps> = props => {
     disabled,
     settings,
     sort,
-    pageInfo,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
     onRemove,
-    onRowClick,
-    onSort
+    onSort,
   } = props;
 
   const classes = useStyles(props);
@@ -97,28 +97,27 @@ const WarehouseList: React.FC<WarehouseListProps> = props => {
             className={classes.colName}
             onClick={() => onSort(WarehouseListUrlSortField.name)}
           >
-            <FormattedMessage defaultMessage="Name" description="warehouse" />
+            <FormattedMessage
+              id="aCJwVq"
+              defaultMessage="Name"
+              description="warehouse"
+            />
           </TableCellHeader>
           <TableCell className={classes.colZones}>
-            <FormattedMessage defaultMessage="Shipping Zones" />
+            <FormattedMessage id="PFXGaR" defaultMessage="Shipping Zones" />
           </TableCell>
           <TableCell className={classes.colActions}>
-            <FormattedMessage defaultMessage="Actions" />
+            <FormattedMessage id="wL7VAE" defaultMessage="Actions" />
           </TableCell>
         </TableRow>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
+            disabled={disabled}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -126,10 +125,10 @@ const WarehouseList: React.FC<WarehouseListProps> = props => {
         {renderCollection(
           warehouses,
           warehouse => (
-            <TableRow
+            <TableRowLink
+              href={warehouse && warehouseUrl(warehouse.id)}
               className={classes.tableRow}
               hover={!!warehouse}
-              onClick={warehouse ? onRowClick(warehouse.id) : undefined}
               key={warehouse ? warehouse.id : "skeleton"}
               data-test-id={
                 "warehouse-entry-" +
@@ -157,24 +156,29 @@ const WarehouseList: React.FC<WarehouseListProps> = props => {
                   >
                     <EditIcon />
                   </IconButton>
-                  <IconButton
-                    variant="secondary"
-                    color="primary"
-                    onClick={stopPropagation(() => onRemove(warehouse.id))}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  <TableButtonWrapper>
+                    <IconButton
+                      variant="secondary"
+                      color="primary"
+                      onClick={stopPropagation(() => onRemove(warehouse.id))}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableButtonWrapper>
                 </div>
               </TableCell>
-            </TableRow>
+            </TableRowLink>
           ),
           () => (
             <TableRow data-test-id="empty-list-message">
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No warehouses found" />
+                <FormattedMessage
+                  id="2gsiR1"
+                  defaultMessage="No warehouses found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

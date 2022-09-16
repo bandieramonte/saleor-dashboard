@@ -3,7 +3,7 @@ import { stringify } from "qs";
 
 export function stringifyQs(params: {}): string {
   return stringify(params, {
-    arrayFormat: "indices"
+    arrayFormat: "indices",
   });
 }
 
@@ -18,3 +18,5 @@ export function getArrayQueryParam(param: string | string[]): string[] {
 
   return [param];
 }
+
+export const isExternalURL = url => /^https?:\/\//.test(url);

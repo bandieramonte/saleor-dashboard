@@ -3,12 +3,14 @@ import { defineMessages } from "react-intl";
 const messages = defineMessages({
   key: {
     defaultMessage: "Key",
-    description: "key-value field input"
+    id: "q1shey",
+    description: "key-value field input",
   },
   value: {
     defaultMessage: "Value",
-    description: "key-value field input"
-  }
+    id: "Pnj+JH",
+    description: "key-value field input",
+  },
 });
 
 export default messages;

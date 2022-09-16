@@ -19,7 +19,7 @@ const PageTypeBulkDeleteDialog: React.FC<PageTypeBulkDeleteDialogProps> = ({
   quantity,
   hasPages,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
 
@@ -30,28 +30,31 @@ const PageTypeBulkDeleteDialog: React.FC<PageTypeBulkDeleteDialogProps> = ({
       onClose={onClose}
       onConfirm={onConfirm}
       title={intl.formatMessage({
+        id: "CcEwXH",
         defaultMessage: "Delete Page Types",
-        description: "dialog header"
+        description: "dialog header",
       })}
       variant="delete"
     >
       <DialogContentText>
         {hasPages ? (
           <FormattedMessage
+            id="2Zyit2"
             defaultMessage="{counter,plural,one{Page Type you want to delete is used by some pages. Deleting this page type will also delete those pages. Are you sure you want to delete this page type? After doing so you won’t be able to revert changes.} other{Page Types you want to delete are used by some pages. Deleting these page types will also delete those pages. Are you sure you want to delete {displayQuantity} page types? After doing so you won’t be able to revert changes.}}"
             description="delete page types with its pages"
             values={{
               counter: quantity,
-              displayQuantity: <strong>{quantity}</strong>
+              displayQuantity: <strong>{quantity}</strong>,
             }}
           />
         ) : (
           <FormattedMessage
+            id="RZmdM3"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this page type? After doing so you won’t be able to revert changes.} other{Are you sure you want to delete {displayQuantity} page types? After doing so you won’t be able to revert changes.}}"
             description="delete page types"
             values={{
               counter: quantity,
-              displayQuantity: <strong>{quantity}</strong>
+              displayQuantity: <strong>{quantity}</strong>,
             }}
           />
         )}

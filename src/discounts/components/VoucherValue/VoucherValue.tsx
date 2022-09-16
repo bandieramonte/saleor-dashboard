@@ -4,12 +4,11 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import CardTitle from "@saleor/components/CardTitle";
 import ControlledCheckbox from "@saleor/components/ControlledCheckbox";
 import { FormSpacer } from "@saleor/components/FormSpacer";
-import Hr from "@saleor/components/Hr";
 import RadioGroupField from "@saleor/components/RadioGroupField";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
@@ -39,7 +38,7 @@ interface VoucherValueProps {
 
 export enum VoucherType {
   ENTIRE_ORDER = "ENTIRE_ORDER",
-  SPECIFIC_PRODUCT = "SPECIFIC_PRODUCT"
+  SPECIFIC_PRODUCT = "SPECIFIC_PRODUCT",
 }
 
 const numberOfColumns = 2;
@@ -55,20 +54,24 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
   const translatedVoucherTypes = translateVoucherTypes(intl);
   const voucherTypeChoices = Object.values(VoucherType).map(type => ({
     label: translatedVoucherTypes[type],
-    value: type
+    value: type,
   }));
 
   return (
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "/oaqFS",
           defaultMessage: "Value",
-          description: "section header"
+          description: "section header",
         })}
       />
       <CardContent>
         <Typography variant="caption">
-          <FormattedMessage defaultMessage="Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency" />
+          <FormattedMessage
+            id="K+ROF8"
+            defaultMessage="Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency"
+          />
         </Typography>
         <div className={classes.tableContainer}>
           <ResponsiveTable className={classes.table}>
@@ -76,6 +79,7 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
               <TableCell className={classes.colName}>
                 <span>
                   <FormattedMessage
+                    id="Hj3T7P"
                     defaultMessage="Channel name"
                     description="column title"
                   />
@@ -84,6 +88,7 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
               <TableCell className={classes.colType}>
                 <span>
                   <FormattedMessage
+                    id="1shOIS"
                     defaultMessage="Price"
                     description="column title"
                   />
@@ -95,7 +100,7 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
                 data.channelListings,
                 (listing, index) => {
                   const error = formErrors.discountValue?.channels?.find(
-                    id => id === listing.id
+                    id => id === listing.id,
                   );
                   return (
                     <TableRow key={listing?.id || `skeleton-${index}`}>
@@ -114,30 +119,31 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
                                   ? listing.currency
                                   : "%",
                               name: "discountType" as keyof FormData,
-                              values: null
+                              values: null,
                             }}
                             helperText={
                               error
                                 ? getDiscountErrorMessage(
                                     formErrors.discountValue,
-                                    intl
+                                    intl,
                                   )
                                 : ""
                             }
                             name={"value"}
                             onChange={e =>
                               onChannelChange(listing.id, {
-                                discountValue: e.target.value
+                                discountValue: e.target.value,
                               })
                             }
                             label={intl.formatMessage({
-                              defaultMessage: "Discount Value"
+                              id: "mmcHeH",
+                              defaultMessage: "Discount Value",
                             })}
                             value={listing.discountValue || ""}
                             type="number"
                             fullWidth
                             inputProps={{
-                              min: 0
+                              min: 0,
                             }}
                           />
                         ) : (
@@ -150,10 +156,13 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
                 () => (
                   <TableRow>
                     <TableCell colSpan={numberOfColumns}>
-                      <FormattedMessage defaultMessage="No channels found" />
+                      <FormattedMessage
+                        id="/glQgs"
+                        defaultMessage="No channels found"
+                      />
                     </TableCell>
                   </TableRow>
-                )
+                ),
               )}
             </TableBody>
           </ResponsiveTable>
@@ -162,14 +171,14 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
         <FormSpacer />
         {variant === "update" && (
           <>
-            <Hr className={classes.hr} />
             <RadioGroupField
               choices={voucherTypeChoices}
               disabled={disabled}
               error={!!formErrors.type}
               hint={getDiscountErrorMessage(formErrors.type, intl)}
               label={intl.formatMessage({
-                defaultMessage: "Voucher Specific Information"
+                id: "9UHfux",
+                defaultMessage: "Voucher Specific Information",
               })}
               name={"type" as keyof VoucherDetailsPageFormData}
               value={data.type}
@@ -183,11 +192,15 @@ const VoucherValue: React.FC<VoucherValueProps> = props => {
           label={
             <>
               <FormattedMessage
-                defaultMessage="Only once per order"
+                id="Y3zr/B"
+                defaultMessage="Apply only to a single cheapest eligible product"
                 description="voucher application, switch button"
               />
               <Typography variant="caption">
-                <FormattedMessage defaultMessage="If this option is disabled, discount will be counted for every eligible product" />
+                <FormattedMessage
+                  id="ObRk1O"
+                  defaultMessage="If this option is disabled, discount will be counted for every eligible product"
+                />
               </Typography>
             </>
           }

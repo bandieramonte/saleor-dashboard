@@ -5,14 +5,15 @@ import { getCommonFormFieldErrorMessage } from "./common";
 
 const messages = defineMessages({
   alreadyExists: {
+    id: "stjHjY",
     defaultMessage: "Promo code already exists",
-    description: "error message"
-  }
+    description: "error message",
+  },
 });
 
 function getDiscountErrorMessage(
   err: Omit<DiscountErrorFragment, "__typename"> | undefined,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   if (err) {
     switch (err.code) {

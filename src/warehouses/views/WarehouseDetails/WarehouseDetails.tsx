@@ -4,7 +4,7 @@ import {
   CountryCode,
   useWarehouseDeleteMutation,
   useWarehouseDetailsQuery,
-  useWarehouseUpdateMutation
+  useWarehouseUpdateMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -14,18 +14,17 @@ import {
   extractMutationErrors,
   findValueInEnum,
   getMutationStatus,
-  getStringOrPlaceholder
+  getStringOrPlaceholder,
 } from "@saleor/misc";
-import { shippingZoneUrl } from "@saleor/shipping/urls";
 import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
 import WarehouseDeleteDialog from "@saleor/warehouses/components/WarehouseDeleteDialog";
 import WarehouseDetailsPage, {
-  WarehouseDetailsPageFormData
+  WarehouseDetailsPageFormData,
 } from "@saleor/warehouses/components/WarehouseDetailsPage";
 import {
   warehouseListUrl,
   warehouseUrl,
-  WarehouseUrlQueryParams
+  WarehouseUrlQueryParams,
 } from "@saleor/warehouses/urls";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -42,17 +41,17 @@ const WarehouseDetails: React.FC<WarehouseDetailsProps> = ({ id, params }) => {
   const shop = useShop();
   const { data, loading } = useWarehouseDetailsQuery({
     displayLoader: true,
-    variables: { id }
+    variables: { id },
   });
   const [updateWarehouse, updateWarehouseOpts] = useWarehouseUpdateMutation({
     onCompleted: data => {
       if (data.updateWarehouse.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
   const updateWarehouseTransitionState = getMutationStatus(updateWarehouseOpts);
 
@@ -61,18 +60,18 @@ const WarehouseDetails: React.FC<WarehouseDetailsProps> = ({ id, params }) => {
       if (data.deleteWarehouse.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate(warehouseListUrl());
       }
-    }
+    },
   });
   const deleteWarehouseTransitionState = getMutationStatus(deleteWarehouseOpts);
 
   const [openModal, closeModal] = createDialogActionHandlers(
     navigate,
     params => warehouseUrl(id, params),
-    params
+    params,
   );
 
   if (data?.warehouse === null) {
@@ -94,14 +93,14 @@ const WarehouseDetails: React.FC<WarehouseDetailsProps> = ({ id, params }) => {
               phone: data.phone,
               postalCode: data.postalCode,
               streetAddress1: data.streetAddress1,
-              streetAddress2: data.streetAddress2
+              streetAddress2: data.streetAddress2,
             },
             name: data.name,
             isPrivate: data.isPrivate,
-            clickAndCollectOption: data.clickAndCollectOption
-          }
-        }
-      })
+            clickAndCollectOption: data.clickAndCollectOption,
+          },
+        },
+      }),
     );
 
   return (
@@ -113,9 +112,7 @@ const WarehouseDetails: React.FC<WarehouseDetailsProps> = ({ id, params }) => {
         errors={updateWarehouseOpts.data?.updateWarehouse.errors || []}
         saveButtonBarState={updateWarehouseTransitionState}
         warehouse={data?.warehouse}
-        onBack={() => navigate(warehouseListUrl())}
         onDelete={() => openModal("delete")}
-        onShippingZoneClick={id => navigate(shippingZoneUrl(id))}
         onSubmit={handleSubmit}
       />
       <WarehouseDeleteDialog
@@ -124,7 +121,7 @@ const WarehouseDetails: React.FC<WarehouseDetailsProps> = ({ id, params }) => {
         onClose={closeModal}
         onConfirm={() =>
           deleteWarehouse({
-            variables: { id }
+            variables: { id },
           })
         }
         open={params.action === "delete"}

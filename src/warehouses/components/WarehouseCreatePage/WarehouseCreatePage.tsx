@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import CompanyAddressInput from "@saleor/components/CompanyAddressInput";
 import Container from "@saleor/components/Container";
@@ -8,15 +9,17 @@ import Savebar from "@saleor/components/Savebar";
 import { AddressTypeInput } from "@saleor/customers/types";
 import {
   CountryWithCodeFragment,
-  WarehouseErrorFragment
+  WarehouseErrorFragment,
 } from "@saleor/graphql";
 import useAddressValidation from "@saleor/hooks/useAddressValidation";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import useStateFromProps from "@saleor/hooks/useStateFromProps";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import createSingleAutocompleteSelectHandler from "@saleor/utils/handlers/singleAutocompleteSelectChangeHandler";
 import { mapCountriesToChoices } from "@saleor/utils/maps";
+import { warehouseListUrl } from "@saleor/warehouses/urls";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -30,7 +33,6 @@ export interface WarehouseCreatePageProps {
   disabled: boolean;
   errors: WarehouseErrorFragment[];
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: WarehouseCreatePageFormData) => SubmitPromise;
 }
 
@@ -43,7 +45,7 @@ const initialForm: WarehouseCreatePageFormData = {
   phone: "",
   postalCode: "",
   streetAddress1: "",
-  streetAddress2: ""
+  streetAddress2: "",
 };
 
 const WarehouseCreatePage: React.FC<WarehouseCreatePageProps> = ({
@@ -51,15 +53,16 @@ const WarehouseCreatePage: React.FC<WarehouseCreatePageProps> = ({
   disabled,
   errors,
   saveButtonBarState,
-  onBack,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
+
   const [displayCountry, setDisplayCountry] = useStateFromProps("");
 
   const {
     errors: validationErrors,
-    submit: handleSubmit
+    submit: handleSubmit,
   } = useAddressValidation(onSubmit);
 
   return (
@@ -69,18 +72,19 @@ const WarehouseCreatePage: React.FC<WarehouseCreatePageProps> = ({
         const handleCountryChange = createSingleAutocompleteSelectHandler(
           change,
           setDisplayCountry,
-          countryChoices
+          countryChoices,
         );
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={warehouseListUrl()}>
               <FormattedMessage {...sectionNames.warehouses} />
             </Backlink>
             <PageHeader
               title={intl.formatMessage({
+                id: "GhcypC",
                 defaultMessage: "Create Warehouse",
-                description: "header"
+                description: "header",
               })}
             />
             <Grid>
@@ -99,8 +103,9 @@ const WarehouseCreatePage: React.FC<WarehouseCreatePageProps> = ({
                   displayCountry={displayCountry}
                   errors={[...errors, ...validationErrors]}
                   header={intl.formatMessage({
+                    id: "43Nlay",
                     defaultMessage: "Address Information",
-                    description: "warehouse"
+                    description: "warehouse",
                   })}
                   onChange={change}
                   onCountryChange={handleCountryChange}
@@ -109,7 +114,7 @@ const WarehouseCreatePage: React.FC<WarehouseCreatePageProps> = ({
             </Grid>
             <Savebar
               disabled={disabled}
-              onCancel={onBack}
+              onCancel={() => navigate(warehouseListUrl())}
               onSubmit={submit}
               state={saveButtonBarState}
             />

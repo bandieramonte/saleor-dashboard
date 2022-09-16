@@ -23,7 +23,7 @@ const ProductCategoryAndCollectionsForm = ({
   productCollections,
   category,
   loading,
-  onChange
+  onChange,
 }: ProductCategoryAndCollectionsFormProps) => {
   const intl = useIntl();
 
@@ -31,8 +31,9 @@ const ProductCategoryAndCollectionsForm = ({
     <Card>
       <PageHeader
         title={intl.formatMessage({
+          id: "fyE8BN",
           defaultMessage: "Organization",
-          description: "product organization, header"
+          description: "product organization, header",
         })}
       />
       <CardContent>
@@ -41,7 +42,8 @@ const ProductCategoryAndCollectionsForm = ({
           error={!!errors.category}
           hint={errors.category}
           label={intl.formatMessage({
-            defaultMessage: "Category"
+            id: "ccXLVi",
+            defaultMessage: "Category",
           })}
           choices={loading ? [] : categories}
           name="category"
@@ -54,7 +56,8 @@ const ProductCategoryAndCollectionsForm = ({
           error={!!errors.collections}
           hint={errors.collections}
           label={intl.formatMessage({
-            defaultMessage: "Collections"
+            id: "ulh3kf",
+            defaultMessage: "Collections",
           })}
           choices={loading ? [] : collections}
           name="collections"

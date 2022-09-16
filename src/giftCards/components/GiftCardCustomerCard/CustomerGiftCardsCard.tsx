@@ -1,5 +1,6 @@
 import { Card, CardActions, Dialog } from "@material-ui/core";
 import VerticalSpacer from "@saleor/apps/components/VerticalSpacer";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import CollectionWithDividers from "@saleor/components/CollectionWithDividers";
 import Link from "@saleor/components/Link";
@@ -10,7 +11,6 @@ import GiftCardCreateDialogContent from "@saleor/giftCards/GiftCardCreateDialog/
 import { getExtendedGiftCard } from "@saleor/giftCards/GiftCardUpdate/providers/GiftCardDetailsProvider/utils";
 import { giftCardListUrl } from "@saleor/giftCards/urls";
 import { useCustomerGiftCardListQuery } from "@saleor/graphql";
-import { Button } from "@saleor/macaw-ui";
 import { getFullName } from "@saleor/misc";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import * as React from "react";
@@ -33,10 +33,10 @@ const CustomerGiftCardsCard: React.FC = () => {
     variables: {
       first: 5,
       filter: {
-        usedBy: [id]
-      }
+        usedBy: [id],
+      },
     },
-    skip: !id
+    skip: !id,
   });
 
   const closeCreateDialog = () => setOpenCreateDialog(false);
@@ -44,11 +44,11 @@ const CustomerGiftCardsCard: React.FC = () => {
   const giftCards = mapEdgesToItems(data?.giftCards);
 
   const classes = useCardActionsStyles({
-    buttonPosition: giftCards?.length > 0 ? "right" : "left"
+    buttonPosition: giftCards?.length > 0 ? "right" : "left",
   });
 
   const viewAllGiftCardsUrl = giftCardListUrl({
-    usedBy: [id]
+    usedBy: [id],
   });
 
   const handleCreateNewCardButton = () => {
@@ -111,7 +111,7 @@ const CustomerGiftCardsCard: React.FC = () => {
           refetchQueries={[CUSTOMER_GIFT_CARD_LIST_QUERY]}
           initialCustomer={{
             email: customer?.email,
-            name: getFullName(customer)
+            name: getFullName(customer),
           }}
         />
       </Dialog>

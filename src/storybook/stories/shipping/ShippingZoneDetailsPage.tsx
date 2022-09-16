@@ -5,7 +5,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import ShippingZoneDetailsPage, {
-  ShippingZoneDetailsPageProps
+  ShippingZoneDetailsPageProps,
 } from "../../../shipping/components/ShippingZoneDetailsPage";
 import { shippingZone } from "../../../shipping/fixtures";
 import Decorator from "../../Decorator";
@@ -15,21 +15,20 @@ const props: ShippingZoneDetailsPageProps = {
   ...searchPageProps,
   disabled: false,
   errors: [],
-  onBack: () => undefined,
   onCountryAdd: () => undefined,
   onCountryRemove: () => undefined,
   onDelete: () => undefined,
   onPriceRateAdd: () => undefined,
-  onPriceRateEdit: () => undefined,
+  getPriceRateEditHref: () => "",
   onRateRemove: () => undefined,
   onSubmit: () => undefined,
   onWarehouseAdd: () => undefined,
   onWeightRateAdd: () => undefined,
-  onWeightRateEdit: () => undefined,
+  getWeightRateEditHref: () => "",
   saveButtonBarState: "default",
   selectedChannelId: "12345",
   shippingZone,
-  warehouses: warehouseList
+  warehouses: warehouseList,
 };
 
 storiesOf("Views / Shipping / Shipping zone details", module)
@@ -50,7 +49,7 @@ storiesOf("Views / Shipping / Shipping zone details", module)
         channels: [],
         code: ShippingErrorCode.INVALID,
         field,
-        message: "Name field invalid"
+        message: "Name field invalid",
       }))}
     />
   ));

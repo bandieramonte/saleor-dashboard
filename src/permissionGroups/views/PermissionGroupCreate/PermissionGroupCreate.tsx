@@ -10,9 +10,9 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import PermissionGroupCreatePage, {
-  PermissionGroupCreateFormData
+  PermissionGroupCreateFormData,
 } from "../../components/PermissionGroupCreatePage";
-import { permissionGroupDetailsUrl, permissionGroupListUrl } from "../../urls";
+import { permissionGroupDetailsUrl } from "../../urls";
 
 const PermissionGroupCreateView: React.FC = () => {
   const navigate = useNavigator();
@@ -23,21 +23,22 @@ const PermissionGroupCreateView: React.FC = () => {
 
   const [
     createPermissionGroup,
-    createPermissionGroupResult
+    createPermissionGroupResult,
   ] = usePermissionGroupCreateMutation({
     onCompleted: data => {
       if (data?.permissionGroupCreate?.errors.length === 0) {
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Permission group created"
-          })
+            id: "eUjFjW",
+            defaultMessage: "Permission group created",
+          }),
         });
         navigate(
-          permissionGroupDetailsUrl(data.permissionGroupCreate.group.id)
+          permissionGroupDetailsUrl(data.permissionGroupCreate.group.id),
         );
       }
-    }
+    },
   });
 
   const errors =
@@ -52,10 +53,10 @@ const PermissionGroupCreateView: React.FC = () => {
               ? shop.permissions.map(perm => perm.code)
               : formData.permissions,
             addUsers: [],
-            name: formData.name
-          }
-        }
-      })
+            name: formData.name,
+          },
+        },
+      }),
     );
 
   const userPermissions = user?.user.userPermissions.map(p => p.code) || [];
@@ -66,16 +67,17 @@ const PermissionGroupCreateView: React.FC = () => {
         ({
           ...p,
           disabled: !userPermissions.includes(p.code),
-          lastSource: false
-        } as PermissionData)
+          lastSource: false,
+        } as PermissionData),
     ) || [];
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage({
+          id: "Irflxf",
           defaultMessage: "Create category",
-          description: "window title"
+          description: "window title",
         })}
       />
       <PermissionGroupCreatePage
@@ -84,7 +86,6 @@ const PermissionGroupCreateView: React.FC = () => {
         permissions={permissions}
         saveButtonBarState={createPermissionGroupResult.status}
         onSubmit={onSubmit}
-        onBack={() => navigate(permissionGroupListUrl())}
       />
     </>
   );

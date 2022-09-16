@@ -21,7 +21,7 @@ const PermissionGroupInfo: React.FC<PermissionGroupInfoProps> = ({
   disabled,
   onChange,
   data,
-  errors
+  errors,
 }) => {
   const intl = useIntl();
 
@@ -36,8 +36,9 @@ const PermissionGroupInfo: React.FC<PermissionGroupInfoProps> = ({
         <TextField
           name="name"
           label={intl.formatMessage({
+            id: "rs815i",
             defaultMessage: "Group name",
-            description: "text field label"
+            description: "text field label",
           })}
           value={data.name}
           onChange={onChange}

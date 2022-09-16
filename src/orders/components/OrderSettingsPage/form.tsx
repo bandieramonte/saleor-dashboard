@@ -1,10 +1,10 @@
 import {
   OrderSettingsFragment,
-  ShopOrderSettingsFragment
+  ShopOrderSettingsFragment,
 } from "@saleor/graphql";
 import useForm, {
   CommonUseFormResult,
-  SubmitPromise
+  SubmitPromise,
 } from "@saleor/hooks/useForm";
 import useHandleFormSubmit from "@saleor/hooks/useHandleFormSubmit";
 import React from "react";
@@ -29,7 +29,7 @@ export interface OrderSettingsFormProps {
 
 function getOrderSeettingsFormData(
   orderSettings: OrderSettingsFragment,
-  shop: ShopOrderSettingsFragment
+  shop: ShopOrderSettingsFragment,
 ): OrderSettingsFormData {
   return {
     automaticallyFulfillNonShippableGiftCard:
@@ -37,7 +37,7 @@ function getOrderSeettingsFormData(
     automaticallyConfirmAllNewOrders:
       orderSettings?.automaticallyConfirmAllNewOrders,
     fulfillmentAutoApprove: shop?.fulfillmentAutoApprove,
-    fulfillmentAllowUnpaid: shop?.fulfillmentAllowUnpaid
+    fulfillmentAllowUnpaid: shop?.fulfillmentAllowUnpaid,
   };
 }
 
@@ -45,35 +45,29 @@ function useOrderSettingsForm(
   orderSettings: OrderSettingsFragment,
   shop: ShopOrderSettingsFragment,
   onSubmit: (data: OrderSettingsFormData) => SubmitPromise,
-  disabled: boolean
+  disabled: boolean,
 ): UseOrderSettingsFormResult {
-  const {
-    data,
-    handleChange,
-    formId,
-    hasChanged,
-    setChanged,
-    setIsSubmitDisabled
-  } = useForm(getOrderSeettingsFormData(orderSettings, shop), undefined, {
-    confirmLeave: true
-  });
+  const { data, handleChange, formId, setIsSubmitDisabled } = useForm(
+    getOrderSeettingsFormData(orderSettings, shop),
+    undefined,
+    {
+      confirmLeave: true,
+    },
+  );
 
   const handleFormSubmit = useHandleFormSubmit({
     formId,
     onSubmit,
-    setChanged
   });
 
   const submit = () => handleFormSubmit(data);
-  const isSaveDisabled = disabled || !hasChanged;
-  setIsSubmitDisabled(isSaveDisabled);
+  setIsSubmitDisabled(disabled);
 
   return {
     change: handleChange,
     data,
-    hasChanged,
     submit,
-    isSaveDisabled
+    isSaveDisabled: disabled,
   };
 }
 
@@ -82,7 +76,7 @@ const OrderSettingsForm: React.FC<OrderSettingsFormProps> = ({
   orderSettings,
   shop,
   onSubmit,
-  disabled
+  disabled,
 }) => {
   const props = useOrderSettingsForm(orderSettings, shop, onSubmit, disabled);
 

@@ -15,23 +15,24 @@ export interface UseSearchResult<TData, TVariables extends SearchVariables> {
   loadMore: () => void;
   result: QueryResult<TData, TVariables>;
   search: (query: string) => void;
+  query: string;
 }
 export type UseSearchOpts<TVariables extends SearchVariables> = Partial<{
   skip: boolean;
   variables: TVariables;
 }>;
 export type UseSearchHook<TData, TVariables extends SearchVariables> = (
-  opts: UseSearchOpts<TVariables>
+  opts: UseSearchOpts<TVariables>,
 ) => UseSearchResult<TData, TVariables>;
 
 function makeSearch<TData, TVariables extends SearchVariables>(
   query: DocumentNode,
-  loadMoreFn: (result: UseQueryResult<TData, TVariables>) => void
+  loadMoreFn: (result: UseQueryResult<TData, TVariables>) => void,
 ): UseSearchHook<TData, TVariables> {
   const useSearchQuery = makeQuery<TData, TVariables>(query);
 
   function useSearch(
-    opts: UseSearchOpts<TVariables>
+    opts: UseSearchOpts<TVariables>,
   ): UseSearchResult<TData, TVariables> {
     const [searchQuery, setSearchQuery] = useState("");
     const debouncedSearch = useDebounce(setSearchQuery);
@@ -40,14 +41,15 @@ function makeSearch<TData, TVariables extends SearchVariables>(
       displayLoader: true,
       variables: {
         ...opts.variables,
-        query: searchQuery
-      }
+        query: searchQuery,
+      },
     });
 
     return {
+      query: searchQuery,
       loadMore: () => loadMoreFn(result),
       result,
-      search: debouncedSearch
+      search: debouncedSearch,
     };
   }
 

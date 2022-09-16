@@ -22,11 +22,11 @@ const ChannelPickerDialog: React.FC<ChannelPickerDialogProps> = ({
   defaultChoice,
   open,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
   const [choice, setChoice] = useStateFromProps(
-    defaultChoice || (!!channelsChoices.length ? channelsChoices[0].value : "")
+    defaultChoice || (!!channelsChoices.length ? channelsChoices[0].value : ""),
   );
   const { result, search } = useChoiceSearch(channelsChoices);
 
@@ -37,8 +37,9 @@ const ChannelPickerDialog: React.FC<ChannelPickerDialogProps> = ({
       onClose={onClose}
       onConfirm={() => onConfirm(choice)}
       title={intl.formatMessage({
+        id: "G/pgG3",
         defaultMessage: "Select a channel",
-        description: "dialog header"
+        description: "dialog header",
       })}
     >
       <Autocomplete
@@ -46,8 +47,10 @@ const ChannelPickerDialog: React.FC<ChannelPickerDialogProps> = ({
         fullWidth
         label={intl.formatMessage({
           defaultMessage: "Channel name",
-          description: "select label"
+          id: "nKwgxY",
+          description: "select label",
         })}
+        data-test-id="channel-autocomplete"
         value={choice}
         onChange={e => setChoice(e.target.value)}
         onInputChange={search}
@@ -55,6 +58,7 @@ const ChannelPickerDialog: React.FC<ChannelPickerDialogProps> = ({
         {({ getItemProps, highlightedIndex }) =>
           result.map((choice, choiceIndex) => (
             <MenuItem
+              data-test-id="select-field-option"
               selected={highlightedIndex === choiceIndex}
               key={choice.value}
               {...getItemProps({ item: choice, index: choiceIndex })}

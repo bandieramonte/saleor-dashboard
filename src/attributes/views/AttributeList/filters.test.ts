@@ -18,7 +18,7 @@ describe("Filtering query params", () => {
 
   it("should not be empty object if params given", () => {
     const params: AttributeListUrlFilters = {
-      availableInGrid: true.toString()
+      isVariantOnly: true.toString(),
     };
     const filterVariables = getFilterVariables(params);
 
@@ -30,36 +30,28 @@ describe("Filtering URL params", () => {
   const intl = createIntl(config);
 
   const filters = createFilterStructure(intl, {
-    availableInGrid: {
-      active: false,
-      value: true
-    },
-    filterableInDashboard: {
-      active: false,
-      value: true
-    },
     filterableInStorefront: {
       active: false,
-      value: true
+      value: true,
     },
     isVariantOnly: {
       active: false,
-      value: true
+      value: true,
     },
     valueRequired: {
       active: false,
-      value: true
+      value: true,
     },
     visibleInStorefront: {
       active: false,
-      value: true
-    }
+      value: true,
+    },
   });
 
   it("should be empty if no active filters", () => {
     const filterQueryParams = getFilterQueryParams(
       filters,
-      getFilterQueryParam
+      getFilterQueryParam,
     );
 
     expect(getExistingKeys(filterQueryParams)).toHaveLength(0);
@@ -68,7 +60,7 @@ describe("Filtering URL params", () => {
   it("should not be empty if active filters are present", () => {
     const filterQueryParams = getFilterQueryParams(
       setFilterOptsStatus(filters, true),
-      getFilterQueryParam
+      getFilterQueryParam,
     );
 
     expect(filterQueryParams).toMatchSnapshot();

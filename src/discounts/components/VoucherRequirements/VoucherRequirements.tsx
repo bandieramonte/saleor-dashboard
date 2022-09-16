@@ -5,7 +5,7 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import CardTitle from "@saleor/components/CardTitle";
 import { FormSpacer } from "@saleor/components/FormSpacer";
@@ -41,48 +41,52 @@ const VoucherRequirements = ({
   disabled,
   errors,
   onChange,
-  onChannelChange
+  onChannelChange,
 }: VoucherRequirementsProps) => {
   const classes = useStyles({});
   const intl = useIntl();
 
   const formErrors = getFormErrors(
     ["minSpent", "minCheckoutItemsQuantity"],
-    errors
+    errors,
   );
   const minimalOrderValueText = intl.formatMessage({
+    id: "bh9+8A",
     defaultMessage: "Minimal order value",
-    description: "voucher requirement"
+    description: "voucher requirement",
   });
   const minimalQuantityText = intl.formatMessage({
+    id: "XT/ZvF",
     defaultMessage: "Minimum quantity of items",
-    description: "voucher requirement"
+    description: "voucher requirement",
   });
 
   const requirementsPickerChoices = [
     {
       label: intl.formatMessage({
+        id: "u/hkKO",
         defaultMessage: "None",
-        description: "voucher has no requirements"
+        description: "voucher has no requirements",
       }),
-      value: RequirementsPicker.NONE
+      value: RequirementsPicker.NONE,
     },
     {
       label: minimalOrderValueText,
-      value: RequirementsPicker.ORDER
+      value: RequirementsPicker.ORDER,
     },
     {
       label: minimalQuantityText,
-      value: RequirementsPicker.ITEM
-    }
+      value: RequirementsPicker.ITEM,
+    },
   ];
 
   return (
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "yhv3HX",
           defaultMessage: "Minimum Requirements",
-          description: "voucher requirements, header"
+          description: "voucher requirements, header",
         })}
       />
       <CardContent>
@@ -94,12 +98,15 @@ const VoucherRequirements = ({
           onChange={onChange}
         />
         {[RequirementsPicker.ORDER, RequirementsPicker.ITEM].includes(
-          data.requirementsPicker
+          data.requirementsPicker,
         ) && <FormSpacer />}
         {data.requirementsPicker === RequirementsPicker.ORDER ? (
           <>
             <Typography variant="caption">
-              <FormattedMessage defaultMessage="Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency" />
+              <FormattedMessage
+                id="K+ROF8"
+                defaultMessage="Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency"
+              />
             </Typography>
             <div className={classes.tableContainer}>
               <ResponsiveTable className={classes.table}>
@@ -111,6 +118,7 @@ const VoucherRequirements = ({
                   <TableCell className={classes.colName}>
                     <span>
                       <FormattedMessage
+                        id="Hj3T7P"
                         defaultMessage="Channel name"
                         description="column title"
                       />
@@ -119,6 +127,7 @@ const VoucherRequirements = ({
                   <TableCell className={classes.colType}>
                     <span>
                       <FormattedMessage
+                        id="GVinbz"
                         defaultMessage="Value"
                         description="column title"
                       />
@@ -130,7 +139,7 @@ const VoucherRequirements = ({
                     data.channelListings,
                     (listing, index) => {
                       const error = formErrors.minSpent?.channels?.find(
-                        id => id === listing.id
+                        id => id === listing.id,
                       );
                       return (
                         <TableRow key={listing?.id || `skeleton-${index}`}>
@@ -148,7 +157,7 @@ const VoucherRequirements = ({
                                   error
                                     ? getDiscountErrorMessage(
                                         formErrors.minSpent,
-                                        intl
+                                        intl,
                                       )
                                     : ""
                                 }
@@ -157,7 +166,7 @@ const VoucherRequirements = ({
                                 value={listing.minSpent || ""}
                                 onChange={e =>
                                   onChannelChange(listing.id, {
-                                    minSpent: e.target.value
+                                    minSpent: e.target.value,
                                   })
                                 }
                               />
@@ -171,10 +180,13 @@ const VoucherRequirements = ({
                     () => (
                       <TableRow>
                         <TableCell colSpan={numberOfColumns}>
-                          <FormattedMessage defaultMessage="No channels found" />
+                          <FormattedMessage
+                            id="/glQgs"
+                            defaultMessage="No channels found"
+                          />
                         </TableCell>
                       </TableRow>
-                    )
+                    ),
                   )}
                 </TableBody>
               </ResponsiveTable>
@@ -186,7 +198,7 @@ const VoucherRequirements = ({
             error={!!formErrors.minCheckoutItemsQuantity}
             helperText={getDiscountErrorMessage(
               formErrors.minCheckoutItemsQuantity,
-              intl
+              intl,
             )}
             label={minimalQuantityText}
             name={

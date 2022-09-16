@@ -5,10 +5,10 @@ import { FormSpacer } from "@saleor/components/FormSpacer";
 import Hr from "@saleor/components/Hr";
 import Link from "@saleor/components/Link";
 import MultiAutocompleteSelectField, {
-  MultiAutocompleteChoiceType
+  MultiAutocompleteChoiceType,
 } from "@saleor/components/MultiAutocompleteSelectField";
 import SingleAutocompleteSelectField, {
-  SingleAutocompleteChoiceType
+  SingleAutocompleteChoiceType,
 } from "@saleor/components/SingleAutocompleteSelectField";
 import { ProductErrorFragment } from "@saleor/graphql";
 import { ChangeEvent } from "@saleor/hooks/useForm";
@@ -30,17 +30,17 @@ interface ProductType {
 const useStyles = makeStyles(
   theme => ({
     card: {
-      overflow: "visible"
+      overflow: "visible",
     },
     cardSubtitle: {
       fontSize: theme.typography.body1.fontSize,
-      marginBottom: theme.spacing(0.5)
+      marginBottom: theme.spacing(0.5),
     },
     label: {
-      marginBottom: theme.spacing(0.5)
-    }
+      marginBottom: theme.spacing(0.5),
+    },
   }),
-  { name: "ProductOrganization" }
+  { name: "ProductOrganization" },
 );
 
 interface ProductOrganizationProps {
@@ -91,7 +91,7 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
     productTypes,
     onCategoryChange,
     onCollectionChange,
-    onProductTypeChange
+    onProductTypeChange,
   } = props;
 
   const classes = useStyles(props);
@@ -99,15 +99,16 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
 
   const formErrors = getFormErrors(
     ["productType", "category", "collections"],
-    errors
+    errors,
   );
 
   return (
     <Card className={classes.card}>
       <CardTitle
         title={intl.formatMessage({
+          id: "JjeZEG",
           defaultMessage: "Organize Product",
-          description: "section header"
+          description: "section header",
         })}
       />
       <CardContent>
@@ -119,7 +120,8 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
             name="productType"
             disabled={disabled}
             label={intl.formatMessage({
-              defaultMessage: "Product Type"
+              id: "anK7jD",
+              defaultMessage: "Product Type",
             })}
             choices={productTypes}
             value={data.productType?.id}
@@ -131,7 +133,7 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
         ) : (
           <>
             <Typography className={classes.label} variant="caption">
-              <FormattedMessage defaultMessage="Product Type" />
+              <FormattedMessage id="anK7jD" defaultMessage="Product Type" />
             </Typography>
             <Typography>
               <Link
@@ -143,7 +145,7 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
             </Typography>
             <CardSpacer />
             <Typography className={classes.label} variant="caption">
-              <FormattedMessage defaultMessage="Configurable" />
+              <FormattedMessage id="Be+J13" defaultMessage="Configurable" />
             </Typography>
             <Typography>
               {maybe(
@@ -151,7 +153,7 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
                   productType.hasVariants
                     ? intl.formatMessage(commonMessages.yes)
                     : intl.formatMessage(commonMessages.no),
-                "..."
+                "...",
               )}
             </Typography>
           </>
@@ -165,7 +167,8 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
           helperText={getProductErrorMessage(formErrors.category, intl)}
           disabled={disabled}
           label={intl.formatMessage({
-            defaultMessage: "Category"
+            id: "ccXLVi",
+            defaultMessage: "Category",
           })}
           choices={disabled ? [] : categories}
           name="category"
@@ -182,7 +185,8 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
           displayValues={collectionsInputDisplayValue}
           error={!!formErrors.collections}
           label={intl.formatMessage({
-            defaultMessage: "Collections"
+            id: "ulh3kf",
+            defaultMessage: "Collections",
           })}
           choices={disabled ? [] : collections}
           name="collections"
@@ -190,9 +194,10 @@ const ProductOrganization: React.FC<ProductOrganizationProps> = props => {
           helperText={
             getProductErrorMessage(formErrors.collections, intl) ||
             intl.formatMessage({
+              id: "v+Pkm+",
               defaultMessage:
                 "*Optional. Adding product to collection helps users find it.",
-              description: "field is optional"
+              description: "field is optional",
             })
           }
           onChange={onCollectionChange}

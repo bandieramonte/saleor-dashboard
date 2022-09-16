@@ -11,6 +11,7 @@ import {
   OrderDraftListUrlQueryParams,
   OrderDraftListUrlSortField,
   orderFulfillPath,
+  OrderFulfillUrlQueryParams,
   orderListPath,
   OrderListUrlQueryParams,
   OrderListUrlSortField,
@@ -18,7 +19,7 @@ import {
   orderRefundPath,
   orderReturnPath,
   orderSettingsPath,
-  OrderUrlQueryParams
+  OrderUrlQueryParams,
 } from "./urls";
 import OrderDetailsComponent from "./views/OrderDetails";
 import OrderDraftListComponent from "./views/OrderDraftList";
@@ -34,7 +35,7 @@ const OrderList: React.FC<RouteComponentProps<any>> = ({ location }) => {
     qs,
     OrderListUrlSortField,
     OrderListUrlSortField.number,
-    false
+    false,
   );
   return <OrderListComponent params={params} />;
 };
@@ -44,7 +45,7 @@ const OrderDraftList: React.FC<RouteComponentProps<any>> = ({ location }) => {
     qs,
     OrderDraftListUrlSortField,
     OrderDraftListUrlSortField.number,
-    false
+    false,
   );
 
   return <OrderDraftListComponent params={params} />;
@@ -52,7 +53,7 @@ const OrderDraftList: React.FC<RouteComponentProps<any>> = ({ location }) => {
 
 const OrderDetails: React.FC<RouteComponentProps<any>> = ({
   location,
-  match
+  match,
 }) => {
   const qs = parseQs(location.search.substr(1));
   const params: OrderUrlQueryParams = qs;
@@ -61,9 +62,19 @@ const OrderDetails: React.FC<RouteComponentProps<any>> = ({
   return <OrderDetailsComponent id={decodeURIComponent(id)} params={params} />;
 };
 
-const OrderFulfill: React.FC<RouteComponentProps<any>> = ({ match }) => (
-  <OrderFulfillComponent orderId={decodeURIComponent(match.params.id)} />
-);
+const OrderFulfill: React.FC<RouteComponentProps<any>> = ({
+  location,
+  match,
+}) => {
+  const qs = parseQs(location.search.substr(1));
+  const params: OrderFulfillUrlQueryParams = qs;
+  return (
+    <OrderFulfillComponent
+      orderId={decodeURIComponent(match.params.id)}
+      params={params}
+    />
+  );
+};
 
 const OrderRefund: React.FC<RouteComponentProps<any>> = ({ match }) => (
   <OrderRefundComponent orderId={decodeURIComponent(match.params.id)} />

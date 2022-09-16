@@ -1,8 +1,11 @@
 import { Typography } from "@material-ui/core";
+import { Backlink } from "@saleor/components/Backlink";
+import { Button } from "@saleor/components/Button";
 import Container from "@saleor/components/Container";
 import PageHeader from "@saleor/components/PageHeader";
+import { customerUrl } from "@saleor/customers/urls";
 import { AddressTypeEnum, CustomerAddressesFragment } from "@saleor/graphql";
-import { Backlink, Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder, renderCollection } from "@saleor/misc";
 import React from "react";
 import { defineMessages, useIntl } from "react-intl";
@@ -13,7 +16,6 @@ export interface CustomerAddressListPageProps {
   customer: CustomerAddressesFragment;
   disabled: boolean;
   onAdd: () => void;
-  onBack: () => void;
   onEdit: (id: string) => void;
   onRemove: (id: string) => void;
   onSetAsDefault: (id: string, type: AddressTypeEnum) => void;
@@ -21,81 +23,79 @@ export interface CustomerAddressListPageProps {
 
 const messages = defineMessages({
   addAddress: {
+    id: "rjy9/k",
     defaultMessage: "Add address",
-    description: "button"
+    description: "button",
   },
   doesntHaveAddresses: {
+    id: "kErneR",
     defaultMessage:
-      "This customer doesn’t have any adresses added to his address book. You can add address using the button below."
+      "This customer doesn’t have any adresses added to his address book. You can add address using the button below.",
   },
   fullNameAddress: {
+    id: "n5vskv",
     defaultMessage: "{fullName}'s Address Book",
-    description: "customer's address book, header"
+    description: "customer's address book, header",
   },
   noNameToShow: {
+    id: "CWqmRU",
     defaultMessage: "Address Book",
     description:
-      "customer's address book when no customer name is available, header"
+      "customer's address book when no customer name is available, header",
   },
   fullNameDetail: {
+    id: "MpR4zK",
     defaultMessage: "{fullName} Details",
-    description: "customer details, header"
+    description: "customer details, header",
   },
   noAddressToShow: {
-    defaultMessage: "There is no address to show for this customer"
-  }
+    id: "y/UWBR",
+    defaultMessage: "There is no address to show for this customer",
+  },
 });
 
 const useStyles = makeStyles(
   theme => ({
     addButton: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     description: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     empty: {
       margin: `${theme.spacing(13)}px auto 0`,
       textAlign: "center",
-      width: 600
+      width: 600,
     },
     root: {
       display: "grid",
       gap: theme.spacing(3),
       gridTemplateColumns: "repeat(3, 1fr)",
       [theme.breakpoints.down("md")]: {
-        gridTemplateColumns: "repeat(2, 1fr)"
+        gridTemplateColumns: "repeat(2, 1fr)",
       },
       [theme.breakpoints.down("sm")]: {
-        gridTemplateColumns: "repeat(1, 1fr)"
-      }
-    }
+        gridTemplateColumns: "repeat(1, 1fr)",
+      },
+    },
   }),
-  { name: "CustomerAddressListPage" }
+  { name: "CustomerAddressListPage" },
 );
 
 const CustomerAddressListPage: React.FC<CustomerAddressListPageProps> = props => {
-  const {
-    customer,
-    disabled,
-    onAdd,
-    onBack,
-    onEdit,
-    onRemove,
-    onSetAsDefault
-  } = props;
+  const { customer, disabled, onAdd, onEdit, onRemove, onSetAsDefault } = props;
   const classes = useStyles(props);
 
   const intl = useIntl();
 
   const isEmpty = customer?.addresses?.length === 0;
   const fullName = getStringOrPlaceholder(
-    customer && [customer.firstName, customer.lastName].join(" ")
+    customer && [customer.firstName, customer.lastName].join(" "),
   );
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink href={customerUrl(customer?.id)}>
         {fullName.trim().length > 0
           ? intl.formatMessage(messages.fullNameDetail, { fullName })
           : intl.formatMessage(messages.noNameToShow)}

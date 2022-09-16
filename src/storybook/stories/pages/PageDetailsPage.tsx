@@ -5,7 +5,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import PageDetailsPage, {
-  PageDetailsPageProps
+  PageDetailsPageProps,
 } from "../../../pages/components/PageDetailsPage";
 import { page } from "../../../pages/fixtures";
 import Decorator from "../../Decorator";
@@ -14,7 +14,6 @@ const props: PageDetailsPageProps = {
   errors: [],
   loading: false,
   onAssignReferencesClick: () => undefined,
-  onBack: () => undefined,
   onCloseDialog: () => undefined,
   onRemove: () => undefined,
   onSubmit: () => undefined,
@@ -25,7 +24,7 @@ const props: PageDetailsPageProps = {
   saveButtonBarState: "default",
   fetchAttributeValues: () => undefined,
   onAttributeSelectBlur: () => undefined,
-  fetchMoreAttributeValues: fetchMoreProps
+  fetchMoreAttributeValues: fetchMoreProps,
 };
 
 storiesOf("Views / Pages / Page details", module)
@@ -44,13 +43,13 @@ storiesOf("Views / Pages / Page details", module)
         "publicationDate",
         "isPublished",
         "seoDescription",
-        "seoTitle"
+        "seoTitle",
       ] as Array<keyof PageData>).map(field => ({
         __typename: "PageError",
         attributes: [],
         code: PageErrorCode.INVALID,
         field,
-        message: "Page field error"
+        message: "Page field error",
       }))}
     />
   ));

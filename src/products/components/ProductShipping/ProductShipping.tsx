@@ -2,7 +2,7 @@ import {
   Card,
   CardContent,
   InputAdornment,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import CardTitle from "@saleor/components/CardTitle";
 import Grid from "@saleor/components/Grid";
@@ -34,8 +34,9 @@ const ProductShipping: React.FC<ProductShippingProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "3rIMq/",
           defaultMessage: "Shipping",
-          description: "product shipping"
+          description: "product shipping",
         })}
       />
       <CardContent>
@@ -43,8 +44,9 @@ const ProductShipping: React.FC<ProductShippingProps> = props => {
           <TextField
             disabled={disabled}
             label={intl.formatMessage({
+              id: "SUbxSK",
               defaultMessage: "Weight",
-              description: "product weight"
+              description: "product weight",
             })}
             error={!!formErrors.weight}
             helperText={getProductErrorMessage(formErrors.weight, intl)}
@@ -58,8 +60,8 @@ const ProductShipping: React.FC<ProductShippingProps> = props => {
                 </InputAdornment>
               ),
               inputProps: {
-                min: 0
-              }
+                min: 0,
+              },
             }}
           />
         </Grid>

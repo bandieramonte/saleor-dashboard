@@ -10,20 +10,17 @@ import { useIntl } from "react-intl";
 import AppsInProgress from "../AppsInProgress/AppsInProgress";
 import CustomApps from "../CustomApps/CustomApps";
 import InstalledApps from "../InstalledApps/InstalledApps";
-import Marketplace from "../Marketplace";
 
 export interface AppsListPageProps extends ListProps {
   installedAppsList: AppsListQuery["apps"]["edges"];
   customAppsList: AppsListQuery["apps"]["edges"];
   appsInProgressList?: AppsInstallationsQuery;
   loadingAppsInProgress: boolean;
-  navigateToCustomApp: (id: string) => () => void;
-  navigateToCustomAppCreate: () => void;
+  getCustomAppHref: (id: string) => string;
   onInstalledAppRemove: (id: string) => void;
   onCustomAppRemove: (id: string) => void;
   onAppInProgressRemove: (id: string) => void;
   onAppInstallRetry: (id: string) => void;
-  onRowAboutClick: (id: string) => () => void;
 }
 
 const AppsListPage: React.FC<AppsListPageProps> = ({
@@ -31,13 +28,11 @@ const AppsListPage: React.FC<AppsListPageProps> = ({
   customAppsList,
   installedAppsList,
   loadingAppsInProgress,
-  navigateToCustomApp,
-  navigateToCustomAppCreate,
+  getCustomAppHref,
   onInstalledAppRemove,
   onCustomAppRemove,
   onAppInProgressRemove,
   onAppInstallRetry,
-  onRowAboutClick,
   ...listProps
 }) => {
   const intl = useIntl();
@@ -47,32 +42,28 @@ const AppsListPage: React.FC<AppsListPageProps> = ({
   return (
     <Container>
       <PageHeader title={intl.formatMessage(sectionNames.apps)} />
+      <InstalledApps
+        appsList={installedAppsList}
+        onRemove={onInstalledAppRemove}
+        {...listProps}
+      />
+      <CardSpacer />
+      <CustomApps
+        appsList={customAppsList}
+        getCustomAppHref={getCustomAppHref}
+        onRemove={onCustomAppRemove}
+      />
       {!!appsInProgress?.length && (
         <>
+          <CardSpacer />
           <AppsInProgress
             appsList={appsInProgress}
             disabled={loadingAppsInProgress}
             onAppInstallRetry={onAppInstallRetry}
             onRemove={onAppInProgressRemove}
           />
-          <CardSpacer />
         </>
       )}
-      <InstalledApps
-        appsList={installedAppsList}
-        onRemove={onInstalledAppRemove}
-        onRowAboutClick={onRowAboutClick}
-        {...listProps}
-      />
-      <CardSpacer />
-      <CustomApps
-        appsList={customAppsList}
-        navigateToCustomApp={navigateToCustomApp}
-        navigateToCustomAppCreate={navigateToCustomAppCreate}
-        onRemove={onCustomAppRemove}
-      />
-      <CardSpacer />
-      <Marketplace />
     </Container>
   );
 };

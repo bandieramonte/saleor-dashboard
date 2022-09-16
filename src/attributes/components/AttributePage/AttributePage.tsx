@@ -1,4 +1,6 @@
+import { attributeListUrl } from "@saleor/attributes/urls";
 import { ATTRIBUTE_TYPES_WITH_DEDICATED_VALUES } from "@saleor/attributes/utils/data";
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
@@ -15,11 +17,12 @@ import {
   AttributeErrorFragment,
   AttributeInputTypeEnum,
   AttributeTypeEnum,
-  MeasurementUnitsEnum
+  MeasurementUnitsEnum,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { maybe } from "@saleor/misc";
 import { ListSettings, ReorderAction } from "@saleor/types";
 import { mapEdgesToItems, mapMetadataItemToInput } from "@saleor/utils/maps";
@@ -39,7 +42,6 @@ export interface AttributePageProps {
   errors: AttributeErrorFragment[];
   saveButtonBarState: ConfirmButtonTransitionState;
   values: AttributeDetailsQuery["attribute"]["choices"];
-  onBack: () => void;
   onDelete: () => void;
   onSubmit: (data: AttributePageFormData) => SubmitPromise;
   onValueAdd: () => void;
@@ -78,7 +80,6 @@ const AttributePage: React.FC<AttributePageProps> = ({
   errors: apiErrors,
   saveButtonBarState,
   values,
-  onBack,
   onDelete,
   onSubmit,
   onValueAdd,
@@ -90,13 +91,15 @@ const AttributePage: React.FC<AttributePageProps> = ({
   pageInfo,
   onNextPage,
   onPreviousPage,
-  children
+  children,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
+
   const {
     isMetadataModified,
     isPrivateMetadataModified,
-    makeChangeHandler: makeMetadataChangeHandler
+    makeChangeHandler: makeMetadataChangeHandler,
   } = useMetadataChangeTrigger();
 
   const initialForm: AttributePageFormData =
@@ -115,7 +118,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
           type: AttributeTypeEnum.PRODUCT_TYPE,
           valueRequired: true,
           visibleInStorefront: true,
-          unit: undefined
+          unit: undefined,
         }
       : {
           availableInGrid: attribute?.availableInGrid ?? true,
@@ -126,7 +129,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
           metadata: attribute?.metadata?.map(mapMetadataItemToInput),
           name: attribute?.name ?? "",
           privateMetadata: attribute?.privateMetadata?.map(
-            mapMetadataItemToInput
+            mapMetadataItemToInput,
           ),
           slug: attribute?.slug ?? "",
           storefrontSearchPosition:
@@ -134,7 +137,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
           type: attribute?.type || AttributeTypeEnum.PRODUCT_TYPE,
           valueRequired: !!attribute?.valueRequired ?? true,
           visibleInStorefront: attribute?.visibleInStorefront ?? true,
-          unit: attribute?.unit || null
+          unit: attribute?.unit || null,
         };
 
   const handleSubmit = (data: AttributePageFormData) => {
@@ -151,7 +154,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
       metadata,
       privateMetadata,
       slug: data.slug || slugify(data.name).toLowerCase(),
-      type
+      type,
     });
   };
 
@@ -170,22 +173,23 @@ const AttributePage: React.FC<AttributePageProps> = ({
         submit,
         errors,
         setError,
-        clearErrors
+        clearErrors,
       }) => {
         const changeMetadata = makeMetadataChangeHandler(change);
 
         return (
           <>
             <Container>
-              <Backlink onClick={onBack}>
+              <Backlink href={attributeListUrl()}>
                 {intl.formatMessage(sectionNames.attributes)}
               </Backlink>
               <PageHeader
                 title={
                   attribute === null
                     ? intl.formatMessage({
+                        id: "8cUEPV",
                         defaultMessage: "Create New Attribute",
-                        description: "page title"
+                        description: "page title",
                       })
                     : maybe(() => attribute.name)
                 }
@@ -204,7 +208,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
                     clearErrors={clearErrors}
                   />
                   {ATTRIBUTE_TYPES_WITH_DEDICATED_VALUES.includes(
-                    data.inputType
+                    data.inputType,
                   ) && (
                     <>
                       <CardSpacer />
@@ -246,7 +250,7 @@ const AttributePage: React.FC<AttributePageProps> = ({
               <Savebar
                 disabled={isSaveDisabled}
                 state={saveButtonBarState}
-                onCancel={onBack}
+                onCancel={() => navigate(attributeListUrl())}
                 onSubmit={submit}
                 onDelete={attribute === null ? undefined : onDelete}
               />

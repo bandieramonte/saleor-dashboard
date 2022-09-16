@@ -2,7 +2,7 @@ import { WindowTitle } from "@saleor/components/WindowTitle";
 import {
   usePageTypeCreateMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -12,9 +12,9 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import PageTypeCreatePage, {
-  PageTypeForm
+  PageTypeForm,
 } from "../components/PageTypeCreatePage";
-import { pageTypeListUrl, pageTypeUrl } from "../urls";
+import { pageTypeUrl } from "../urls";
 
 export const PageTypeCreate: React.FC = () => {
   const navigate = useNavigator();
@@ -29,49 +29,49 @@ export const PageTypeCreate: React.FC = () => {
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Successfully created page type"
-          })
+            id: "5bJ26s",
+            defaultMessage: "Successfully created page type",
+          }),
         });
         navigate(pageTypeUrl(updateData.pageTypeCreate.pageType.id));
       }
-    }
+    },
   });
 
   const handleCreate = async (formData: PageTypeForm) => {
     const result = await createPageType({
       variables: {
         input: {
-          name: formData.name
-        }
-      }
+          name: formData.name,
+        },
+      },
     });
 
     return {
       id: result.data?.pageTypeCreate.pageType?.id || null,
-      errors: getMutationErrors(result)
+      errors: getMutationErrors(result),
     };
   };
 
   const handleSubmit = createMetadataCreateHandler(
     handleCreate,
     updateMetadata,
-    updatePrivateMetadata
+    updatePrivateMetadata,
   );
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage({
+          id: "BftZHy",
           defaultMessage: "Create Page Type",
           description: "window title",
-          id: "pageTypeCreateHeader"
         })}
       />
       <PageTypeCreatePage
         disabled={createPageTypeOpts.loading}
         errors={createPageTypeOpts.data?.pageTypeCreate.errors || []}
         saveButtonBarState={createPageTypeOpts.status}
-        onBack={() => navigate(pageTypeListUrl())}
         onSubmit={handleSubmit}
       />
     </>

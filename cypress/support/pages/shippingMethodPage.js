@@ -1,5 +1,6 @@
 import { BUTTON_SELECTORS } from "../../elements/shared/button-selectors";
 import { SHARED_ELEMENTS } from "../../elements/shared/sharedElements";
+import { UNSAVED_CHANGES_DIALOG } from "../../elements/shared/unsavedChangesDialog";
 import { SHIPPING_RATE_DETAILS } from "../../elements/shipping/shipping-rate-details";
 import { SHIPPING_ZONE_DETAILS } from "../../elements/shipping/shipping-zone-details";
 import { SHIPPING_ZONES_LIST } from "../../elements/shipping/shipping-zones-list";
@@ -8,14 +9,14 @@ export function createShippingZone(
   shippingName,
   warehouseName,
   country,
-  channelName
+  channelName,
 ) {
   cy.get(SHIPPING_ZONES_LIST.addShippingZone).click();
   fillUpShippingZoneData({
     shippingName,
     warehouseName,
     country,
-    channelName
+    channelName,
   });
 }
 
@@ -23,7 +24,7 @@ export function fillUpShippingZoneData({
   shippingName,
   warehouseName,
   country,
-  channelName
+  channelName,
 }) {
   cy.get(SHIPPING_ZONE_DETAILS.nameInput)
     .clearAndType(shippingName)
@@ -31,12 +32,26 @@ export function fillUpShippingZoneData({
     .clearAndType(shippingName)
     .get(BUTTON_SELECTORS.confirm)
     .click()
-    .confirmationMessageShouldDisappear()
+    .confirmationMessageShouldAppear()
+
+    .get(SHIPPING_ZONE_DETAILS.warehouseSelector)
+    .click()
+    .get(SHIPPING_ZONE_DETAILS.warehouseSelector)
+    .type(warehouseName)
+    .get(SHIPPING_ZONE_DETAILS.autocompleteContentDialog);
+  cy.contains(SHIPPING_ZONE_DETAILS.option, warehouseName)
+    .click({ force: true })
+    .get(SHIPPING_ZONE_DETAILS.channelSelector)
+    .click()
+    .get(SHIPPING_ZONE_DETAILS.option)
+    .contains(channelName)
+    .click()
     .get(SHIPPING_ZONE_DETAILS.assignCountryButton)
     .click()
     .get(SHIPPING_ZONE_DETAILS.searchInput)
     .type(country);
-  cy.contains(SHIPPING_ZONE_DETAILS.tableRow, country)
+  return cy
+    .contains(SHIPPING_ZONE_DETAILS.tableRow, country)
     .find(BUTTON_SELECTORS.checkbox)
     .click()
     .get(SHIPPING_ZONE_DETAILS.submitAssignCountry)
@@ -44,25 +59,8 @@ export function fillUpShippingZoneData({
     .get(BUTTON_SELECTORS.confirm)
     .click()
     .confirmationMessageShouldDisappear()
-    .get(SHIPPING_ZONE_DETAILS.warehouseSelector)
-    .click()
-    .get(SHIPPING_ZONE_DETAILS.warehouseSelector)
-    .type(warehouseName)
-    .get(SHIPPING_ZONE_DETAILS.autocompleteContentDialog)
-    .scrollTo("bottom");
-  return cy
-    .contains(SHIPPING_ZONE_DETAILS.option, warehouseName)
-    .click({ force: true })
-    .get(SHIPPING_ZONE_DETAILS.channelSelector)
-    .click()
-    .get(SHIPPING_ZONE_DETAILS.option)
-    .contains(channelName)
-    .click()
     .addAliasToGraphRequest("UpdateShippingZone")
-    .get(BUTTON_SELECTORS.confirm)
-    .click()
-    .confirmationMessageShouldDisappear()
-    .waitForRequestAndCheckIfNoErrors("@UpdateShippingZone");
+    .reload();
 }
 
 export function changeWeightUnit(weightUnit) {
@@ -70,7 +68,7 @@ export function changeWeightUnit(weightUnit) {
     .addAliasToGraphRequest("UpdateDefaultWeightUnit")
     .get(SHIPPING_ZONES_LIST.saveUnit)
     .click()
-    .confirmationMessageShouldDisappear()
+    .confirmationMessageShouldAppear()
     .waitForRequestAndCheckIfNoErrors("@UpdateDefaultWeightUnit")
     .wait(5000);
 }
@@ -81,7 +79,7 @@ export function createShippingRate({
   rateOption,
   weightLimits,
   deliveryTime,
-  priceLimits
+  priceLimits,
 }) {
   enterAndFillUpShippingRate({
     rateName,
@@ -89,7 +87,7 @@ export function createShippingRate({
     rateOption,
     weightLimits,
     deliveryTime,
-    priceLimits
+    priceLimits,
   });
   return saveRate();
 }
@@ -100,7 +98,7 @@ export function enterAndFillUpShippingRate({
   rateOption,
   weightLimits,
   priceLimits,
-  deliveryTime
+  deliveryTime,
 }) {
   cy.get(rateOption).click();
   fillUpShippingRate({
@@ -108,7 +106,7 @@ export function enterAndFillUpShippingRate({
     price,
     weightLimits,
     priceLimits,
-    deliveryTime
+    deliveryTime,
   });
 }
 
@@ -117,7 +115,7 @@ export function fillUpShippingRate({
   price,
   weightLimits,
   priceLimits,
-  deliveryTime
+  deliveryTime,
 }) {
   cy.waitForProgressBarToNotBeVisible()
     .get(SHARED_ELEMENTS.richTextEditor.empty)
@@ -144,7 +142,7 @@ export function createRateWithPostalCode({
   rateOption = rateOptions.PRICE_OPTION,
   minPostalCode,
   maxPostalCode,
-  postalCodeOption
+  postalCodeOption,
 }) {
   enterAndFillUpShippingRate({ rateName, price, rateOption });
   cy.get(postalCodeOption)
@@ -166,10 +164,10 @@ export function saveRate() {
     .addAliasToGraphRequest("ShippingZone")
     .get(BUTTON_SELECTORS.confirm)
     .click()
-    .confirmationMessageShouldDisappear()
+    .confirmationMessageShouldAppear()
     .waitForRequestAndCheckIfNoErrors(`@ShippingMethodChannelListingUpdate`)
     .waitForRequestAndCheckIfNoErrors(`@ShippingZone`)
-    .its("response.body.0.data.shippingZone");
+    .its("response.body.data.shippingZone");
 }
 
 export function saveRateAfterUpdate() {
@@ -177,7 +175,7 @@ export function saveRateAfterUpdate() {
     .addAliasToGraphRequest("ShippingMethodChannelListingUpdate")
     .get(BUTTON_SELECTORS.confirm)
     .click()
-    .confirmationMessageShouldDisappear()
+    .confirmationMessageShouldAppear()
     .waitForRequestAndCheckIfNoErrors(`@ShippingMethodChannelListingUpdate`);
 }
 
@@ -197,10 +195,10 @@ export function fillUpDeliveryTime({ min, max }) {
 
 export const rateOptions = {
   PRICE_OPTION: SHIPPING_ZONE_DETAILS.addPriceRateButton,
-  WEIGHT_OPTION: SHIPPING_ZONE_DETAILS.addWeightRateButton
+  WEIGHT_OPTION: SHIPPING_ZONE_DETAILS.addWeightRateButton,
 };
 
 export const postalCodesOptions = {
   INCLUDE_OPTION: SHIPPING_RATE_DETAILS.includePostalCodesCheckbox,
-  EXCLUDE_OPTION: SHIPPING_RATE_DETAILS.excludePostalCodesCheckbox
+  EXCLUDE_OPTION: SHIPPING_RATE_DETAILS.excludePostalCodesCheckbox,
 };

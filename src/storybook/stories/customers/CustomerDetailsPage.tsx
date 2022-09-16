@@ -3,23 +3,20 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import CustomerDetailsPageComponent, {
-  CustomerDetailsPageProps
+  CustomerDetailsPageProps,
 } from "../../../customers/components/CustomerDetailsPage";
 import { customer } from "../../../customers/fixtures";
 import Decorator from "../../Decorator";
 import { MockedUserProvider } from "./MockedUserProvider";
 
 const props: Omit<CustomerDetailsPageProps, "classes"> = {
+  customerId: "123",
   customer,
   disabled: false,
   errors: [],
-  onAddressManageClick: () => undefined,
-  onBack: () => undefined,
   onDelete: () => undefined,
-  onRowClick: () => undefined,
   onSubmit: () => undefined,
-  onViewAllOrdersClick: () => undefined,
-  saveButtonBar: "default"
+  saveButtonBar: "default",
 };
 
 interface CustomerDetailsPageErrors {
@@ -51,7 +48,7 @@ storiesOf("Views / Customers / Customer details", module)
         code: AccountErrorCode.INVALID,
         field,
         addressType: null,
-        message: "Account invalid"
+        message: "Account invalid",
       }))}
     />
   ))
@@ -62,8 +59,8 @@ storiesOf("Views / Customers / Customer details", module)
         ...customer,
         defaultBillingAddress: {
           ...customer.defaultBillingAddress,
-          id: "AvSduf72="
-        }
+          id: "AvSduf72=",
+        },
       }}
     />
   ))
@@ -72,7 +69,7 @@ storiesOf("Views / Customers / Customer details", module)
       {...props}
       customer={{
         ...customer,
-        lastLogin: null
+        lastLogin: null,
       }}
     />
   ))
@@ -83,8 +80,8 @@ storiesOf("Views / Customers / Customer details", module)
         ...customer,
         lastPlacedOrder: {
           ...customer.lastPlacedOrder,
-          edges: []
-        }
+          edges: [],
+        },
       }}
     />
   ))
@@ -93,7 +90,7 @@ storiesOf("Views / Customers / Customer details", module)
       {...props}
       customer={{
         ...customer,
-        defaultBillingAddress: null
+        defaultBillingAddress: null,
       }}
     />
   ))
@@ -102,7 +99,7 @@ storiesOf("Views / Customers / Customer details", module)
       {...props}
       customer={{
         ...customer,
-        defaultShippingAddress: null
+        defaultShippingAddress: null,
       }}
     />
   ))
@@ -112,7 +109,7 @@ storiesOf("Views / Customers / Customer details", module)
       customer={{
         ...customer,
         defaultBillingAddress: null,
-        defaultShippingAddress: null
+        defaultShippingAddress: null,
       }}
     />
   ));

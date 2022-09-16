@@ -43,25 +43,27 @@ export enum ListViews {
   WAREHOUSE_LIST = "WAREHOUSE_LIST",
   WEBHOOK_LIST = "WEBHOOK_LIST",
   TRANSLATION_ATTRIBUTE_VALUE_LIST = "TRANSLATION_ATTRIBUTE_VALUE_LIST",
-  GIFT_CARD_LIST = " GIFT_CARD_LIST"
+  GIFT_CARD_LIST = " GIFT_CARD_LIST",
 }
 
 export interface ListProps<TColumns extends string = string> {
   disabled: boolean;
+  settings?: ListSettings<TColumns>;
+  onUpdateListSettings?: <T extends keyof ListSettings<TColumns>>(
+    key: T,
+    value: ListSettings<TColumns>[T],
+  ) => void;
+  onListSettingsReset?: () => void;
+  filterDependency?: FilterElement;
+}
+
+export interface PaginateListProps {
   pageInfo?: {
     hasNextPage: boolean;
     hasPreviousPage: boolean;
   };
-  settings?: ListSettings<TColumns>;
   onNextPage: () => void;
   onPreviousPage: () => void;
-  onRowClick: (id: string) => () => void;
-  onUpdateListSettings?: <T extends keyof ListSettings<TColumns>>(
-    key: T,
-    value: ListSettings<TColumns>[T]
-  ) => void;
-  onListSettingsReset?: () => void;
-  filterDependency?: FilterElement;
 }
 
 export interface SortPage<TSortKey extends string> {
@@ -91,7 +93,6 @@ export interface ListActions extends ListActionsWithoutToolbar {
 export interface PageListProps<TColumns extends string = string>
   extends ListProps<TColumns> {
   defaultSettings?: ListSettings<TColumns>;
-  onAdd: () => void;
 }
 
 export interface SearchProps {
@@ -230,7 +231,7 @@ export enum StatusType {
   INFO = "info",
   ERROR = "error",
   WARNING = "warning",
-  SUCCESS = "success"
+  SUCCESS = "success",
 }
 
 export type RelayToFlat<T extends { edges: Array<{ node: any }> }> = Array<

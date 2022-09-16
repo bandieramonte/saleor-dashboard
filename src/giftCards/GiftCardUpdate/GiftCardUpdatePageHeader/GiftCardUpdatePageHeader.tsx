@@ -1,8 +1,10 @@
 import HorizontalSpacer from "@saleor/apps/components/HorizontalSpacer";
+import { Backlink } from "@saleor/components/Backlink";
+import { Button } from "@saleor/components/Button";
 import PageHeader from "@saleor/components/PageHeader";
 import GiftCardStatusChip from "@saleor/giftCards/components/GiftCardStatusChip/GiftCardStatusChip";
+import { giftCardsListPath } from "@saleor/giftCards/urls";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, Button } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -18,7 +20,6 @@ const GiftCardUpdatePageHeader: React.FC = () => {
   const classes = useStyles();
   const intl = useIntl();
   const { giftCard } = useGiftCardDetails();
-  const { navigateBack } = useGiftCardUpdateDialogs();
 
   const { openResendCodeDialog } = useGiftCardUpdateDialogs();
 
@@ -29,12 +30,12 @@ const GiftCardUpdatePageHeader: React.FC = () => {
   const { last4CodeChars, isExpired } = giftCard;
 
   const title = intl.formatMessage(tableMessages.codeEndingWithLabel, {
-    last4CodeChars
+    last4CodeChars,
   });
 
   return (
     <>
-      <Backlink onClick={navigateBack}>
+      <Backlink href={giftCardsListPath}>
         {intl.formatMessage(sectionNames.giftCards)}
       </Backlink>
       <PageHeader

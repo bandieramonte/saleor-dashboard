@@ -3,7 +3,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import HorizontalSpacer from "@saleor/apps/components/HorizontalSpacer";
 import Checkbox from "@saleor/components/Checkbox";
@@ -12,6 +12,8 @@ import Link from "@saleor/components/Link";
 import Money from "@saleor/components/Money";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { customerUrl } from "@saleor/customers/urls";
 import GiftCardStatusChip from "@saleor/giftCards/components/GiftCardStatusChip/GiftCardStatusChip";
 import { PLACEHOLDER } from "@saleor/giftCards/GiftCardUpdate/types";
@@ -45,7 +47,7 @@ const GiftCardsListTable: React.FC = () => {
     isSelected,
     giftCards,
     numberOfColumns,
-    params
+    params,
   } = useGiftCardList();
   const { openDeleteDialog } = useGiftCardListDialogs();
 
@@ -56,18 +58,11 @@ const GiftCardsListTable: React.FC = () => {
       navigate(
         giftCardListUrl({
           ...params,
-          sort: GiftCardUrlSortField.usedBy
-        })
+          sort: GiftCardUrlSortField.usedBy,
+        }),
       );
     }
   });
-
-  const redirectToGiftCardUpdate = (id: string) => () =>
-    navigate(giftCardUrl(id));
-
-  const onLinkClick: React.MouseEventHandler = event => {
-    event.stopPropagation();
-  };
 
   return (
     <Card>
@@ -102,12 +97,12 @@ const GiftCardsListTable: React.FC = () => {
                 usedByEmail,
                 tags,
                 product,
-                currentBalance
+                currentBalance,
               } = giftCard;
 
               return (
-                <TableRow
-                  onClick={redirectToGiftCardUpdate(id)}
+                <TableRowLink
+                  href={giftCardUrl(id)}
                   className={classes.row}
                   key={id}
                   hover={!!giftCard}
@@ -126,7 +121,7 @@ const GiftCardsListTable: React.FC = () => {
                     <div className={classes.cardCodeContainer}>
                       <Typography>
                         {intl.formatMessage(messages.codeEndingWithLabel, {
-                          last4CodeChars
+                          last4CodeChars,
                         })}
                       </Typography>
                       <>
@@ -140,22 +135,30 @@ const GiftCardsListTable: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     {product ? (
-                      <PillLink
-                        component={RouterLink}
-                        to={productUrl(product?.id)}
-                        onClick={onLinkClick}
-                      >
-                        {product?.name}
-                      </PillLink>
+                      <TableButtonWrapper>
+                        <PillLink
+                          className={classes.pill}
+                          component={RouterLink}
+                          to={productUrl(product?.id)}
+                          onClick={event => {
+                            event.stopPropagation();
+                            navigate(productUrl(product?.id));
+                          }}
+                        >
+                          {product?.name}
+                        </PillLink>
+                      </TableButtonWrapper>
                     ) : (
                       PLACEHOLDER
                     )}
                   </TableCell>
                   <TableCell>
                     {usedBy ? (
-                      <Link href={customerUrl(usedBy?.id)}>
-                        {`${usedBy?.firstName} ${usedBy?.lastName}`}
-                      </Link>
+                      <TableButtonWrapper>
+                        <Link href={customerUrl(usedBy?.id)}>
+                          {`${usedBy?.firstName} ${usedBy?.lastName}`}
+                        </Link>
+                      </TableButtonWrapper>
                     ) : (
                       <Typography noWrap>
                         {usedByEmail || PLACEHOLDER}
@@ -173,7 +176,7 @@ const GiftCardsListTable: React.FC = () => {
                       }}
                     />
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
@@ -182,7 +185,7 @@ const GiftCardsListTable: React.FC = () => {
                   <FormattedMessage {...messages.noGiftCardsFound} />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

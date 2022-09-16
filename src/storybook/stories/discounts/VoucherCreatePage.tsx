@@ -6,7 +6,7 @@ import React from "react";
 
 import VoucherCreatePage, {
   FormData,
-  VoucherCreatePageProps
+  VoucherCreatePageProps,
 } from "../../../discounts/components/VoucherCreatePage";
 import Decorator from "../../Decorator";
 
@@ -17,12 +17,10 @@ const props: VoucherCreatePageProps = {
   channelListings: channels,
   disabled: false,
   errors: [],
-  hasChannelChanged: false,
-  onBack: () => undefined,
   onChannelsChange: () => undefined,
   onSubmit: () => undefined,
   openChannelsModal: () => undefined,
-  saveButtonBarState: "default"
+  saveButtonBarState: "default",
 };
 
 storiesOf("Views / Discounts / Voucher create", module)
@@ -41,13 +39,13 @@ storiesOf("Views / Discounts / Voucher create", module)
         "startDate",
         "type",
         "usageLimit",
-        "value"
+        "value",
       ] as Array<keyof FormData>).map(field => ({
         __typename: "DiscountError",
         channels: [],
         code: DiscountErrorCode.INVALID,
         field,
-        message: "Discount invalid"
+        message: "Discount invalid",
       }))}
     />
   ));

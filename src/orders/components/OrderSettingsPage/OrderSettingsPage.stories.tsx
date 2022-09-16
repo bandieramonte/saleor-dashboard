@@ -1,6 +1,6 @@
 import {
   orderSettings as orderSettingsFixture,
-  shopOrderSettings as shopOrderSettingsFixture
+  shopOrderSettings as shopOrderSettingsFixture,
 } from "@saleor/orders/fixtures";
 import { storiesOf } from "@storybook/react";
 import React from "react";
@@ -12,9 +12,8 @@ const props: OrderSettingsPageProps = {
   orderSettings: orderSettingsFixture,
   shop: shopOrderSettingsFixture,
   disabled: false,
-  onBack: () => undefined,
   onSubmit: () => undefined,
-  saveButtonBarState: "default"
+  saveButtonBarState: "default",
 };
 
 storiesOf("Views / Orders / Order settings", module)

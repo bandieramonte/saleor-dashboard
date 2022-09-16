@@ -22,7 +22,7 @@ const TranslationFieldsShort: React.FC<TranslationFieldsShortProps> = ({
   initial,
   saveButtonState,
   onDiscard,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
 
@@ -38,7 +38,8 @@ const TranslationFieldsShort: React.FC<TranslationFieldsShortProps> = ({
             disabled={disabled}
             fullWidth
             label={intl.formatMessage({
-              defaultMessage: "Translation"
+              id: "/vCXIP",
+              defaultMessage: "Translation",
             })}
             name="translation"
             data-test-id="translation-field"
@@ -55,7 +56,7 @@ const TranslationFieldsShort: React.FC<TranslationFieldsShortProps> = ({
     </Form>
   ) : initial === null ? (
     <Typography color="textSecondary">
-      <FormattedMessage defaultMessage="No translation yet" />
+      <FormattedMessage id="T/5OyA" defaultMessage="No translation yet" />
     </Typography>
   ) : (
     <Typography>{initial}</Typography>

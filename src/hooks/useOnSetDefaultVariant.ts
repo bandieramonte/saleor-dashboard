@@ -14,36 +14,37 @@ function useOnSetDefaultVariant(productId: string, variant: Node) {
         errors.map(error =>
           notify({
             status: "error",
-            text: getProductErrorMessage(error, intl)
-          })
+            text: getProductErrorMessage(error, intl),
+          }),
         );
       } else {
         const defaultVariant = data.productVariantSetDefault.product.variants.find(
           variant =>
             variant.id ===
-            data.productVariantSetDefault.product.defaultVariant.id
+            data.productVariantSetDefault.product.defaultVariant.id,
         );
         if (defaultVariant) {
           notify({
             status: "success",
             text: intl.formatMessage(
               {
-                defaultMessage: "Variant {name} has been set as default."
+                id: "gSQ0Ge",
+                defaultMessage: "Variant {name} has been set as default.",
               },
-              { name: defaultVariant.name }
-            )
+              { name: defaultVariant.name },
+            ),
           });
         }
       }
-    }
+    },
   });
 
   const onSetDefaultVariant = (selectedVariant = null) => {
     productVariantSetDefault({
       variables: {
         productId,
-        variantId: variant ? variant.id : selectedVariant.id
-      }
+        variantId: variant ? variant.id : selectedVariant.id,
+      },
     });
   };
 

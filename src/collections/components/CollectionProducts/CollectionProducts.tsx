@@ -3,19 +3,23 @@ import {
   TableBody,
   TableCell,
   TableFooter,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import { ChannelsAvailabilityDropdown } from "@saleor/components/ChannelsAvailabilityDropdown";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import { AVATAR_MARGIN } from "@saleor/components/TableCellAvatar/Avatar";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { CollectionDetailsQuery } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { productUrl } from "@saleor/products/urls";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -27,34 +31,35 @@ const useStyles = makeStyles(
   theme => ({
     colActions: {
       width: `calc(76px + ${theme.spacing(1)})`,
-      marginRight: theme.spacing(-2)
+      marginRight: theme.spacing(-2),
     },
     colName: {
       paddingLeft: 0,
-      width: "auto"
+      width: "auto",
     },
     colNameLabel: {
-      marginLeft: AVATAR_MARGIN
+      marginLeft: AVATAR_MARGIN,
     },
     colPublished: {
-      width: 200
+      width: 200,
     },
     colType: {
-      width: 200
+      width: 200,
     },
     table: {
-      tableLayout: "fixed"
+      tableLayout: "fixed",
     },
     tableRow: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "CollectionProducts" }
+  { name: "CollectionProducts" },
 );
 
 export interface CollectionProductsProps extends PageListProps, ListActions {
   collection: CollectionDetailsQuery["collection"];
   onProductUnassign: (id: string, event: React.MouseEvent<any>) => void;
+  onAdd: () => void;
 }
 
 const CollectionProducts: React.FC<CollectionProductsProps> = props => {
@@ -62,16 +67,12 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
     collection,
     disabled,
     onAdd,
-    onNextPage,
-    onPreviousPage,
     onProductUnassign,
-    onRowClick,
-    pageInfo,
     isChecked,
     selected,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
 
   const classes = useStyles(props);
@@ -87,12 +88,13 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
           !!collection ? (
             intl.formatMessage(
               {
+                id: "/dnWE8",
                 defaultMessage: "Products in {name}",
-                description: "products in collection"
+                description: "products in collection",
               },
               {
-                name: maybe(() => collection.name, "...")
-              }
+                name: maybe(() => collection.name, "..."),
+              },
             )
           ) : (
             <Skeleton />
@@ -106,6 +108,7 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
             onClick={onAdd}
           >
             <FormattedMessage
+              id="scHVdW"
               defaultMessage="Assign product"
               description="button"
             />
@@ -124,6 +127,7 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
           <TableCell className={classes.colName}>
             <span className={classes.colNameLabel}>
               <FormattedMessage
+                id="6AMFki"
                 defaultMessage="Name"
                 description="product name"
               />
@@ -131,12 +135,14 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
           </TableCell>
           <TableCell className={classes.colType}>
             <FormattedMessage
+              id="k+HcTv"
               defaultMessage="Type"
               description="product type"
             />
           </TableCell>
           <TableCell className={classes.colPublished}>
             <FormattedMessage
+              id="Oe62bR"
               defaultMessage="Availability"
               description="product availability"
             />
@@ -145,13 +151,7 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
-              colSpan={numberOfColumns}
-              hasNextPage={pageInfo?.hasNextPage}
-              onNextPage={onNextPage}
-              hasPreviousPage={pageInfo?.hasPreviousPage}
-              onPreviousPage={onPreviousPage}
-            />
+            <TablePaginationWithContext colSpan={numberOfColumns} />
           </TableRow>
         </TableFooter>
         <TableBody>
@@ -161,10 +161,10 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
               const isSelected = product ? isChecked(product.id) : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   className={classes.tableRow}
                   hover={!!product}
-                  onClick={!!product ? onRowClick(product.id) : undefined}
+                  href={product && productUrl(product.id)}
                   key={product ? product.id : "skeleton"}
                   selected={isSelected}
                 >
@@ -185,7 +185,7 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
                   <TableCell className={classes.colType}>
                     {maybe<React.ReactNode>(
                       () => product.productType.name,
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCell>
                   <TableCell className={classes.colType}>
@@ -200,25 +200,30 @@ const CollectionProducts: React.FC<CollectionProductsProps> = props => {
                     )}
                   </TableCell>
                   <TableCell className={classes.colActions}>
-                    <IconButton
-                      data-test-id="delete-icon"
-                      variant="secondary"
-                      disabled={!product}
-                      onClick={event => onProductUnassign(product.id, event)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <TableButtonWrapper>
+                      <IconButton
+                        data-test-id="delete-icon"
+                        variant="secondary"
+                        disabled={!product}
+                        onClick={event => onProductUnassign(product.id, event)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableButtonWrapper>
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No products found" />
+                  <FormattedMessage
+                    id="Q1Uzbb"
+                    defaultMessage="No products found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

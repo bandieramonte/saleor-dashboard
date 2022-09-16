@@ -243,8 +243,16 @@ export const orderFulfillmentUpdateTrackingMutation = gql`
 `;
 
 export const orderFulfillmentApproveMutation = gql`
-  mutation OrderFulfillmentApprove($id: ID!, $notifyCustomer: Boolean!) {
-    orderFulfillmentApprove(id: $id, notifyCustomer: $notifyCustomer) {
+  mutation OrderFulfillmentApprove(
+    $id: ID!
+    $notifyCustomer: Boolean!
+    $allowStockToBeExceeded: Boolean
+  ) {
+    orderFulfillmentApprove(
+      id: $id
+      notifyCustomer: $notifyCustomer
+      allowStockToBeExceeded: $allowStockToBeExceeded
+    ) {
       errors {
         ...OrderError
       }
@@ -376,7 +384,10 @@ export const orderLineDeleteMutation = gql`
         ...OrderError
       }
       order {
-        ...OrderDetails
+        id
+        lines {
+          ...OrderLine
+        }
       }
     }
   }
@@ -389,7 +400,10 @@ export const orderLinesAddMutation = gql`
         ...OrderError
       }
       order {
-        ...OrderDetails
+        id
+        lines {
+          ...OrderLine
+        }
       }
     }
   }
@@ -401,8 +415,8 @@ export const orderLineUpdateMutation = gql`
       errors {
         ...OrderError
       }
-      order {
-        ...OrderDetails
+      orderLine {
+        ...OrderLine
       }
     }
   }
@@ -414,7 +428,6 @@ export const fulfillOrder = gql`
       errors {
         ...OrderError
         warehouse
-        orderLines
       }
       order {
         ...OrderDetails

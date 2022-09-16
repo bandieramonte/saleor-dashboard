@@ -4,17 +4,18 @@ import {
   TableCell,
   TableFooter,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
 import { ShippingZoneQuery } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { renderCollection } from "@saleor/misc";
 import { ListActions, ListProps, RelayToFlat } from "@saleor/types";
 import React from "react";
@@ -24,26 +25,26 @@ const useStyles = makeStyles(
   theme => ({
     colAction: {
       "&:last-child": {
-        paddingRight: theme.spacing(3)
+        paddingRight: theme.spacing(3),
       },
       textAlign: "right",
-      width: 100
+      width: 100,
     },
     colName: {
-      width: "auto"
+      width: "auto",
     },
     colProductName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     table: {
-      tableLayout: "fixed"
-    }
+      tableLayout: "fixed",
+    },
   }),
-  { name: "ShippingMethodProducts" }
+  { name: "ShippingMethodProducts" },
 );
 
 export interface ShippingMethodProductsProps
-  extends Pick<ListProps, Exclude<keyof ListProps, "onRowClick">>,
+  extends Pick<ListProps, Exclude<keyof ListProps, "getRowHref">>,
     ListActions {
   products: RelayToFlat<
     ShippingZoneQuery["shippingZone"]["shippingMethods"][0]["excludedProducts"]
@@ -57,17 +58,14 @@ const numberOfColumns = 3;
 const ShippingMethodProducts: React.FC<ShippingMethodProductsProps> = props => {
   const {
     disabled,
-    pageInfo,
     products,
-    onNextPage,
-    onPreviousPage,
     onProductAssign,
     onProductUnassign,
     isChecked,
     selected,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
 
   const classes = useStyles(props);
@@ -77,12 +75,14 @@ const ShippingMethodProducts: React.FC<ShippingMethodProductsProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "t3aiWF",
           defaultMessage: "Excluded Products",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
           <Button variant="tertiary" onClick={onProductAssign}>
             <FormattedMessage
+              id="U8eeLW"
               defaultMessage="Assign products"
               description="button"
             />
@@ -101,24 +101,17 @@ const ShippingMethodProducts: React.FC<ShippingMethodProductsProps> = props => {
               toolbar={toolbar}
             >
               <TableCell className={classes.colProductName}>
-                <FormattedMessage defaultMessage="Product Name" />
+                <FormattedMessage id="ZIc5lM" defaultMessage="Product Name" />
               </TableCell>
               <TableCell className={classes.colAction}>
-                <FormattedMessage defaultMessage="Actions" />
+                <FormattedMessage id="wL7VAE" defaultMessage="Actions" />
               </TableCell>
             </TableHead>
             <TableFooter>
               <TableRow>
-                <TablePagination
+                <TablePaginationWithContext
                   colSpan={numberOfColumns}
-                  hasNextPage={
-                    pageInfo && !disabled ? pageInfo.hasNextPage : false
-                  }
-                  onNextPage={onNextPage}
-                  hasPreviousPage={
-                    pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-                  }
-                  onPreviousPage={onPreviousPage}
+                  disabled={disabled}
                 />
               </TableRow>
             </TableFooter>
@@ -128,7 +121,7 @@ const ShippingMethodProducts: React.FC<ShippingMethodProductsProps> = props => {
           {products?.length === 0 ? (
             <TableRow>
               <TableCell colSpan={5}>
-                <FormattedMessage defaultMessage="No Products" />
+                <FormattedMessage id="Gg4+K7" defaultMessage="No Products" />
               </TableCell>
             </TableRow>
           ) : (

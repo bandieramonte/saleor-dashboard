@@ -5,19 +5,22 @@ import { getCommonFormFieldErrorMessage } from "./common";
 
 const messages = defineMessages({
   alreadyExists: {
-    defaultMessage: "An attribute already exists."
+    id: "KFv8hX",
+    defaultMessage: "An attribute already exists.",
   },
   nameAlreadyTaken: {
-    defaultMessage: "This name is already taken. Please provide another."
+    id: "FuAV5G",
+    defaultMessage: "This name is already taken. Please provide another.",
   },
   notFound: {
-    defaultMessage: "Attribute not found."
-  }
+    id: "SKFr04",
+    defaultMessage: "Attribute not found.",
+  },
 });
 
 function getAttributeErrorMessage(
   err: Omit<AttributeErrorFragment, "__typename"> | undefined,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   if (err) {
     switch (err.code) {

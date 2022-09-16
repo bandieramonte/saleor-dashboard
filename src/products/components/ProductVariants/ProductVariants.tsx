@@ -3,9 +3,10 @@ import {
   CardContent,
   Hidden,
   TableCell,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Checkbox from "@saleor/components/Checkbox";
 import LimitReachedAlert from "@saleor/components/LimitReachedAlert";
@@ -16,15 +17,20 @@ import { SingleAutocompleteChoiceType } from "@saleor/components/SingleAutocompl
 import Skeleton from "@saleor/components/Skeleton";
 import {
   SortableTableBody,
-  SortableTableRow
+  SortableTableRow,
 } from "@saleor/components/SortableTable";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableHead from "@saleor/components/TableHead";
 import {
   ProductDetailsVariantFragment,
   ProductFragment,
-  RefreshLimitsQuery
+  RefreshLimitsQuery,
 } from "@saleor/graphql";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
+import {
+  productVariantAddUrl,
+  productVariantEditUrl,
+} from "@saleor/products/urls";
 import { isLimitReached } from "@saleor/utils/limits";
 import React from "react";
 import { FormattedMessage, IntlShape, useIntl } from "react-intl";
@@ -37,15 +43,16 @@ type Warehouse = ProductDetailsVariantFragment[][0]["stocks"][0]["warehouse"];
 
 function getWarehouseChoices(
   variants: ProductDetailsVariantFragment[],
-  intl: IntlShape
+  intl: IntlShape,
 ): SingleAutocompleteChoiceType[] {
   return [
     {
       label: intl.formatMessage({
+        id: "JtZ71e",
         defaultMessage: "All Warehouses",
-        description: "filtering option"
+        description: "filtering option",
       }),
-      value: null
+      value: null,
     },
     ...variants
       .reduce<Warehouse[]>(
@@ -57,14 +64,14 @@ function getWarehouseChoices(
             }
 
             return [...variantStocks, stock.warehouse];
-          }, [])
+          }, []),
         ],
-        []
+        [],
       )
       .map(w => ({
         label: w.name,
-        value: w.id
-      }))
+        value: w.id,
+      })),
   ];
 }
 
@@ -72,85 +79,87 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colActions: {
-        width: 80
+        width: 80,
       },
       colInventory: {
-        width: 200
+        width: 200,
       },
       colName: {},
       colPrice: {
-        width: 135
+        width: 135,
       },
       colSku: {
-        width: 200
-      }
+        width: 200,
+      },
     },
     alert: {
-      margin: theme.spacing(3, 3, 0)
+      margin: theme.spacing(3, 3, 0),
     },
     colGrab: {
-      width: 60
+      width: 60,
     },
     colInventory: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colPrice: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colSku: {},
     colStatus: {},
     defaultVariant: {
       color: fade(theme.palette.text.secondary, 0.6),
-      display: "block"
+      display: "block",
     },
     link: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     select: {
-      display: "inline-block"
+      display: "inline-block",
     },
     textLeft: {
-      textAlign: "left" as "left"
+      textAlign: "left" as "left",
     },
     textRight: {
-      textAlign: "right" as "right"
+      textAlign: "right" as "right",
     },
     warehouseLabel: {
       display: "inline-block",
-      marginRight: theme.spacing()
+      marginRight: theme.spacing(),
     },
     warehouseSelectContainer: {
-      paddingTop: theme.spacing(2)
-    }
+      paddingTop: theme.spacing(2),
+    },
   }),
-  { name: "ProductVariants" }
+  { name: "ProductVariants" },
 );
 
 function getAvailabilityLabel(
   intl: IntlShape,
   warehouse: string,
   variant: ProductDetailsVariantFragment[][0],
-  numAvailable: number
+  numAvailable: number,
 ): string {
   if (variant.preorder) {
     if (variant.preorder.globalThreshold) {
       return intl.formatMessage(
         {
+          id: "80FeaT",
           defaultMessage: "{globalThreshold} Global threshold",
-          description: "product variant preorder threshold"
+          description: "product variant preorder threshold",
         },
         {
-          globalThreshold: variant.preorder.globalThreshold
-        }
+          globalThreshold: variant.preorder.globalThreshold,
+        },
       );
     }
 
     return intl.formatMessage({
+      id: "qbqMpk",
       defaultMessage: "In preorder",
-      description: "product variant preorder threshold"
+      description: "product variant preorder threshold",
     });
   }
 
@@ -161,71 +170,72 @@ function getAvailabilityLabel(
       if (variantStock.quantity > 0) {
         return intl.formatMessage(
           {
+            id: "uVssds",
             defaultMessage:
               "{stockQuantity,plural,one{{stockQuantity} available} other{{stockQuantity} available}}",
-            description: "product variant inventory"
+            description: "product variant inventory",
           },
           {
-            stockQuantity: variantStock.quantity
-          }
+            stockQuantity: variantStock.quantity,
+          },
         );
       } else {
         return intl.formatMessage({
+          id: "7mK2vs",
           defaultMessage: "Unavailable",
-          description: "product variant inventory"
+          description: "product variant inventory",
         });
       }
     } else {
       return intl.formatMessage({
+        id: "9PmyrU",
         defaultMessage: "Not stocked",
-        description: "product variant inventory"
+        description: "product variant inventory",
       });
     }
   } else {
     if (numAvailable > 0) {
       return intl.formatMessage(
         {
+          id: "wWYYBR",
           defaultMessage:
             "{numLocations,plural,one{{numAvailable} available at {numLocations} location} other{{numAvailable} available at {numLocations} locations}}",
-          description: "product variant inventory"
+          description: "product variant inventory",
         },
         {
           numAvailable,
-          numLocations: variant.stocks.length
-        }
+          numLocations: variant.stocks.length,
+        },
       );
     } else {
       return intl.formatMessage({
+        id: "6+sMz4",
         defaultMessage: "Unavailable in all locations",
-        description: "product variant inventory"
+        description: "product variant inventory",
       });
     }
   }
 }
 
 interface ProductVariantsProps extends ListActions, ChannelProps {
+  productId: string;
   disabled: boolean;
   limits: RefreshLimitsQuery["shop"]["limits"];
   product: ProductFragment;
   variants: ProductDetailsVariantFragment[];
   onVariantReorder: ReorderAction;
-  onRowClick: (id: string) => () => void;
   onSetDefaultVariant(variant: ProductDetailsVariantFragment[][0]);
-  onVariantAdd?();
-  onVariantsAdd?();
 }
 
 const numberOfColumns = 7;
 
 export const ProductVariants: React.FC<ProductVariantsProps> = props => {
   const {
+    productId,
     disabled,
     limits,
     variants,
     product,
-    onRowClick,
-    onVariantAdd,
-    onVariantsAdd,
     onVariantReorder,
     onSetDefaultVariant,
     isChecked,
@@ -233,7 +243,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
     selectedChannelId,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
   const classes = useStyles(props);
 
@@ -246,35 +256,23 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "1kdQdO",
           defaultMessage: "Variants",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
-          hasVariants ? (
-            <Button
-              disabled={limitReached}
-              onClick={onVariantAdd}
-              variant="tertiary"
-              data-test-id="button-add-variant"
-            >
-              <FormattedMessage
-                defaultMessage="Create variant"
-                description="button"
-              />
-            </Button>
-          ) : (
-            <Button
-              disabled={limitReached}
-              onClick={onVariantsAdd}
-              variant="tertiary"
-              data-test-id="button-add-variants"
-            >
-              <FormattedMessage
-                defaultMessage="Create variants"
-                description="button"
-              />
-            </Button>
-          )
+          <Button
+            disabled={limitReached}
+            href={productVariantAddUrl(productId)}
+            variant="tertiary"
+            data-test-id="button-add-variant"
+          >
+            <FormattedMessage
+              id="3VyHbJ"
+              defaultMessage="Create variant"
+              description="button"
+            />
+          </Button>
         }
       />
 
@@ -282,11 +280,15 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
         <LimitReachedAlert
           className={classes.alert}
           title={intl.formatMessage({
+            id: "FwHWUm",
             defaultMessage: "SKU limit reached",
-            description: "alert"
+            description: "alert",
           })}
         >
-          <FormattedMessage defaultMessage="You have reached your SKU limit, you will be no longer able to add SKUs to your store. If you would like to up your limit, contact your administration staff about raising your limits." />
+          <FormattedMessage
+            id="5Vwnu+"
+            defaultMessage="You have reached your SKU limit, you will be no longer able to add SKUs to your store. If you would like to up your limit, contact your administration staff about raising your limits."
+          />
         </LimitReachedAlert>
       )}
 
@@ -294,6 +296,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
         <CardContent className={classes.warehouseSelectContainer}>
           <Typography className={classes.warehouseLabel}>
             <FormattedMessage
+              id="FSinkL"
               defaultMessage="Available inventory at:"
               description="variant stock status"
             />
@@ -309,7 +312,10 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
       ) : (
         <CardContent>
           <Typography color={hasVariants ? "textPrimary" : "textSecondary"}>
-            <FormattedMessage defaultMessage="Use variants for products that come in a variety of versions for example different sizes or colors" />
+            <FormattedMessage
+              id="rIJbNC"
+              defaultMessage="Use variants for products that come in a variety of versions for example different sizes or colors"
+            />
           </Typography>
         </CardContent>
       )}
@@ -335,16 +341,18 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
           >
             <TableCell className={classes.colName}>
               <FormattedMessage
+                id="OTek3r"
                 defaultMessage="Variant"
                 description="product variant name"
               />
             </TableCell>
             <TableCell className={classes.colSku}>
-              <FormattedMessage defaultMessage="SKU" />
+              <FormattedMessage id="k4brJy" defaultMessage="SKU" />
             </TableCell>
             <Hidden smDown>
               <TableCell className={classes.colPrice}>
                 <FormattedMessage
+                  id="n02c9W"
                   defaultMessage="Price"
                   description="product variant price"
                 />
@@ -352,6 +360,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
             </Hidden>
             <TableCell className={classes.colInventory}>
               <FormattedMessage
+                id="kL3C+K"
                 defaultMessage="Inventory"
                 description="product variant inventory status"
               />
@@ -367,11 +376,11 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
                 variant && variant.stocks
                   ? variant.stocks.reduce(
                       (acc, s) => acc + s.quantity - s.quantityAllocated,
-                      0
+                      0,
                     )
                   : null;
               const channel = variant.channelListings.find(
-                listing => listing.channel.id === selectedChannelId
+                listing => listing.channel.id === selectedChannelId,
               );
 
               return (
@@ -379,7 +388,7 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
                   data-test-id="product-variant-row"
                   selected={isSelected}
                   hover={!!variant}
-                  onClick={onRowClick(variant.id)}
+                  href={productVariantEditUrl(product.id, variant.id)}
                   key={variant ? variant.id : "skeleton"}
                   index={variantIndex || 0}
                   className={classes.link}
@@ -397,8 +406,9 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
                     {isDefault && (
                       <span className={classes.defaultVariant}>
                         {intl.formatMessage({
+                          id: "vZMs8f",
                           defaultMessage: "Default",
-                          description: "default product variant indicator"
+                          description: "default product variant indicator",
                         })}
                       </span>
                     )}
@@ -429,21 +439,24 @@ export const ProductVariants: React.FC<ProductVariantsProps> = props => {
                         intl,
                         warehouse,
                         variant,
-                        numAvailable
+                        numAvailable,
                       )
                     )}
                   </TableCell>
-                  <TableCell
-                    className={classes.colActions}
-                    data-test-id="actions"
-                    onClick={e => e.stopPropagation()}
-                  >
-                    {variant?.id !== product?.defaultVariant?.id && (
-                      <ProductVariantSetDefault
-                        onSetDefaultVariant={() => onSetDefaultVariant(variant)}
-                      />
-                    )}
-                  </TableCell>
+                  <TableButtonWrapper>
+                    <TableCell
+                      className={classes.colActions}
+                      data-test-id="actions"
+                    >
+                      {variant?.id !== product?.defaultVariant?.id && (
+                        <ProductVariantSetDefault
+                          onSetDefaultVariant={() =>
+                            onSetDefaultVariant(variant)
+                          }
+                        />
+                      )}
+                    </TableCell>
+                  </TableButtonWrapper>
                 </SortableTableRow>
               );
             })}

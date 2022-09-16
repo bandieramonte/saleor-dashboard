@@ -8,11 +8,12 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import { MetadataInput } from "@saleor/graphql";
 import { FormChange } from "@saleor/hooks/useForm";
-import { Button, DeleteIcon, ExpandIcon, IconButton } from "@saleor/macaw-ui";
+import { DeleteIcon, ExpandIcon, IconButton } from "@saleor/macaw-ui";
 import classNames from "classnames";
 import React, { useEffect } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -35,7 +36,7 @@ export const valueInputPrefix = EventDataField.value;
 const MetadataCard: React.FC<MetadataCardProps> = ({
   data,
   isPrivate,
-  onChange
+  onChange,
 }) => {
   const intl = useIntl();
   const loaded = React.useRef(false);
@@ -63,16 +64,18 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
           <>
             {isPrivate
               ? intl.formatMessage({
+                  id: "ETHnjq",
                   defaultMessage: "Private Metadata",
-                  description: "header"
+                  description: "header",
                 })
               : intl.formatMessage({
+                  id: "VcI+Zh",
                   defaultMessage: "Metadata",
-                  description: "header"
+                  description: "header",
                 })}
             <IconButton
               className={classNames(classes.expandBtn, {
-                [classes.rotate]: expanded
+                [classes.rotate]: expanded,
               })}
               hoverOutline={false}
               variant="secondary"
@@ -94,10 +97,11 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
             {data.length > 0 && (
               <Typography color="textSecondary" variant="body2">
                 <FormattedMessage
+                  id="2+v1wX"
                   defaultMessage="{number,plural,one{{number} string} other{{number} strings}}"
                   description="number of metadata fields in model"
                   values={{
-                    number: data.length
+                    number: data.length,
                   }}
                 />
               </Typography>
@@ -109,6 +113,7 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                 <CardContent className={classes.emptyContainer}>
                   <Typography variant="body2" color="textSecondary">
                     <FormattedMessage
+                      id="cY6H2C"
                       defaultMessage="No metadata created for this element. Use the button below to add new metadata field."
                       description="empty metadata text"
                     />
@@ -120,18 +125,21 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                     <TableRow>
                       <TableCell className={classes.colNameHeader}>
                         <FormattedMessage
+                          id="nudPsY"
                           defaultMessage="Field"
                           description="metadata field name, header"
                         />
                       </TableCell>
                       <TableCell className={classes.colValue}>
                         <FormattedMessage
+                          id="LkuDEb"
                           defaultMessage="Value"
                           description="metadata field value, header"
                         />
                       </TableCell>
                       <TableCell className={classes.colActionHeader}>
                         <FormattedMessage
+                          id="nEixpu"
                           defaultMessage="Actions"
                           description="table action"
                         />
@@ -145,8 +153,8 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                           <TextField
                             InputProps={{
                               classes: {
-                                input: classes.nameInput
-                              }
+                                input: classes.nameInput,
+                              },
                             }}
                             name={`${nameInputPrefix}${nameSeparator}${fieldIndex}`}
                             fullWidth
@@ -158,8 +166,8 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                           <TextField
                             InputProps={{
                               classes: {
-                                root: classes.input
-                              }
+                                root: classes.input,
+                              },
                             }}
                             multiline
                             name={`${valueInputPrefix}${nameSeparator}${fieldIndex}`}
@@ -176,8 +184,8 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                               onChange({
                                 target: {
                                   name: EventDataAction.delete,
-                                  value: fieldIndex
-                                }
+                                  value: fieldIndex,
+                                },
                               })
                             }
                           >
@@ -197,12 +205,13 @@ const MetadataCard: React.FC<MetadataCardProps> = ({
                     onChange({
                       target: {
                         name: EventDataAction.add,
-                        value: null
-                      }
+                        value: null,
+                      },
                     })
                   }
                 >
                   <FormattedMessage
+                    id="GiDxS4"
                     defaultMessage="Add Field"
                     description="add metadata field,button"
                   />

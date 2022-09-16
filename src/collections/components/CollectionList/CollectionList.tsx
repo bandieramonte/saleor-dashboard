@@ -1,17 +1,21 @@
 import { TableBody, TableCell, TableFooter, TableRow } from "@material-ui/core";
-import { CollectionListUrlSortField } from "@saleor/collections/urls";
+import {
+  CollectionListUrlSortField,
+  collectionUrl,
+} from "@saleor/collections/urls";
 import { canBeSorted } from "@saleor/collections/views/CollectionList/sort";
 import { ChannelsAvailabilityDropdown } from "@saleor/components/ChannelsAvailabilityDropdown";
 import {
   getChannelAvailabilityColor,
-  getChannelAvailabilityLabel
+  getChannelAvailabilityLabel,
 } from "@saleor/components/ChannelsAvailabilityDropdown/utils";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import TooltipTableCellHeader from "@saleor/components/TooltipTableCellHeader";
 import { commonTooltipMessages } from "@saleor/components/TooltipTableCellHeader/messages";
 import { CollectionListQuery } from "@saleor/graphql";
@@ -22,7 +26,7 @@ import {
   ListActions,
   ListProps,
   RelayToFlat,
-  SortPage
+  SortPage,
 } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
@@ -32,25 +36,25 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colAvailability: {
-        width: 240
+        width: 240,
       },
       colName: {
-        paddingLeft: 0
+        paddingLeft: 0,
       },
       colProducts: {
-        width: 240
-      }
+        width: 240,
+      },
     },
     colAvailability: {},
     colName: {},
     colProducts: {
-      textAlign: "center"
+      textAlign: "center",
     },
     tableRow: {
-      cursor: "pointer" as "pointer"
-    }
+      cursor: "pointer" as "pointer",
+    },
   }),
-  { name: "CollectionList" }
+  { name: "CollectionList" },
 );
 
 export interface CollectionListProps
@@ -69,19 +73,15 @@ const CollectionList: React.FC<CollectionListProps> = props => {
     disabled,
     settings,
     sort,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
-    pageInfo,
     isChecked,
     selected,
     selectedChannelId,
     toggle,
     toggleAll,
     toolbar,
-    filterDependency
+    filterDependency,
   } = props;
 
   const classes = useStyles(props);
@@ -107,7 +107,7 @@ const CollectionList: React.FC<CollectionListProps> = props => {
           onClick={() => onSort(CollectionListUrlSortField.name)}
           className={classes.colName}
         >
-          <FormattedMessage defaultMessage="Collection Name" />
+          <FormattedMessage id="VZsE96" defaultMessage="Collection Name" />
         </TableCellHeader>
         <TableCellHeader
           direction={
@@ -118,7 +118,7 @@ const CollectionList: React.FC<CollectionListProps> = props => {
           onClick={() => onSort(CollectionListUrlSortField.productCount)}
           className={classes.colProducts}
         >
-          <FormattedMessage defaultMessage="No. of Products" />
+          <FormattedMessage id="mWQt3s" defaultMessage="No. of Products" />
         </TableCellHeader>
         <TooltipTableCellHeader
           direction={
@@ -131,14 +131,15 @@ const CollectionList: React.FC<CollectionListProps> = props => {
           disabled={
             !canBeSorted(
               CollectionListUrlSortField.available,
-              !!selectedChannelId
+              !!selectedChannelId,
             )
           }
           tooltip={intl.formatMessage(commonTooltipMessages.noFilterSelected, {
-            filterName: filterDependency.label
+            filterName: filterDependency.label,
           })}
         >
           <FormattedMessage
+            id="UxdBmI"
             defaultMessage="Availability"
             description="collection availability"
           />
@@ -146,16 +147,10 @@ const CollectionList: React.FC<CollectionListProps> = props => {
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -165,13 +160,13 @@ const CollectionList: React.FC<CollectionListProps> = props => {
           collection => {
             const isSelected = collection ? isChecked(collection.id) : false;
             const channel = collection?.channelListings?.find(
-              listing => listing?.channel?.id === selectedChannelId
+              listing => listing?.channel?.id === selectedChannelId,
             );
             return (
-              <TableRow
+              <TableRowLink
                 className={classes.tableRow}
                 hover={!!collection}
-                onClick={collection ? onRowClick(collection.id) : undefined}
+                href={collection && collectionUrl(collection.id)}
                 key={collection ? collection.id : "skeleton"}
                 selected={isSelected}
                 data-test-id={"id-" + maybe(() => collection.id)}
@@ -190,7 +185,7 @@ const CollectionList: React.FC<CollectionListProps> = props => {
                 <TableCell className={classes.colProducts}>
                   {maybe<React.ReactNode>(
                     () => collection.products.totalCount,
-                    <Skeleton />
+                    <Skeleton />,
                   )}
                 </TableCell>
                 <TableCell
@@ -202,7 +197,7 @@ const CollectionList: React.FC<CollectionListProps> = props => {
                     (channel ? (
                       <Pill
                         label={intl.formatMessage(
-                          getChannelAvailabilityLabel(channel)
+                          getChannelAvailabilityLabel(channel),
                         )}
                         color={getChannelAvailabilityColor(channel)}
                       />
@@ -212,16 +207,19 @@ const CollectionList: React.FC<CollectionListProps> = props => {
                       />
                     ))}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No collections found" />
+                <FormattedMessage
+                  id="Yw+9F7"
+                  defaultMessage="No collections found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

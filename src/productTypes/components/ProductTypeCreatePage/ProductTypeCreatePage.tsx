@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
@@ -8,13 +9,15 @@ import Savebar from "@saleor/components/Savebar";
 import {
   ProductTypeDetailsQuery,
   ProductTypeKindEnum,
-  WeightUnitsEnum
+  WeightUnitsEnum,
 } from "@saleor/graphql";
 import { ChangeEvent, FormChange, SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import useStateFromProps from "@saleor/hooks/useStateFromProps";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { makeProductTypeKindChangeHandler } from "@saleor/productTypes/handlers";
+import { productTypeListUrl } from "@saleor/productTypes/urls";
 import { UserError } from "@saleor/types";
 import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTrigger";
 import React from "react";
@@ -41,7 +44,6 @@ export interface ProductTypeCreatePageProps {
   taxTypes: ProductTypeDetailsQuery["taxTypes"];
   kind: ProductTypeKindEnum;
   onChangeKind: (kind: ProductTypeKindEnum) => void;
-  onBack: () => void;
   onSubmit: (data: ProductTypeForm) => SubmitPromise<any[]>;
 }
 
@@ -52,18 +54,19 @@ const formInitialData: ProductTypeForm = {
   kind: ProductTypeKindEnum.NORMAL,
   privateMetadata: [],
   taxType: "",
-  weight: 0
+  weight: 0,
 };
 
 function handleTaxTypeChange(
   event: ChangeEvent,
   taxTypes: ProductTypeDetailsQuery["taxTypes"],
   formChange: FormChange,
-  displayChange: (name: string) => void
+  displayChange: (name: string) => void,
 ) {
   formChange(event);
   displayChange(
-    taxTypes.find(taxType => taxType.taxCode === event.target.value).description
+    taxTypes.find(taxType => taxType.taxCode === event.target.value)
+      .description,
   );
 }
 
@@ -76,18 +79,19 @@ const ProductTypeCreatePage: React.FC<ProductTypeCreatePageProps> = ({
   taxTypes,
   kind,
   onChangeKind,
-  onBack,
-  onSubmit
+  onSubmit,
 }: ProductTypeCreatePageProps) => {
   const intl = useIntl();
+  const navigate = useNavigator();
+
   const [taxTypeDisplayName, setTaxTypeDisplayName] = useStateFromProps("");
   const {
-    makeChangeHandler: makeMetadataChangeHandler
+    makeChangeHandler: makeMetadataChangeHandler,
   } = useMetadataChangeTrigger();
 
   const initialData = {
     ...formInitialData,
-    kind: kind || formInitialData.kind
+    kind: kind || formInitialData.kind,
   };
 
   return (
@@ -102,12 +106,12 @@ const ProductTypeCreatePage: React.FC<ProductTypeCreatePageProps> = ({
 
         const changeKind = makeProductTypeKindChangeHandler(
           change,
-          onChangeKind
+          onChangeKind,
         );
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={productTypeListUrl()}>
               {intl.formatMessage(sectionNames.productTypes)}
             </Backlink>
             <PageHeader title={pageTitle} />
@@ -131,7 +135,7 @@ const ProductTypeCreatePage: React.FC<ProductTypeCreatePageProps> = ({
                       event,
                       taxTypes,
                       change,
-                      setTaxTypeDisplayName
+                      setTaxTypeDisplayName,
                     )
                   }
                 />
@@ -148,7 +152,7 @@ const ProductTypeCreatePage: React.FC<ProductTypeCreatePageProps> = ({
               </div>
             </Grid>
             <Savebar
-              onCancel={onBack}
+              onCancel={() => navigate(productTypeListUrl())}
               onSubmit={submit}
               disabled={isSaveDisabled}
               state={saveButtonBarState}

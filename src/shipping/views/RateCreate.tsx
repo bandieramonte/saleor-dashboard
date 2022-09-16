@@ -3,7 +3,7 @@ import ChannelsAvailabilityDialog from "@saleor/components/ChannelsAvailabilityD
 import { WindowTitle } from "@saleor/components/WindowTitle";
 import {
   PostalCodeRuleInclusionTypeEnum,
-  useShippingZoneChannelsQuery
+  useShippingZoneChannelsQuery,
 } from "@saleor/graphql";
 import useChannels from "@saleor/hooks/useChannels";
 import useNavigator from "@saleor/hooks/useNavigator";
@@ -15,13 +15,13 @@ import {
   shippingRateCreateUrl,
   ShippingRateCreateUrlDialog,
   ShippingRateCreateUrlQueryParams,
-  shippingZoneUrl
+  shippingZoneUrl,
 } from "@saleor/shipping/urls";
 import postalCodesReducer from "@saleor/shipping/views/reducer";
 import {
   filterPostalCodes,
   getPostalCodeRuleByMinMax,
-  getRuleObject
+  getRuleObject,
 } from "@saleor/shipping/views/utils";
 import { MinMax } from "@saleor/types";
 import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
@@ -46,14 +46,14 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
 
   const {
     data: shippingZoneData,
-    loading: channelsLoading
+    loading: channelsLoading,
   } = useShippingZoneChannelsQuery({
     displayLoader: true,
-    variables: { id }
+    variables: { id },
   });
 
   const allChannels = createSortedShippingChannels(
-    shippingZoneData?.shippingZone?.channels
+    shippingZoneData?.shippingZone?.channels,
   );
 
   const {
@@ -66,12 +66,12 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
     isChannelSelected,
     isChannelsModalOpen,
     setCurrentChannels,
-    toggleAllChannels
+    toggleAllChannels,
   } = useChannels(
     allChannels,
     params?.action,
     { closeModal, openModal },
-    { formId: FORM_ID }
+    { formId: FORM_ID },
   );
 
   const [state, dispatch] = React.useReducer(postalCodesReducer, {
@@ -79,22 +79,20 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
     havePostalCodesChanged: false,
     inclusionType: PostalCodeRuleInclusionTypeEnum.EXCLUDE,
     originalCodes: [],
-    postalCodeRules: []
+    postalCodeRules: [],
   });
 
   const {
     channelErrors,
     createShippingRate,
     errors,
-    status
+    status,
   } = useShippingRateCreator(
     id,
     params.type,
     state.postalCodeRules,
-    state.inclusionType
+    state.inclusionType,
   );
-
-  const handleBack = () => navigate(shippingZoneUrl(id));
 
   const onPostalCodeAssign = (rule: MinMax) => {
     if (
@@ -107,24 +105,24 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
     const newCode = getRuleObject(rule, state.inclusionType);
     dispatch({
       havePostalCodesChanged: true,
-      postalCodeRules: [...state.postalCodeRules, newCode]
+      postalCodeRules: [...state.postalCodeRules, newCode],
     });
     closeModal();
   };
 
   const onPostalCodeInclusionChange = (
-    inclusion: PostalCodeRuleInclusionTypeEnum
+    inclusion: PostalCodeRuleInclusionTypeEnum,
   ) => {
     dispatch({
       inclusionType: inclusion,
-      postalCodeRules: []
+      postalCodeRules: [],
     });
   };
 
   const onPostalCodeUnassign = code => {
     dispatch({
       havePostalCodesChanged: true,
-      postalCodeRules: filterPostalCodes(state.postalCodeRules, code)
+      postalCodeRules: filterPostalCodes(state.postalCodeRules, code),
     });
   };
 
@@ -139,7 +137,8 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
           onClose={handleChannelsModalClose}
           open={isChannelsModalOpen}
           title={intl.formatMessage({
-            defaultMessage: "Manage Channel Availability"
+            id: "EM730i",
+            defaultMessage: "Manage Channel Availability",
           })}
           confirmButtonState="default"
           selected={channelListElements.length}
@@ -155,7 +154,7 @@ export const RateCreate: React.FC<RateCreateProps> = ({ id, params }) => {
         disabled={channelsLoading || status === "loading"}
         saveButtonBarState={status}
         onSubmit={createShippingRate}
-        onBack={handleBack}
+        backUrl={shippingZoneUrl(id)}
         errors={errors}
         channelErrors={channelErrors}
         postalCodes={state.postalCodeRules}

@@ -3,7 +3,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import ConfirmButton from "@saleor/components/ConfirmButton";
@@ -28,7 +28,7 @@ const OrderPaymentVoidDialog: React.FC<OrderPaymentVoidDialogProps> = ({
   errors,
   open,
   onConfirm,
-  onClose
+  onClose,
 }) => {
   const intl = useIntl();
 
@@ -36,13 +36,17 @@ const OrderPaymentVoidDialog: React.FC<OrderPaymentVoidDialogProps> = ({
     <Dialog onClose={onClose} open={open}>
       <DialogTitle>
         <FormattedMessage
+          id="KszPFx"
           defaultMessage="Void Payment"
           description="dialog header"
         />
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <FormattedMessage defaultMessage="Are you sure you want to void this payment?" />
+          <FormattedMessage
+            id="euRfu+"
+            defaultMessage="Are you sure you want to void this payment?"
+          />
         </DialogContentText>
         {errors.length > 0 && (
           <>

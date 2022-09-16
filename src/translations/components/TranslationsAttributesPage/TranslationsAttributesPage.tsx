@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import LanguageSwitch from "@saleor/components/LanguageSwitch";
@@ -5,12 +6,16 @@ import PageHeader from "@saleor/components/PageHeader";
 import { ListSettingsUpdate } from "@saleor/components/TablePagination";
 import {
   AttributeTranslationDetailsFragment,
-  LanguageCodeEnum
+  LanguageCodeEnum,
 } from "@saleor/graphql";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import { TranslationsEntitiesPageProps } from "@saleor/translations/types";
+import {
+  languageEntitiesUrl,
+  languageEntityUrl,
+  TranslatableEntities,
+} from "@saleor/translations/urls";
 import { ListSettings } from "@saleor/types";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -24,37 +29,27 @@ export interface TranslationsAttributesPageProps
   data: AttributeTranslationDetailsFragment;
   settings?: ListSettings;
   onUpdateListSettings?: ListSettingsUpdate;
-  pageInfo: {
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
-  onNextPage: () => void;
-  onPreviousPage: () => void;
 }
 
 export const fieldNames = {
   attribute: "attribute",
   value: "attributeValue",
-  richTextValue: "attributeRichTextValue"
+  richTextValue: "attributeRichTextValue",
 };
 
 const TranslationsAttributesPage: React.FC<TranslationsAttributesPageProps> = ({
+  translationId,
   activeField,
   disabled,
   languages,
   languageCode,
   data,
   saveButtonState,
-  onBack,
   onDiscard,
   onEdit,
-  onLanguageChange,
   onSubmit,
   settings,
   onUpdateListSettings,
-  pageInfo,
-  onNextPage,
-  onPreviousPage
 }) => {
   const intl = useIntl();
 
@@ -62,26 +57,37 @@ const TranslationsAttributesPage: React.FC<TranslationsAttributesPageProps> = ({
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink
+        href={languageEntitiesUrl(languageCode, {
+          tab: TranslatableEntities.attributes,
+        })}
+      >
         {intl.formatMessage(sectionNames.translations)}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "SPBLzT",
             defaultMessage:
               'Translation Attribute "{attribute}" - {languageCode}',
-            description: "header"
+            description: "header",
           },
           {
             attribute: getStringOrPlaceholder(data?.attribute?.name),
-            languageCode
-          }
+            languageCode,
+          },
         )}
       >
         <LanguageSwitch
           currentLanguage={LanguageCodeEnum[languageCode]}
           languages={languages}
-          onLanguageChange={onLanguageChange}
+          getLanguageUrl={lang =>
+            languageEntityUrl(
+              lang,
+              TranslatableEntities.attributes,
+              translationId,
+            )
+          }
         />
       </PageHeader>
       <TranslationFields
@@ -92,13 +98,14 @@ const TranslationsAttributesPage: React.FC<TranslationsAttributesPageProps> = ({
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Attribute Name"
+              id: "DRMMDs",
+              defaultMessage: "Attribute Name",
             }),
             name: fieldNames.attribute + ":" + data?.attribute.id,
             translation: data?.translation?.name || null,
             type: "short" as "short",
-            value: data?.attribute?.name
-          }
+            value: data?.attribute?.name,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}
@@ -119,9 +126,6 @@ const TranslationsAttributesPage: React.FC<TranslationsAttributesPageProps> = ({
           pagination={{
             settings,
             onUpdateListSettings,
-            pageInfo,
-            onNextPage,
-            onPreviousPage
           }}
           onEdit={onEdit}
           onDiscard={onDiscard}

@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Grid from "@saleor/components/Grid";
@@ -5,11 +6,11 @@ import PageHeader from "@saleor/components/PageHeader";
 import {
   FulfillmentStatus,
   OrderErrorFragment,
-  OrderRefundDataQuery
+  OrderRefundDataQuery,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
-import { Backlink } from "@saleor/macaw-ui";
 import { renderCollection } from "@saleor/misc";
+import { orderUrl } from "@saleor/orders/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -18,18 +19,18 @@ import OrderRefundFulfilledProducts from "../OrderRefundFulfilledProducts";
 import OrderRefundAmount from "../OrderRefundReturnAmount";
 import {
   getMiscellaneousAmountValues,
-  getRefundProductsAmountValues
+  getRefundProductsAmountValues,
 } from "../OrderRefundReturnAmount/utils";
 import OrderRefundUnfulfilledProducts from "../OrderRefundUnfulfilledProducts";
 import OrderRefundForm, {
   OrderRefundSubmitData,
-  OrderRefundType
+  OrderRefundType,
 } from "./form";
 
 export const refundFulfilledStatuses = [
   FulfillmentStatus.FULFILLED,
   FulfillmentStatus.RETURNED,
-  FulfillmentStatus.WAITING_FOR_APPROVAL
+  FulfillmentStatus.WAITING_FOR_APPROVAL,
 ];
 
 export interface OrderRefundPageProps {
@@ -37,7 +38,6 @@ export interface OrderRefundPageProps {
   defaultType?: OrderRefundType;
   disabled: boolean;
   errors: OrderErrorFragment[];
-  onBack: () => void;
   onSubmit: (data: OrderRefundSubmitData) => SubmitPromise;
 }
 
@@ -47,19 +47,18 @@ const OrderRefundPage: React.FC<OrderRefundPageProps> = props => {
     defaultType = OrderRefundType.PRODUCTS,
     disabled,
     errors = [],
-    onBack,
-    onSubmit
+    onSubmit,
   } = props;
 
   const intl = useIntl();
 
   const unfulfilledLines = order?.lines.filter(
-    line => line.quantityToFulfill > 0
+    line => line.quantityToFulfill > 0,
   );
 
   const fulfilledFulfillemnts =
     order?.fulfillments.filter(({ status }) =>
-      refundFulfilledStatuses.includes(status)
+      refundFulfilledStatuses.includes(status),
     ) || [];
 
   return (
@@ -74,31 +73,34 @@ const OrderRefundPage: React.FC<OrderRefundPageProps> = props => {
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={orderUrl(order?.id)}>
               {order?.number
                 ? intl.formatMessage(
                     {
+                      id: "rVIlBs",
                       defaultMessage: "Order #{orderNumber}",
-                      description: "page header with order number"
+                      description: "page header with order number",
                     },
                     {
-                      orderNumber: order.number
-                    }
+                      orderNumber: order.number,
+                    },
                   )
                 : intl.formatMessage({
+                    id: "6u4K7e",
                     defaultMessage: "Order",
-                    description: "page header"
+                    description: "page header",
                   })}
             </Backlink>
             <PageHeader
               title={intl.formatMessage(
                 {
+                  id: "0krqBj",
                   defaultMessage: "Order no. {orderNumber} - Refund",
-                  description: "page header"
+                  description: "page header",
                 },
                 {
-                  orderNumber: order?.number
-                }
+                  orderNumber: order?.number,
+                },
               )}
             />
             <Grid>
@@ -139,7 +141,7 @@ const OrderRefundPage: React.FC<OrderRefundPageProps> = props => {
                           }
                           onSetMaximalQuantities={() =>
                             handlers.setMaximalRefundedFulfilledProductQuantities(
-                              fulfillment?.id
+                              fulfillment?.id,
                             )
                           }
                         />

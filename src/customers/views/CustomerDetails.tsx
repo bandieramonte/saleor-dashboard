@@ -6,28 +6,22 @@ import {
   useRemoveCustomerMutation,
   useUpdateCustomerMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { commonMessages } from "@saleor/intl";
 import { extractMutationErrors, getStringOrPlaceholder } from "@saleor/misc";
-import { orderListUrl, orderUrl } from "@saleor/orders/urls";
 import createMetadataUpdateHandler from "@saleor/utils/handlers/metadataUpdateHandler";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import CustomerDetailsPage, {
-  CustomerDetailsPageFormData
+  CustomerDetailsPageFormData,
 } from "../components/CustomerDetailsPage";
 import { useCustomerDetails } from "../hooks/useCustomerDetails";
 import { CustomerDetailsProvider } from "../providers/CustomerDetailsProvider";
-import {
-  customerAddressesUrl,
-  customerListUrl,
-  customerUrl,
-  CustomerUrlQueryParams
-} from "../urls";
+import { customerListUrl, customerUrl, CustomerUrlQueryParams } from "../urls";
 
 interface CustomerDetailsViewProps {
   id: string;
@@ -36,7 +30,7 @@ interface CustomerDetailsViewProps {
 
 const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
   id,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -52,12 +46,13 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Customer Removed"
-          })
+            id: "PXatmC",
+            defaultMessage: "Customer Removed",
+          }),
         });
         navigate(customerListUrl());
       }
-    }
+    },
   });
 
   const [updateCustomer, updateCustomerOpts] = useUpdateCustomerMutation({
@@ -65,19 +60,17 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
       if (data.customerUpdate.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const [updateMetadata] = useUpdateMetadataMutation({});
   const [updatePrivateMetadata] = useUpdatePrivateMetadataMutation({});
 
-  const handleBack = () => navigate(customerListUrl());
-
   if (user === null) {
-    return <NotFoundPage onBack={handleBack} />;
+    return <NotFoundPage backHref={customerListUrl()} />;
   }
 
   const updateData = async (data: CustomerDetailsPageFormData) =>
@@ -90,23 +83,24 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
             firstName: data.firstName,
             isActive: data.isActive,
             lastName: data.lastName,
-            note: data.note
-          }
-        }
-      })
+            note: data.note,
+          },
+        },
+      }),
     );
 
   const handleSubmit = createMetadataUpdateHandler(
     user,
     updateData,
     variables => updateMetadata({ variables }),
-    variables => updatePrivateMetadata({ variables })
+    variables => updatePrivateMetadata({ variables }),
   );
 
   return (
     <>
       <WindowTitle title={user?.email} />
       <CustomerDetailsPage
+        customerId={id}
         customer={user}
         disabled={
           customerDetailsLoading ||
@@ -115,22 +109,12 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
         }
         errors={updateCustomerOpts.data?.customerUpdate.errors || []}
         saveButtonBar={updateCustomerOpts.status}
-        onAddressManageClick={() => navigate(customerAddressesUrl(id))}
-        onBack={handleBack}
-        onRowClick={id => navigate(orderUrl(id))}
         onSubmit={handleSubmit}
         onDelete={() =>
           navigate(
             customerUrl(id, {
-              action: "remove"
-            })
-          )
-        }
-        onViewAllOrdersClick={() =>
-          navigate(
-            orderListUrl({
-              customer: user?.email
-            })
+              action: "remove",
+            }),
           )
         }
       />
@@ -140,23 +124,25 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
         onConfirm={() =>
           removeCustomer({
             variables: {
-              id
-            }
+              id,
+            },
           })
         }
         title={intl.formatMessage({
+          id: "ey0lZj",
           defaultMessage: "Delete Customer",
-          description: "dialog header"
+          description: "dialog header",
         })}
         variant="delete"
         open={params.action === "remove"}
       >
         <DialogContentText>
           <FormattedMessage
+            id="2p0tZx"
             defaultMessage="Are you sure you want to delete {email}?"
             description="delete customer, dialog content"
             values={{
-              email: <strong>{getStringOrPlaceholder(user?.email)}</strong>
+              email: <strong>{getStringOrPlaceholder(user?.email)}</strong>,
             }}
           />
         </DialogContentText>
@@ -167,7 +153,7 @@ const CustomerDetailsViewInner: React.FC<CustomerDetailsViewProps> = ({
 
 export const CustomerDetailsView: React.FC<CustomerDetailsViewProps> = ({
   id,
-  params
+  params,
 }) => (
   <CustomerDetailsProvider id={id}>
     <CustomerDetailsViewInner id={id} params={params} />

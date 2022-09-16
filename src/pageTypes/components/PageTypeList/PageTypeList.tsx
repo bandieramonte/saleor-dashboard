@@ -4,10 +4,11 @@ import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { PageTypeFragment } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
-import { PageTypeListUrlSortField } from "@saleor/pageTypes/urls";
+import { PageTypeListUrlSortField, pageTypeUrl } from "@saleor/pageTypes/urls";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -18,13 +19,13 @@ import { ListActions, ListProps, SortPage } from "../../../types";
 const useStyles = makeStyles(
   {
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     link: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
-  { name: "PageTypeList" }
+  { name: "PageTypeList" },
 );
 
 interface PageTypeListProps
@@ -38,17 +39,13 @@ const PageTypeList: React.FC<PageTypeListProps> = props => {
   const {
     disabled,
     pageTypes,
-    pageInfo,
-    onNextPage,
-    onPreviousPage,
-    onRowClick,
     onSort,
     isChecked,
     selected,
     sort,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
   const classes = useStyles(props);
   const numberOfColumns = pageTypes?.length === 0 ? 1 : 2;
@@ -74,6 +71,7 @@ const PageTypeList: React.FC<PageTypeListProps> = props => {
           className={classes.colName}
         >
           <FormattedMessage
+            id="BQ2NVl"
             defaultMessage="Content Type Name"
             description="page type name"
           />
@@ -81,14 +79,9 @@ const PageTypeList: React.FC<PageTypeListProps> = props => {
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
+            disabled={disabled}
           />
         </TableRow>
       </TableFooter>
@@ -98,11 +91,11 @@ const PageTypeList: React.FC<PageTypeListProps> = props => {
           pageType => {
             const isSelected = pageType ? isChecked(pageType.id) : false;
             return (
-              <TableRow
+              <TableRowLink
                 className={!!pageType ? classes.link : undefined}
                 hover={!!pageType}
                 key={pageType ? pageType.id : "skeleton"}
-                onClick={pageType ? onRowClick(pageType.id) : undefined}
+                href={pageType && pageTypeUrl(pageType.id)}
                 selected={isSelected}
                 data-test-id={"id-" + pageType?.id}
               >
@@ -121,16 +114,19 @@ const PageTypeList: React.FC<PageTypeListProps> = props => {
                     <Skeleton />
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No page types found" />
+                <FormattedMessage
+                  id="6fORLY"
+                  defaultMessage="No page types found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

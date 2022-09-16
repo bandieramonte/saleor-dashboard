@@ -8,12 +8,12 @@ const resolve = resolvePath => path.resolve(__dirname, resolvePath);
 module.exports = ({ config }) => {
   config.module.rules.push({
     exclude: /node_modules/,
-    loader: "babel-loader",
+    loader: "esbuild-loader",
     options: {
-      configFile: resolve("../../babel.config.js"),
-      envName: "storybook"
+      loader: "tsx",
+      target: "es2015",
     },
-    test: /\.(jsx?|tsx?)$/
+    test: /\.(jsx?|tsx?)$/,
   });
   config.optimization.removeAvailableModules = false;
   config.optimization.removeEmptyChunks = false;
@@ -21,8 +21,8 @@ module.exports = ({ config }) => {
   config.resolve.extensions.push(".ts", ".tsx");
   config.resolve.plugins = [
     new TsconfigPathsPlugin({
-      configFile: "./tsconfig.json"
-    })
+      configFile: "./tsconfig.json",
+    }),
   ];
   // Resolve macaw ui's peer dependencies to our own node_modules
   // to make it work with npm link
@@ -31,12 +31,12 @@ module.exports = ({ config }) => {
     "react-dom": path.resolve("./node_modules/react-dom"),
     "@material-ui/core": path.resolve("./node_modules/@material-ui/core"),
     "@material-ui/icons": path.resolve("./node_modules/@material-ui/icons"),
-    "@material-ui/styles": path.resolve("./node_modules/@material-ui/styles")
+    "@material-ui/styles": path.resolve("./node_modules/@material-ui/styles"),
   };
   config.plugins.push(
     new CheckerPlugin({
-      eslint: true
-    })
+      eslint: true,
+    }),
   );
   return config;
 };

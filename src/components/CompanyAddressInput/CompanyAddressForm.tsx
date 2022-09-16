@@ -2,13 +2,13 @@ import { TextField } from "@material-ui/core";
 import FormSpacer from "@saleor/components/FormSpacer";
 import Grid from "@saleor/components/Grid";
 import SingleAutocompleteSelectField, {
-  SingleAutocompleteChoiceType
+  SingleAutocompleteChoiceType,
 } from "@saleor/components/SingleAutocompleteSelectField";
 import { AddressTypeInput } from "@saleor/customers/types";
 import {
   AccountErrorFragment,
   ShopErrorFragment,
-  WarehouseErrorFragment
+  WarehouseErrorFragment,
 } from "@saleor/graphql";
 import { ChangeEvent } from "@saleor/hooks/useForm";
 import { makeStyles } from "@saleor/macaw-ui";
@@ -33,14 +33,14 @@ export interface CompanyAddressFormProps {
 
 const useStyles = makeStyles(
   {
-    root: {}
+    root: {},
   },
-  { name: "CompanyAddressForm" }
+  { name: "CompanyAddressForm" },
 );
 
 function getErrorMessage(
   err: AccountErrorFragment | ShopErrorFragment | WarehouseErrorFragment,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   switch (err?.__typename) {
     case "AccountError":
@@ -60,7 +60,7 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
     displayCountry,
     errors,
     onChange,
-    onCountryChange
+    onCountryChange,
   } = props;
 
   const classes = useStyles(props);
@@ -75,7 +75,7 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
     "country",
     "countryArea",
     "companyArea",
-    "phone"
+    "phone",
   ];
   const formErrors = getFormErrors(formFields, errors);
 
@@ -86,14 +86,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
         error={!!formErrors.companyName}
         helperText={getErrorMessage(formErrors.companyName, intl)}
         label={intl.formatMessage({
-          defaultMessage: "Company"
+          id: "9YazHG",
+          defaultMessage: "Company",
         })}
         name={"companyName" as keyof AddressTypeInput}
         onChange={onChange}
         value={data.companyName}
         fullWidth
         InputProps={{
-          autoComplete: "organization"
+          autoComplete: "organization",
         }}
       />
       <FormSpacer />
@@ -102,14 +103,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
         error={!!formErrors.streetAddress1}
         helperText={getErrorMessage(formErrors.streetAddress1, intl)}
         label={intl.formatMessage({
-          defaultMessage: "Address line 1"
+          id: "B52Em/",
+          defaultMessage: "Address line 1",
         })}
         name={"streetAddress1" as keyof AddressTypeInput}
         onChange={onChange}
         value={data.streetAddress1}
         fullWidth
         InputProps={{
-          autoComplete: "address-line1"
+          autoComplete: "address-line1",
         }}
       />
       <FormSpacer />
@@ -118,14 +120,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
         error={!!formErrors.streetAddress2}
         helperText={getErrorMessage(formErrors.streetAddress2, intl)}
         label={intl.formatMessage({
-          defaultMessage: "Address line 2"
+          id: "oQY0a2",
+          defaultMessage: "Address line 2",
         })}
         name={"streetAddress2" as keyof AddressTypeInput}
         onChange={onChange}
         value={data.streetAddress2}
         fullWidth
         InputProps={{
-          autoComplete: "address-line2"
+          autoComplete: "address-line2",
         }}
       />
       <FormSpacer />
@@ -135,14 +138,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
           error={!!formErrors.city}
           helperText={getErrorMessage(formErrors.city, intl)}
           label={intl.formatMessage({
-            defaultMessage: "City"
+            id: "TE4fIS",
+            defaultMessage: "City",
           })}
           name={"city" as keyof AddressTypeInput}
           onChange={onChange}
           value={data.city}
           fullWidth
           InputProps={{
-            autoComplete: "address-level2"
+            autoComplete: "address-level2",
           }}
         />
         <TextField
@@ -150,14 +154,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
           error={!!formErrors.postalCode}
           helperText={getErrorMessage(formErrors.postalCode, intl)}
           label={intl.formatMessage({
-            defaultMessage: "ZIP / Postal code"
+            id: "oYGfnY",
+            defaultMessage: "ZIP / Postal code",
           })}
           name={"postalCode" as keyof AddressTypeInput}
           onChange={onChange}
           value={data.postalCode}
           fullWidth
           InputProps={{
-            autoComplete: "postal-code"
+            autoComplete: "postal-code",
           }}
         />
       </Grid>
@@ -170,7 +175,8 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
           error={!!formErrors.country}
           helperText={getErrorMessage(formErrors.country, intl)}
           label={intl.formatMessage({
-            defaultMessage: "Country"
+            id: "vONi+O",
+            defaultMessage: "Country",
           })}
           name={"country" as keyof AddressTypeInput}
           onChange={onCountryChange}
@@ -182,14 +188,15 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
           error={!!formErrors.countryArea}
           helperText={getErrorMessage(formErrors.countryArea, intl)}
           label={intl.formatMessage({
-            defaultMessage: "Country area"
+            id: "AuwpCm",
+            defaultMessage: "Country area",
           })}
           name={"countryArea" as keyof AddressTypeInput}
           onChange={onChange}
           value={data.countryArea}
           fullWidth
           InputProps={{
-            autoComplete: "address-level1"
+            autoComplete: "address-level1",
           }}
         />
       </Grid>
@@ -200,13 +207,14 @@ const CompanyAddressForm: React.FC<CompanyAddressFormProps> = props => {
         fullWidth
         helperText={getErrorMessage(formErrors.phone, intl)}
         label={intl.formatMessage({
-          defaultMessage: "Phone"
+          id: "O95R3Z",
+          defaultMessage: "Phone",
         })}
         name={"phone" as keyof AddressTypeInput}
         value={data.phone}
         onChange={onChange}
         InputProps={{
-          autoComplete: "tel"
+          autoComplete: "tel",
         }}
       />
     </div>

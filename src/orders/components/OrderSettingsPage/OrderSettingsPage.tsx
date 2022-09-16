@@ -1,15 +1,18 @@
 import { Typography } from "@material-ui/core";
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import Grid from "@saleor/components/Grid";
 import PageHeader from "@saleor/components/PageHeader";
 import Savebar from "@saleor/components/Savebar";
 import {
   OrderSettingsFragment,
-  ShopOrderSettingsFragment
+  ShopOrderSettingsFragment,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { orderListUrl } from "@saleor/orders/urls";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -23,20 +26,13 @@ export interface OrderSettingsPageProps {
   shop: ShopOrderSettingsFragment;
   disabled: boolean;
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: OrderSettingsFormData) => SubmitPromise;
 }
 
 const OrderSettingsPage: React.FC<OrderSettingsPageProps> = props => {
-  const {
-    orderSettings,
-    shop,
-    disabled,
-    saveButtonBarState,
-    onBack,
-    onSubmit
-  } = props;
+  const { orderSettings, shop, disabled, saveButtonBarState, onSubmit } = props;
   const intl = useIntl();
+  const navigate = useNavigator();
 
   return (
     <OrderSettingsForm
@@ -47,20 +43,24 @@ const OrderSettingsPage: React.FC<OrderSettingsPageProps> = props => {
     >
       {({ data, submit, change, isSaveDisabled }) => (
         <Container>
-          <Backlink onClick={onBack}>
+          <Backlink href={orderListUrl()}>
             {intl.formatMessage(sectionNames.orders)}
           </Backlink>
           <PageHeader
             title={intl.formatMessage({
+              id: "Vu9nol",
               defaultMessage: "Order settings",
-              description: "header"
+              description: "header",
             })}
             underline={true}
           />
           <Grid variant="inverted">
             <div>
               <Typography>
-                <FormattedMessage defaultMessage="General Settings" />
+                <FormattedMessage
+                  id="yuiyES"
+                  defaultMessage="General Settings"
+                />
               </Typography>
             </div>
             <OrderSettings data={data} disabled={disabled} onChange={change} />
@@ -72,7 +72,7 @@ const OrderSettingsPage: React.FC<OrderSettingsPageProps> = props => {
             />
           </Grid>
           <Savebar
-            onCancel={onBack}
+            onCancel={() => navigate(orderListUrl())}
             onSubmit={submit}
             disabled={isSaveDisabled}
             state={saveButtonBarState}

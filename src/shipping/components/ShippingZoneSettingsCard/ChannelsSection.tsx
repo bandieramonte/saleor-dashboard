@@ -1,6 +1,6 @@
 import CardSpacer from "@saleor/components/CardSpacer";
 import MultiAutocompleteSelectField, {
-  MultiAutocompleteChoiceType
+  MultiAutocompleteChoiceType,
 } from "@saleor/components/MultiAutocompleteSelectField";
 import { ChannelFragment } from "@saleor/graphql";
 import { useChannelsSearch } from "@saleor/hooks/useChannelsSearch";
@@ -11,19 +11,21 @@ import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
 const messages = defineMessages({
   subtitle: {
+    id: "avj76v",
     defaultMessage:
       "Assign channels to this shipping zone so we know which orders will be supported",
-    description: "ChannelsSection subtitle"
+    description: "ChannelsSection subtitle",
   },
   selectFieldLabel: {
+    id: "mLZMb6",
     defaultMessage: "Channel",
     description: "ChannelsSection select field label",
-    id: "shippingZoneChannels.autocomplete.label"
   },
   selectFieldPlaceholder: {
+    id: "cnvyqW",
     defaultMessage: "Add Channel",
-    description: "ChannelsSection select field placeholder"
-  }
+    description: "ChannelsSection select field placeholder",
+  },
 });
 
 interface ChannelsSectionProps {
@@ -37,7 +39,7 @@ const ChannelsSection: React.FC<ChannelsSectionProps> = ({
   onChange,
   allChannels = [],
   selectedChannels,
-  channelsDisplayValues
+  channelsDisplayValues,
 }) => {
   const { onQueryChange, filteredChannels } = useChannelsSearch(allChannels);
 
@@ -58,6 +60,7 @@ const ChannelsSection: React.FC<ChannelsSectionProps> = ({
         onChange={onChange}
         placeholder={intl.formatMessage(messages.selectFieldPlaceholder)}
         value={selectedChannels}
+        testId="channels"
       />
     </>
   );

@@ -8,25 +8,21 @@ import { orderToFulfill } from "./fixtures";
 import OrderFulfillPage, { OrderFulfillPageProps } from "./OrderFulfillPage";
 
 const props: OrderFulfillPageProps = {
+  params: {},
   errors: [],
   loading: false,
-  onBack: () => undefined,
   onSubmit: () => undefined,
   order: orderToFulfill,
   saveButtonBar: "default",
-  warehouses: warehouseList
+  openModal: () => undefined,
+  closeModal: () => undefined,
 };
 
 storiesOf("Views / Orders / Fulfill order", module)
   .addDecorator(Decorator)
   .add("default", () => <OrderFulfillPage {...props} />)
   .add("loading", () => (
-    <OrderFulfillPage
-      {...props}
-      loading={true}
-      order={undefined}
-      warehouses={undefined}
-    />
+    <OrderFulfillPage {...props} loading={true} order={undefined} />
   ))
   .add("error", () => (
     <OrderFulfillPage
@@ -39,11 +35,9 @@ storiesOf("Views / Orders / Fulfill order", module)
           orderLines: [orderToFulfill.lines[0].id],
           warehouse: warehouseList[0].id,
           addressType: null,
-          message: "Insufficient stock"
-        }
+          message: "Insufficient stock",
+        },
       ]}
     />
   ))
-  .add("one warehouse", () => (
-    <OrderFulfillPage {...props} warehouses={warehouseList.slice(0, 1)} />
-  ));
+  .add("one warehouse", () => <OrderFulfillPage {...props} />);

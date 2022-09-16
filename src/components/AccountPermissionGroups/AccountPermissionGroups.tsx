@@ -1,7 +1,7 @@
 import { Typography } from "@material-ui/core";
 import {
   SearchPermissionGroupsQuery,
-  StaffErrorFragment
+  StaffErrorFragment,
 } from "@saleor/graphql";
 import { FormChange } from "@saleor/hooks/useForm";
 import { FetchMoreProps, RelayToFlat, SearchPageProps } from "@saleor/types";
@@ -11,7 +11,7 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import MultiAutocompleteSelectField, {
-  MultiAutocompleteChoiceType
+  MultiAutocompleteChoiceType,
 } from "../MultiAutocompleteSelectField";
 
 export interface AccountPermissionGroupsProps
@@ -38,7 +38,7 @@ const AccountPermissionGroups: React.FC<AccountPermissionGroupsProps> = props =>
     loading,
     onChange,
     onFetchMore,
-    onSearchChange
+    onSearchChange,
   } = props;
 
   const intl = useIntl();
@@ -46,7 +46,7 @@ const AccountPermissionGroups: React.FC<AccountPermissionGroupsProps> = props =>
   const choices = availablePermissionGroups?.map(pg => ({
     disabled: !pg.userCanManage,
     label: pg.name,
-    value: pg.id
+    value: pg.id,
   }));
   const formErrors = getFormErrors(["addGroups", "removeGroups"], errors);
   return (
@@ -54,7 +54,8 @@ const AccountPermissionGroups: React.FC<AccountPermissionGroupsProps> = props =>
       <MultiAutocompleteSelectField
         displayValues={displayValues}
         label={intl.formatMessage({
-          defaultMessage: "Permission groups"
+          id: "C7eDb9",
+          defaultMessage: "Permission groups",
         })}
         choices={disabled ? [] : choices}
         name="permissionGroups"

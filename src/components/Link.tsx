@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core";
 import { TypographyProps } from "@material-ui/core/Typography";
 import { makeStyles } from "@saleor/macaw-ui";
+import { isExternalURL } from "@saleor/utils/urls";
 import classNames from "classnames";
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
@@ -8,30 +9,28 @@ import { Link as RouterLink } from "react-router-dom";
 const useStyles = makeStyles(
   theme => ({
     primary: {
-      color: theme.palette.textHighlighted.active
+      color: theme.palette.textHighlighted.active,
     },
     root: {
       cursor: "pointer",
-      display: "inline"
+      display: "inline",
     },
     secondary: {
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
     },
     underline: {
-      textDecoration: "underline"
+      textDecoration: "underline",
     },
     noUnderline: {
-      textDecoration: "none"
+      textDecoration: "none",
     },
     disabled: {
       cursor: "default",
-      color: theme.palette.textHighlighted.inactive
-    }
+      color: theme.palette.textHighlighted.inactive,
+    },
   }),
-  { name: "Link" }
+  { name: "Link" },
 );
-
-const isExternalURL = url => /^https?:\/\//.test(url);
 
 interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href?: string;
@@ -62,7 +61,7 @@ const Link: React.FC<LinkProps> = props => {
       [classes[color]]: true,
       [classes.underline]: underline,
       [classes.noUnderline]: !underline,
-      [classes.disabled]: disabled
+      [classes.disabled]: disabled,
     }),
     onClick: event => {
       if (disabled || !onClick) {
@@ -72,7 +71,7 @@ const Link: React.FC<LinkProps> = props => {
       event.preventDefault();
       onClick(event);
     },
-    ...linkProps
+    ...linkProps,
   };
 
   return (

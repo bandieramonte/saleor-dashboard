@@ -22,23 +22,25 @@ const AppDeactivateDialog: React.FC<AppDeactivateDialogProps> = ({
   name,
   thirdParty = true,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
 
   return (
     <ActionDialog
       confirmButtonLabel={intl.formatMessage({
+        id: "W+AFZY",
         defaultMessage: "Deactivate",
-        description: "button label"
+        description: "button label",
       })}
       confirmButtonState={confirmButtonState}
       open={open}
       onClose={onClose}
       onConfirm={onConfirm}
       title={intl.formatMessage({
+        id: "yMi8I8",
         defaultMessage: "Dectivate App",
-        description: "dialog header"
+        description: "dialog header",
       })}
       variant="delete"
     >
@@ -53,7 +55,7 @@ const AppDeactivateDialog: React.FC<AppDeactivateDialogProps> = ({
               ? msgs.deactivateNamedApp
               : msgs.deactivateLocalNamedApp)}
             values={{
-              name: <strong>{getStringOrPlaceholder(name)}</strong>
+              name: <strong>{getStringOrPlaceholder(name)}</strong>,
             }}
           />
         )}

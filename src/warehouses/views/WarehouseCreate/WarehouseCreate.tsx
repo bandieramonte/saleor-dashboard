@@ -7,12 +7,12 @@ import { commonMessages } from "@saleor/intl";
 import {
   extractMutationErrors,
   findValueInEnum,
-  getMutationStatus
+  getMutationStatus,
 } from "@saleor/misc";
 import WarehouseCreatePage, {
-  WarehouseCreatePageFormData
+  WarehouseCreatePageFormData,
 } from "@saleor/warehouses/components/WarehouseCreatePage";
-import { warehouseListUrl, warehouseUrl } from "@saleor/warehouses/urls";
+import { warehouseUrl } from "@saleor/warehouses/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -27,10 +27,10 @@ const WarehouseCreate: React.FC = () => {
         navigate(warehouseUrl(data.createWarehouse.warehouse.id));
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
   const createWarehouseTransitionState = getMutationStatus(createWarehouseOpts);
 
@@ -48,20 +48,21 @@ const WarehouseCreate: React.FC = () => {
               phone: data.phone,
               postalCode: data.postalCode,
               streetAddress1: data.streetAddress1,
-              streetAddress2: data.streetAddress2
+              streetAddress2: data.streetAddress2,
             },
-            name: data.name
-          }
-        }
-      })
+            name: data.name,
+          },
+        },
+      }),
     );
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage({
+          id: "GhcypC",
           defaultMessage: "Create Warehouse",
-          description: "header"
+          description: "header",
         })}
       />
       <WarehouseCreatePage
@@ -69,7 +70,6 @@ const WarehouseCreate: React.FC = () => {
         disabled={createWarehouseOpts.loading}
         errors={createWarehouseOpts.data?.createWarehouse.errors || []}
         saveButtonBarState={createWarehouseTransitionState}
-        onBack={() => navigate(warehouseListUrl())}
         onSubmit={handleSubmit}
       />
     </>

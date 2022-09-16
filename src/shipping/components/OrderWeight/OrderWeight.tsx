@@ -3,7 +3,7 @@ import {
   CardContent,
   InputAdornment,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import VerticalSpacer from "@saleor/apps/components/VerticalSpacer";
 import CardTitle from "@saleor/components/CardTitle";
@@ -33,7 +33,7 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
   errors,
   maxValue = "",
   minValue = "",
-  onChange
+  onChange,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();
@@ -46,8 +46,9 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "vWapBZ",
           defaultMessage: "Order Weight",
-          description: "card title"
+          description: "card title",
         })}
       />
       <CardContent>
@@ -56,11 +57,13 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
           label={
             <>
               <FormattedMessage
+                id="r2dojI"
                 defaultMessage="Restrict order weight"
                 description="checkbox label"
               />
               <Typography variant="caption">
                 <FormattedMessage
+                  id="7v8suW"
                   defaultMessage="This rate will apply to all orders"
                   description="info text"
                 />
@@ -79,18 +82,19 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
                 disabled={disabled}
                 helperText={getShippingWeightRateErrorMessage(
                   formErrors.minimumOrderWeight,
-                  intl
+                  intl,
                 )}
                 error={!!formErrors.minimumOrderWeight}
                 fullWidth
                 label={intl.formatMessage({
-                  defaultMessage: "Min. Order Weight"
+                  id: "w+5Djm",
+                  defaultMessage: "Min. Order Weight",
                 })}
                 name="minValue"
                 type="number"
                 inputProps={{
                   min: 0,
-                  type: "number"
+                  type: "number",
                 }}
                 InputProps={{
                   inputProps: { min: 0 },
@@ -98,7 +102,7 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
                     <InputAdornment position="end">
                       <Typography>{shop?.defaultWeightUnit}</Typography>
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 value={minValue}
                 onChange={onChange}
@@ -107,12 +111,13 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
                 disabled={disabled}
                 helperText={getShippingWeightRateErrorMessage(
                   formErrors.maximumOrderWeight,
-                  intl
+                  intl,
                 )}
                 error={!!formErrors.maximumOrderWeight}
                 fullWidth
                 label={intl.formatMessage({
-                  defaultMessage: "Max. Order Weight"
+                  id: "u0V06N",
+                  defaultMessage: "Max. Order Weight",
                 })}
                 name="maxValue"
                 type="number"
@@ -122,7 +127,7 @@ export const OrderWeight: React.FC<OrderWeightProps> = ({
                     <InputAdornment position="end">
                       <Typography>{shop?.defaultWeightUnit}</Typography>
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 value={maxValue}
                 onChange={onChange}

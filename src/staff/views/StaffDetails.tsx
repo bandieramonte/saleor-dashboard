@@ -10,7 +10,7 @@ import {
   useStaffAvatarUpdateMutation,
   useStaffMemberDeleteMutation,
   useStaffMemberDetailsQuery,
-  useStaffMemberUpdateMutation
+  useStaffMemberUpdateMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -18,7 +18,7 @@ import { commonMessages, errorMessages } from "@saleor/intl";
 import {
   extractMutationErrors,
   getStringOrPlaceholder,
-  maybe
+  maybe,
 } from "@saleor/misc";
 import usePermissionGroupSearch from "@saleor/searches/usePermissionGroupSearch";
 import { mapEdgesToItems } from "@saleor/utils/maps";
@@ -26,13 +26,13 @@ import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import StaffDetailsPage, {
-  StaffDetailsFormData
+  StaffDetailsFormData,
 } from "../components/StaffDetailsPage/StaffDetailsPage";
 import StaffPasswordResetDialog from "../components/StaffPasswordResetDialog";
 import {
   staffListUrl,
   staffMemberDetailsUrl,
-  StaffMemberDetailsUrlQueryParams
+  StaffMemberDetailsUrlQueryParams,
 } from "../urls";
 import { groupsDiff } from "../utils";
 
@@ -51,14 +51,13 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
     navigate(
       staffMemberDetailsUrl(id, {
         ...params,
-        action: undefined
-      })
+        action: undefined,
+      }),
     );
-  const handleBack = () => navigate(staffListUrl());
 
   const { data, loading, refetch } = useStaffMemberDetailsQuery({
     displayLoader: true,
-    variables: { id }
+    variables: { id },
   });
 
   const staffMember = data?.user;
@@ -68,33 +67,33 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       if (data.passwordChange.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         closeModal();
       }
-    }
+    },
   });
 
   const {
     loadMore: loadMorePermissionGroups,
     search: searchPermissionGroups,
-    result: searchPermissionGroupsOpts
+    result: searchPermissionGroupsOpts,
   } = usePermissionGroupSearch({
-    variables: DEFAULT_INITIAL_SEARCH_DATA
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
   });
 
   const [
     updateStaffMember,
-    updateStaffMemberOpts
+    updateStaffMemberOpts,
   ] = useStaffMemberUpdateMutation({
     onCompleted: data => {
       if (!maybe(() => data.staffUpdate.errors.length !== 0)) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const [deleteStaffMember, deleteResult] = useStaffMemberDeleteMutation({
@@ -102,11 +101,11 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       if (!maybe(() => data.staffDelete.errors.length !== 0)) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate(staffListUrl());
       }
-    }
+    },
   });
 
   const [updateStaffAvatar] = useStaffAvatarUpdateMutation({
@@ -114,17 +113,17 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       if (!maybe(() => data.userAvatarUpdate.errors.length !== 0)) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         refetch();
       } else {
         notify({
           status: "error",
           title: intl.formatMessage(errorMessages.imgageUploadErrorTitle),
-          text: intl.formatMessage(errorMessages.imageUploadErrorText)
+          text: intl.formatMessage(errorMessages.imageUploadErrorText),
         });
       }
-    }
+    },
   });
 
   const [deleteStaffAvatar, deleteAvatarResult] = useStaffAvatarDeleteMutation({
@@ -132,16 +131,16 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       if (!maybe(() => data.userAvatarDelete.errors.length !== 0)) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate(staffMemberDetailsUrl(id));
         refetch();
       }
-    }
+    },
   });
 
   if (staffMember === null) {
-    return <NotFoundPage onBack={handleBack} />;
+    return <NotFoundPage backHref={staffListUrl()} />;
   }
 
   const handleUpdate = (formData: StaffDetailsFormData) =>
@@ -154,10 +153,10 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
             firstName: formData.firstName,
             isActive: formData.isActive,
             lastName: formData.lastName,
-            ...groupsDiff(data?.user, formData)
-          }
-        }
-      })
+            ...groupsDiff(data?.user, formData),
+          },
+        },
+      }),
     );
 
   const isUserSameAsViewer = user.user?.id === data?.user?.id;
@@ -172,69 +171,70 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
         canEditStatus={!isUserSameAsViewer}
         canRemove={!isUserSameAsViewer}
         disabled={loading}
-        onBack={handleBack}
         initialSearch=""
         onChangePassword={() =>
           navigate(
             staffMemberDetailsUrl(id, {
-              action: "change-password"
-            })
+              action: "change-password",
+            }),
           )
         }
         onDelete={() =>
           navigate(
             staffMemberDetailsUrl(id, {
-              action: "remove"
-            })
+              action: "remove",
+            }),
           )
         }
         onSubmit={handleUpdate}
         onImageUpload={file =>
           updateStaffAvatar({
             variables: {
-              image: file
-            }
+              image: file,
+            },
           })
         }
         onImageDelete={() =>
           navigate(
             staffMemberDetailsUrl(id, {
-              action: "remove-avatar"
-            })
+              action: "remove-avatar",
+            }),
           )
         }
         availablePermissionGroups={mapEdgesToItems(
-          searchPermissionGroupsOpts?.data?.search
+          searchPermissionGroupsOpts?.data?.search,
         )}
         staffMember={staffMember}
         saveButtonBarState={updateStaffMemberOpts.status}
         fetchMorePermissionGroups={{
           hasMore: searchPermissionGroupsOpts.data?.search.pageInfo.hasNextPage,
           loading: searchPermissionGroupsOpts.loading,
-          onFetchMore: loadMorePermissionGroups
+          onFetchMore: loadMorePermissionGroups,
         }}
         onSearchChange={searchPermissionGroups}
       />
       <ActionDialog
         open={params.action === "remove"}
         title={intl.formatMessage({
+          id: "GhXwO/",
           defaultMessage: "delete Staff User",
-          description: "dialog header"
+          description: "dialog header",
         })}
         confirmButtonState={deleteResult.status}
         variant="delete"
         onClose={closeModal}
         onConfirm={() =>
           deleteStaffMember({
-            variables: { id }
+            variables: { id },
           })
         }
       >
         <DialogContentText>
           <FormattedMessage
+            id="gxPjIQ"
             defaultMessage="Are you sure you want to delete {email} from staff members?"
             values={{
-              email: getStringOrPlaceholder(data?.user?.email)
+              email: getStringOrPlaceholder(data?.user?.email),
             }}
           />
         </DialogContentText>
@@ -242,8 +242,9 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       <ActionDialog
         open={params.action === "remove-avatar"}
         title={intl.formatMessage({
+          id: "VKWPBf",
           defaultMessage: "Delete Staff User Avatar",
-          description: "dialog header"
+          description: "dialog header",
         })}
         confirmButtonState={deleteAvatarResult.status}
         variant="delete"
@@ -252,11 +253,12 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
       >
         <DialogContentText>
           <FormattedMessage
+            id="fzpXvv"
             defaultMessage="Are you sure you want to remove {email} avatar?"
             values={{
               email: (
                 <strong>{getStringOrPlaceholder(data?.user?.email)}</strong>
-              )
+              ),
             }}
           />
         </DialogContentText>
@@ -268,7 +270,7 @@ export const StaffDetails: React.FC<OrderListProps> = ({ id, params }) => {
         onClose={closeModal}
         onSubmit={data =>
           changePassword({
-            variables: data
+            variables: data,
           })
         }
       />

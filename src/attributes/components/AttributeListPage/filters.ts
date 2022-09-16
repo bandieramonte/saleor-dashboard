@@ -5,17 +5,13 @@ import { createBooleanField } from "@saleor/utils/filters/fields";
 import { defineMessages, IntlShape } from "react-intl";
 
 export enum AttributeFilterKeys {
-  availableInGrid = "availableInGrid",
-  filterableInDashboard = "filterableInDashboard",
   filterableInStorefront = "filterableInStorefront",
   isVariantOnly = "isVariantOnly",
   valueRequired = "valueRequired",
-  visibleInStorefront = "visibleInStorefront"
+  visibleInStorefront = "visibleInStorefront",
 }
 
 export interface AttributeListFilterOpts {
-  availableInGrid: FilterOpts<boolean>;
-  filterableInDashboard: FilterOpts<boolean>;
   filterableInStorefront: FilterOpts<boolean>;
   isVariantOnly: FilterOpts<boolean>;
   valueRequired: FilterOpts<boolean>;
@@ -23,61 +19,33 @@ export interface AttributeListFilterOpts {
 }
 
 const messages = defineMessages({
-  availableInGrid: {
-    defaultMessage: "Can be used as column",
-    description: "attribute can be column in product list table"
-  },
-  filterableInDashboard: {
-    defaultMessage: "Filterable in Dashboard",
-    description: "use attribute in filtering"
-  },
   filterableInStorefront: {
+    id: "PsRG+v",
     defaultMessage: "Filterable in Storefront",
-    description: "use attribute in filtering"
+    description: "use attribute in filtering",
   },
   isVariantOnly: {
+    id: "rvk9ls",
     defaultMessage: "Variant Only",
-    description: "attribute can be used only in variants"
+    description: "attribute can be used only in variants",
   },
   valueRequired: {
+    id: "HQR2y0",
     defaultMessage: "Value Required",
-    description: "attribute value is required"
+    description: "attribute value is required",
   },
   visibleInStorefront: {
+    id: "cvbqJu",
     defaultMessage: "Visible on Product Page in Storefront",
-    description: "attribute"
-  }
+    description: "attribute",
+  },
 });
 
 export function createFilterStructure(
   intl: IntlShape,
-  opts: AttributeListFilterOpts
+  opts: AttributeListFilterOpts,
 ): IFilter<AttributeFilterKeys> {
   return [
-    {
-      ...createBooleanField(
-        AttributeFilterKeys.availableInGrid,
-        intl.formatMessage(messages.availableInGrid),
-        opts.availableInGrid.value,
-        {
-          negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
-      ),
-      active: opts.availableInGrid.active
-    },
-    {
-      ...createBooleanField(
-        AttributeFilterKeys.filterableInDashboard,
-        intl.formatMessage(messages.filterableInDashboard),
-        opts.filterableInDashboard.value,
-        {
-          negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
-      ),
-      active: opts.filterableInDashboard.active
-    },
     {
       ...createBooleanField(
         AttributeFilterKeys.filterableInStorefront,
@@ -85,10 +53,10 @@ export function createFilterStructure(
         opts.filterableInStorefront.value,
         {
           negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
+          positive: intl.formatMessage(commonMessages.yes),
+        },
       ),
-      active: opts.filterableInStorefront.active
+      active: opts.filterableInStorefront.active,
     },
     {
       ...createBooleanField(
@@ -97,10 +65,10 @@ export function createFilterStructure(
         opts.isVariantOnly.value,
         {
           negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
+          positive: intl.formatMessage(commonMessages.yes),
+        },
       ),
-      active: opts.isVariantOnly.active
+      active: opts.isVariantOnly.active,
     },
     {
       ...createBooleanField(
@@ -109,10 +77,10 @@ export function createFilterStructure(
         opts.valueRequired.value,
         {
           negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
+          positive: intl.formatMessage(commonMessages.yes),
+        },
       ),
-      active: opts.valueRequired.active
+      active: opts.valueRequired.active,
     },
     {
       ...createBooleanField(
@@ -121,10 +89,10 @@ export function createFilterStructure(
         opts.visibleInStorefront.value,
         {
           negative: intl.formatMessage(commonMessages.no),
-          positive: intl.formatMessage(commonMessages.yes)
-        }
+          positive: intl.formatMessage(commonMessages.yes),
+        },
       ),
-      active: opts.visibleInStorefront.active
-    }
+      active: opts.visibleInStorefront.active,
+    },
   ];
 }

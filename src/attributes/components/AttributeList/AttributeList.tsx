@@ -1,11 +1,15 @@
 import { TableBody, TableCell, TableFooter, TableRow } from "@material-ui/core";
-import { AttributeListUrlSortField } from "@saleor/attributes/urls";
+import {
+  AttributeListUrlSortField,
+  attributeUrl,
+} from "@saleor/attributes/urls";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { AttributeFragment } from "@saleor/graphql";
 import { translateBoolean } from "@saleor/intl";
 import { makeStyles } from "@saleor/macaw-ui";
@@ -26,39 +30,39 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colFaceted: {
-        width: 180
+        width: 180,
       },
       colName: {
-        width: "auto"
+        width: "auto",
       },
       colSearchable: {
-        width: 180
+        width: 180,
       },
       colSlug: {
-        width: 200
+        width: 200,
       },
       colVisible: {
-        width: 180
-      }
+        width: 180,
+      },
     },
     colFaceted: {
-      textAlign: "center"
+      textAlign: "center",
     },
     colName: {},
     colSearchable: {
-      textAlign: "center"
+      textAlign: "center",
     },
     colSlug: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colVisible: {
-      textAlign: "center"
+      textAlign: "center",
     },
     link: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "AttributeList" }
+  { name: "AttributeList" },
 );
 
 const numberOfColumns = 6;
@@ -67,16 +71,12 @@ const AttributeList: React.FC<AttributeListProps> = ({
   attributes,
   disabled,
   isChecked,
-  onNextPage,
-  onPreviousPage,
-  onRowClick,
-  pageInfo,
   selected,
   sort,
   toggle,
   toggleAll,
   toolbar,
-  onSort
+  onSort,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();
@@ -101,7 +101,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
           arrowPosition="right"
           onClick={() => onSort(AttributeListUrlSortField.slug)}
         >
-          <FormattedMessage defaultMessage="Attribute Code" />
+          <FormattedMessage id="oJkeS6" defaultMessage="Attribute Code" />
         </TableCellHeader>
         <TableCellHeader
           className={classes.colName}
@@ -113,6 +113,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
           onClick={() => onSort(AttributeListUrlSortField.name)}
         >
           <FormattedMessage
+            id="HjUoHK"
             defaultMessage="Default Label"
             description="attribute's label'"
           />
@@ -128,6 +129,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
           onClick={() => onSort(AttributeListUrlSortField.visible)}
         >
           <FormattedMessage
+            id="k6WDZl"
             defaultMessage="Visible"
             description="attribute is visible"
           />
@@ -143,6 +145,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
           onClick={() => onSort(AttributeListUrlSortField.searchable)}
         >
           <FormattedMessage
+            id="yKuba7"
             defaultMessage="Searchable"
             description="attribute can be searched in dashboard"
           />
@@ -158,22 +161,15 @@ const AttributeList: React.FC<AttributeListProps> = ({
           onClick={() => onSort(AttributeListUrlSortField.useInFacetedSearch)}
         >
           <FormattedMessage
-            defaultMessage="Use in faceted search"
+            defaultMessage="Use as filter"
+            id="Y3pCRX"
             description="attribute can be searched in storefront"
           />
         </TableCellHeader>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
-            colSpan={numberOfColumns}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
-          />
+          <TablePaginationWithContext colSpan={numberOfColumns} />
         </TableRow>
       </TableFooter>
       <TableBody>
@@ -183,11 +179,11 @@ const AttributeList: React.FC<AttributeListProps> = ({
             const isSelected = attribute ? isChecked(attribute.id) : false;
 
             return (
-              <TableRow
+              <TableRowLink
                 selected={isSelected}
                 hover={!!attribute}
                 key={attribute ? attribute.id : "skeleton"}
-                onClick={attribute && onRowClick(attribute.id)}
+                href={attribute && attributeUrl(attribute.id)}
                 className={classes.link}
                 data-test-id={"id-" + maybe(() => attribute.id)}
               >
@@ -220,7 +216,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
                   className={classes.colSearchable}
                   data-test-id="searchable"
                   data-test-searchable={maybe(
-                    () => attribute.filterableInDashboard
+                    () => attribute.filterableInDashboard,
                   )}
                 >
                   {attribute ? (
@@ -233,7 +229,7 @@ const AttributeList: React.FC<AttributeListProps> = ({
                   className={classes.colFaceted}
                   data-test-id="use-in-faceted-search"
                   data-test-use-in-faceted-search={maybe(
-                    () => attribute.filterableInStorefront
+                    () => attribute.filterableInStorefront,
                   )}
                 >
                   {attribute ? (
@@ -242,16 +238,19 @@ const AttributeList: React.FC<AttributeListProps> = ({
                     <Skeleton />
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No attributes found" />
+                <FormattedMessage
+                  id="ztQgD8"
+                  defaultMessage="No attributes found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

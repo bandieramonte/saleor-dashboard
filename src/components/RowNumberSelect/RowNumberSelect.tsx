@@ -6,27 +6,27 @@ import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles(
   theme => ({
     label: {
-      fontSize: 14
+      fontSize: 14,
     },
     select: {
       "& div": {
         "&:focus": {
-          background: "none"
+          background: "none",
         },
         color: theme.palette.primary.main,
-        marginLeft: theme.spacing(1)
+        marginLeft: theme.spacing(1),
       },
       "& svg": {
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
       },
       "&:after, &:before, &:hover": {
-        border: "none !important"
-      }
-    }
+        border: "none !important",
+      },
+    },
   }),
   {
-    name: "RowNumberSelect"
-  }
+    name: "RowNumberSelect",
+  },
 );
 
 interface RowNumberSelectProps {
@@ -40,14 +40,14 @@ const RowNumberSelect: React.FC<RowNumberSelectProps> = ({
   className,
   choices,
   rowNumber,
-  onChange
+  onChange,
 }) => {
   const classes = useStyles({});
 
   return (
     <div className={className}>
       <span className={classes.label}>
-        <FormattedMessage defaultMessage="No of Rows:" />
+        <FormattedMessage id="fNFEkh" defaultMessage="No of Rows:" />
       </span>
       <Select
         data-test-id="row-number-select"

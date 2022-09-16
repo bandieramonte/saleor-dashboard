@@ -3,12 +3,12 @@ import ActionDialog from "@saleor/components/ActionDialog";
 import useAppChannel from "@saleor/components/AppLayout/AppChannelContext";
 import DeleteFilterTabDialog from "@saleor/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog, {
-  SaveFilterTabDialogFormData
+  SaveFilterTabDialogFormData,
 } from "@saleor/components/SaveFilterTabDialog";
 import { WindowTitle } from "@saleor/components/WindowTitle";
 import {
   useVoucherBulkDeleteMutation,
-  useVoucherListQuery
+  useVoucherListQuery,
 } from "@saleor/graphql";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useListSettings from "@saleor/hooks/useListSettings";
@@ -16,7 +16,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext,
 } from "@saleor/hooks/usePaginator";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -32,11 +33,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import VoucherListPage from "../../components/VoucherListPage";
 import {
-  voucherAddUrl,
   voucherListUrl,
   VoucherListUrlDialog,
   VoucherListUrlQueryParams,
-  voucherUrl
 } from "../../urls";
 import {
   deleteFilterTab,
@@ -46,7 +45,7 @@ import {
   getFiltersCurrentTab,
   getFilterTabs,
   getFilterVariables,
-  saveFilterTab
+  saveFilterTab,
 } from "./filters";
 import { canBeSorted, DEFAULT_SORT_KEY, getSortQueryVariables } from "./sort";
 
@@ -57,12 +56,11 @@ interface VoucherListProps {
 export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
-    params.ids
+    params.ids,
   );
   const { updateListSettings, settings } = useListSettings(
-    ListViews.VOUCHER_LIST
+    ListViews.VOUCHER_LIST,
   );
 
   usePaginationReset(voucherListUrl, params, settings.rowNumber);
@@ -71,7 +69,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
 
   const { availableChannels } = useAppChannel(false);
   const selectedChannel = availableChannels.find(
-    channel => channel.slug === params.channel
+    channel => channel.slug === params.channel,
   );
   const channelOpts = availableChannels
     ? mapNodeToChoice(availableChannels, channel => channel.slug)
@@ -88,13 +86,13 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
       ...paginationState,
       filter: getFilterVariables(params),
       sort: getSortQueryVariables(params),
-      channel: params.channel
+      channel: params.channel,
     }),
-    [params, settings.rowNumber]
+    [params, settings.rowNumber],
   );
   const { data, loading, refetch } = useVoucherListQuery({
     displayLoader: true,
-    variables: queryVariables
+    variables: queryVariables,
   });
 
   const tabs = getFilterTabs();
@@ -104,13 +102,13 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
   const [
     changeFilters,
     resetFilters,
-    handleSearchChange
+    handleSearchChange,
   ] = createFilterHandlers({
     cleanupFn: reset,
     createUrl: voucherListUrl,
     getFilterQueryParam,
     navigate,
-    params
+    params,
   });
 
   useEffect(() => {
@@ -118,8 +116,8 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
       navigate(
         voucherListUrl({
           ...params,
-          sort: DEFAULT_SORT_KEY
-        })
+          sort: DEFAULT_SORT_KEY,
+        }),
       );
     }
   }, [params]);
@@ -129,8 +127,8 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
     navigate(
       voucherListUrl({
         activeTab: tab.toString(),
-        ...getFilterTabs()[tab - 1].data
-      })
+        ...getFilterTabs()[tab - 1].data,
+      }),
     );
   };
 
@@ -147,40 +145,40 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
 
   const canOpenBulkActionDialog = maybe(() => params.ids.length > 0);
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    data?.vouchers?.pageInfo,
+  const paginationValues = usePaginator({
+    pageInfo: data?.vouchers?.pageInfo,
     paginationState,
-    params
-  );
+    queryString: params,
+  });
 
   const [
     voucherBulkDelete,
-    voucherBulkDeleteOpts
+    voucherBulkDeleteOpts,
   ] = useVoucherBulkDeleteMutation({
     onCompleted: data => {
       if (data.voucherBulkDelete.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         reset();
         closeModal();
         refetch();
       }
-    }
+    },
   });
 
   const onVoucherBulkDelete = () =>
     voucherBulkDelete({
       variables: {
-        ids: params.ids
-      }
+        ids: params.ids,
+      },
     });
 
   const handleSort = createSortHandler(navigate, voucherListUrl, params);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <WindowTitle title={intl.formatMessage(sectionNames.vouchers)} />
       <VoucherListPage
         currentTab={currentTab}
@@ -196,12 +194,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         settings={settings}
         vouchers={mapEdgesToItems(data?.vouchers)}
         disabled={loading}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(voucherAddUrl())}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onUpdateListSettings={updateListSettings}
-        onRowClick={id => () => navigate(voucherUrl(id))}
         onSort={handleSort}
         isChecked={isSelected}
         selected={listElements.length}
@@ -214,7 +207,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
             color="primary"
             onClick={() =>
               openModal("remove", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -229,19 +222,21 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         onConfirm={onVoucherBulkDelete}
         open={params.action === "remove" && canOpenBulkActionDialog}
         title={intl.formatMessage({
+          id: "Q0JJ4F",
           defaultMessage: "Delete Vouchers",
-          description: "dialog header"
+          description: "dialog header",
         })}
         variant="delete"
       >
         {canOpenBulkActionDialog && (
           <DialogContentText>
             <FormattedMessage
+              id="O9QPe1"
               defaultMessage="{counter,plural,one{Are you sure you want to delete this voucher?} other{Are you sure you want to delete {displayQuantity} vouchers?}}"
               description="dialog content"
               values={{
                 counter: params.ids.length,
-                displayQuantity: <strong>{params.ids.length}</strong>
+                displayQuantity: <strong>{params.ids.length}</strong>,
               }}
             />
           </DialogContentText>
@@ -260,7 +255,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default VoucherList;

@@ -1,11 +1,12 @@
 import { TableBody, TableCell, TableFooter, TableRow } from "@material-ui/core";
-import { CategoryListUrlSortField } from "@saleor/categories/urls";
+import { CategoryListUrlSortField, categoryUrl } from "@saleor/categories/urls";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { CategoryFragment } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
 import { maybe, renderCollection } from "@saleor/misc";
@@ -18,29 +19,29 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colName: {
-        width: "auto"
+        width: "auto",
       },
       colProducts: {
-        width: 160
+        width: 160,
       },
       colSubcategories: {
-        width: 160
-      }
+        width: 160,
+      },
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colProducts: {
-      textAlign: "center"
+      textAlign: "center",
     },
     colSubcategories: {
-      textAlign: "center"
+      textAlign: "center",
     },
     tableRow: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "CategoryList" }
+  { name: "CategoryList" },
 );
 
 interface CategoryListProps
@@ -49,7 +50,6 @@ interface CategoryListProps
     SortPage<CategoryListUrlSortField> {
   categories?: CategoryFragment[];
   isRoot: boolean;
-  onAdd?();
 }
 
 const CategoryList: React.FC<CategoryListProps> = props => {
@@ -58,18 +58,14 @@ const CategoryList: React.FC<CategoryListProps> = props => {
     disabled,
     settings,
     sort,
-    pageInfo,
     isChecked,
     isRoot,
     selected,
     toggle,
     toggleAll,
     toolbar,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
-    onSort
+    onSort,
   } = props;
 
   const classes = useStyles(props);
@@ -96,7 +92,7 @@ const CategoryList: React.FC<CategoryListProps> = props => {
           disabled={!isRoot}
           onClick={() => isRoot && onSort(CategoryListUrlSortField.name)}
         >
-          <FormattedMessage defaultMessage="Category Name" />
+          <FormattedMessage id="vEYtiq" defaultMessage="Category Name" />
         </TableCellHeader>
         <TableCellHeader
           direction={
@@ -111,6 +107,7 @@ const CategoryList: React.FC<CategoryListProps> = props => {
           }
         >
           <FormattedMessage
+            id="BHQrgz"
             defaultMessage="Subcategories"
             description="number of subcategories"
           />
@@ -128,6 +125,7 @@ const CategoryList: React.FC<CategoryListProps> = props => {
           }
         >
           <FormattedMessage
+            id="k8ZJ5L"
             defaultMessage="No. of Products"
             description="number of products"
           />
@@ -135,16 +133,10 @@ const CategoryList: React.FC<CategoryListProps> = props => {
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -155,10 +147,10 @@ const CategoryList: React.FC<CategoryListProps> = props => {
             const isSelected = category ? isChecked(category.id) : false;
 
             return (
-              <TableRow
+              <TableRowLink
                 className={classes.tableRow}
                 hover={!!category}
-                onClick={category ? onRowClick(category.id) : undefined}
+                href={category && categoryUrl(category.id)}
                 key={category ? category.id : "skeleton"}
                 selected={isSelected}
                 data-test-id={"id-" + maybe(() => category.id)}
@@ -192,20 +184,26 @@ const CategoryList: React.FC<CategoryListProps> = props => {
                     <Skeleton />
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
                 {isRoot ? (
-                  <FormattedMessage defaultMessage="No categories found" />
+                  <FormattedMessage
+                    id="dM86a2"
+                    defaultMessage="No categories found"
+                  />
                 ) : (
-                  <FormattedMessage defaultMessage="No subcategories found" />
+                  <FormattedMessage
+                    id="rrbzZt"
+                    defaultMessage="No subcategories found"
+                  />
                 )}
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

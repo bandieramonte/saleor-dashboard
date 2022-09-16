@@ -1,7 +1,7 @@
 import {
   LanguageCodeEnum,
   useCollectionTranslationDetailsQuery,
-  useUpdateCollectionTranslationsMutation
+  useUpdateCollectionTranslationsMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -14,11 +14,6 @@ import { useIntl } from "react-intl";
 import { extractMutationErrors, maybe } from "../../misc";
 import TranslationsCollectionsPage from "../components/TranslationsCollectionsPage";
 import { TranslationField, TranslationInputFieldName } from "../types";
-import {
-  languageEntitiesUrl,
-  languageEntityUrl,
-  TranslatableEntities
-} from "../urls";
 import { getParsedTranslationInputData } from "../utils";
 
 export interface TranslationsCollectionsQueryParams {
@@ -33,7 +28,7 @@ export interface TranslationsCollectionsProps {
 const TranslationsCollections: React.FC<TranslationsCollectionsProps> = ({
   id,
   languageCode,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -41,32 +36,32 @@ const TranslationsCollections: React.FC<TranslationsCollectionsProps> = ({
   const intl = useIntl();
 
   const collectionTranslations = useCollectionTranslationDetailsQuery({
-    variables: { id, language: languageCode }
+    variables: { id, language: languageCode },
   });
 
   const [
     updateTranslations,
-    updateTranslationsOpts
+    updateTranslationsOpts,
   ] = useUpdateCollectionTranslationsMutation({
     onCompleted: data => {
       if (data.collectionTranslate.errors.length === 0) {
         collectionTranslations.refetch();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate("?", { replace: true });
       }
-    }
+    },
   });
 
   const onEdit = (field: string) =>
     navigate(
       "?" +
         stringifyQs({
-          activeField: field
+          activeField: field,
         }),
-      { replace: true }
+      { replace: true },
     );
 
   const onDiscard = () => {
@@ -76,7 +71,7 @@ const TranslationsCollections: React.FC<TranslationsCollectionsProps> = ({
 
   const handleSubmit = (
     { name: fieldName }: TranslationField<TranslationInputFieldName>,
-    data: string
+    data: string,
   ) =>
     extractMutationErrors(
       updateTranslations({
@@ -84,15 +79,16 @@ const TranslationsCollections: React.FC<TranslationsCollectionsProps> = ({
           id,
           input: getParsedTranslationInputData({
             data,
-            fieldName
+            fieldName,
           }),
-          language: languageCode
-        }
-      })
+          language: languageCode,
+        },
+      }),
     );
 
   return (
     <TranslationsCollectionsPage
+      translationId={id}
       activeField={params.activeField}
       disabled={
         collectionTranslations.loading || updateTranslationsOpts.loading
@@ -102,16 +98,6 @@ const TranslationsCollections: React.FC<TranslationsCollectionsProps> = ({
       saveButtonState={updateTranslationsOpts.status}
       onEdit={onEdit}
       onDiscard={onDiscard}
-      onBack={() =>
-        navigate(
-          languageEntitiesUrl(languageCode, {
-            tab: TranslatableEntities.collections
-          })
-        )
-      }
-      onLanguageChange={lang =>
-        navigate(languageEntityUrl(lang, TranslatableEntities.collections, id))
-      }
       onSubmit={handleSubmit}
       data={
         translation?.__typename === "CollectionTranslatableContent"

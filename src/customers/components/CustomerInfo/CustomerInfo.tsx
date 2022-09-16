@@ -13,16 +13,16 @@ import { FormattedMessage, useIntl } from "react-intl";
 const useStyles = makeStyles(
   theme => ({
     content: {
-      paddingTop: theme.spacing(2)
+      paddingTop: theme.spacing(2),
     },
     hr: {
-      margin: theme.spacing(3, 0)
+      margin: theme.spacing(3, 0),
     },
     sectionHeader: {
-      marginBottom: theme.spacing()
-    }
+      marginBottom: theme.spacing(),
+    },
   }),
-  { name: "CustomerInfo" }
+  { name: "CustomerInfo" },
 );
 
 export interface CustomerInfoProps {
@@ -49,6 +49,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = props => {
       <CardTitle
         title={
           <FormattedMessage
+            id="4v5gfh"
             defaultMessage="Account Information"
             description="account information, header"
           />
@@ -85,6 +86,7 @@ const CustomerInfo: React.FC<CustomerInfoProps> = props => {
         <Hr className={classes.hr} />
         <Typography className={classes.sectionHeader}>
           <FormattedMessage
+            id="SMakqb"
             defaultMessage="Contact Information"
             description="customer contact section, header"
           />

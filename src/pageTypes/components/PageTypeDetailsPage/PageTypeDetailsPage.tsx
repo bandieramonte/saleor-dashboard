@@ -1,4 +1,5 @@
 import { Typography } from "@material-ui/core";
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
 import Grid from "@saleor/components/Grid";
@@ -11,14 +12,12 @@ import { SingleAutocompleteChoiceType } from "@saleor/components/SingleAutocompl
 import {
   AttributeTypeEnum,
   PageErrorFragment,
-  PageTypeDetailsFragment
+  PageTypeDetailsFragment,
 } from "@saleor/graphql";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import {
-  Backlink,
-  ConfirmButtonTransitionState,
-  makeStyles
-} from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState, makeStyles } from "@saleor/macaw-ui";
+import { pageTypeListUrl } from "@saleor/pageTypes/urls";
 import { ListActions, ReorderEvent } from "@saleor/types";
 import { mapMetadataItemToInput } from "@saleor/utils/maps";
 import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTrigger";
@@ -41,10 +40,8 @@ export interface PageTypeDetailsPageProps {
   attributeList: ListActions;
   saveButtonBarState: ConfirmButtonTransitionState;
   onAttributeAdd: (type: AttributeTypeEnum) => void;
-  onAttributeClick: (id: string) => void;
   onAttributeReorder: (event: ReorderEvent, type: AttributeTypeEnum) => void;
   onAttributeUnassign: (id: string) => void;
-  onBack: () => void;
   onDelete: () => void;
   onSubmit: (data: PageTypeForm) => void;
 }
@@ -53,12 +50,12 @@ const useStyles = makeStyles(
   theme => ({
     hr: {
       gridColumnEnd: "span 2",
-      margin: theme.spacing(1, 0)
-    }
+      margin: theme.spacing(1, 0),
+    },
   }),
   {
-    name: "PageTypeDetailsPage"
-  }
+    name: "PageTypeDetailsPage",
+  },
 );
 
 const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
@@ -72,28 +69,28 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
     onAttributeAdd,
     onAttributeUnassign,
     onAttributeReorder,
-    onAttributeClick,
-    onBack,
     onDelete,
-    onSubmit
+    onSubmit,
   } = props;
   const classes = useStyles(props);
   const intl = useIntl();
+  const navigate = useNavigator();
+
   const {
     isMetadataModified,
     isPrivateMetadataModified,
-    makeChangeHandler: makeMetadataChangeHandler
+    makeChangeHandler: makeMetadataChangeHandler,
   } = useMetadataChangeTrigger();
 
   const formInitialData: PageTypeForm = {
     attributes:
       pageType?.attributes?.map(attribute => ({
         label: attribute.name,
-        value: attribute.id
+        value: attribute.id,
       })) || [],
     metadata: pageType?.metadata?.map(mapMetadataItemToInput),
     name: pageType?.name || "",
-    privateMetadata: pageType?.privateMetadata?.map(mapMetadataItemToInput)
+    privateMetadata: pageType?.privateMetadata?.map(mapMetadataItemToInput),
   };
 
   const handleSubmit = (data: PageTypeForm) => {
@@ -105,7 +102,7 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
     onSubmit({
       ...data,
       metadata,
-      privateMetadata
+      privateMetadata,
     });
   };
 
@@ -121,7 +118,7 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={pageTypeListUrl()}>
               {intl.formatMessage(sectionNames.pageTypes)}
             </Backlink>
             <PageHeader title={pageTitle} />
@@ -131,7 +128,10 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
                   {intl.formatMessage(commonMessages.generalInformations)}
                 </Typography>
                 <Typography variant="body2">
-                  <FormattedMessage defaultMessage="These are general information about this Content Type." />
+                  <FormattedMessage
+                    id="kZfIl/"
+                    defaultMessage="These are general information about this Content Type."
+                  />
                 </Typography>
               </div>
               <PageTypeDetails
@@ -144,12 +144,16 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
               <div>
                 <Typography>
                   <FormattedMessage
+                    id="iQxjow"
                     defaultMessage="Content Attributes"
                     description="section header"
                   />
                 </Typography>
                 <Typography variant="body2">
-                  <FormattedMessage defaultMessage="This list shows all attributes that will be assigned to pages that have this page type assigned." />
+                  <FormattedMessage
+                    id="lct0qd"
+                    defaultMessage="This list shows all attributes that will be assigned to pages that have this page type assigned."
+                  />
                 </Typography>
               </div>
               <PageTypeAttributes
@@ -157,7 +161,6 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
                 disabled={disabled}
                 type={AttributeTypeEnum.PAGE_TYPE}
                 onAttributeAssign={onAttributeAdd}
-                onAttributeClick={onAttributeClick}
                 onAttributeReorder={(event: ReorderEvent) =>
                   onAttributeReorder(event, AttributeTypeEnum.PAGE_TYPE)
                 }
@@ -168,6 +171,7 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
               <div>
                 <Typography>
                   <FormattedMessage
+                    id="OVOU1z"
                     defaultMessage="Metadata"
                     description="section header"
                   />
@@ -176,7 +180,7 @@ const PageTypeDetailsPage: React.FC<PageTypeDetailsPageProps> = props => {
               <Metadata data={data} onChange={changeMetadata} />
             </Grid>
             <Savebar
-              onCancel={onBack}
+              onCancel={() => navigate(pageTypeListUrl())}
               onDelete={onDelete}
               onSubmit={submit}
               disabled={isSaveDisabled}

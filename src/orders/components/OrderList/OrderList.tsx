@@ -3,7 +3,7 @@ import {
   TableCell,
   TableFooter,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import { CSSProperties } from "@material-ui/styles";
 import { DateTime } from "@saleor/components/Date";
@@ -11,16 +11,17 @@ import Money from "@saleor/components/Money";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { OrderListQuery } from "@saleor/graphql";
 import { makeStyles, Pill } from "@saleor/macaw-ui";
 import {
   maybe,
   renderCollection,
   transformOrderStatus,
-  transformPaymentStatus
+  transformPaymentStatus,
 } from "@saleor/misc";
-import { OrderListUrlSortField } from "@saleor/orders/urls";
+import { OrderListUrlSortField, orderUrl } from "@saleor/orders/urls";
 import { ListProps, RelayToFlat, SortPage } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
@@ -30,29 +31,29 @@ const useStyles = makeStyles(
   theme => {
     const overflowing: CSSProperties = {
       overflow: "hidden",
-      textOverflow: "ellipsis"
+      textOverflow: "ellipsis",
     };
 
     return {
       [theme.breakpoints.up("lg")]: {
         colCustomer: {
-          width: 220
+          width: 220,
         },
         colDate: {},
         colFulfillment: {
-          width: 230
+          width: 230,
         },
         colNumber: {
-          width: 120
+          width: 120,
         },
         colPayment: {
-          width: 220
+          width: 220,
         },
-        colTotal: {}
+        colTotal: {},
       },
       pill: {
         maxWidth: "100%",
-        ...overflowing
+        ...overflowing,
       },
       colCustomer: overflowing,
       colDate: {},
@@ -60,14 +61,14 @@ const useStyles = makeStyles(
       colNumber: {},
       colPayment: {},
       colTotal: {
-        textAlign: "right"
+        textAlign: "right",
       },
       link: {
-        cursor: "pointer"
-      }
+        cursor: "pointer",
+      },
     };
   },
-  { name: "OrderList" }
+  { name: "OrderList" },
 );
 
 interface OrderListProps extends ListProps, SortPage<OrderListUrlSortField> {
@@ -81,13 +82,9 @@ export const OrderList: React.FC<OrderListProps> = props => {
     disabled,
     settings,
     orders,
-    pageInfo,
-    onPreviousPage,
-    onNextPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
-    sort
+    sort,
   } = props;
   const classes = useStyles(props);
 
@@ -97,7 +94,7 @@ export const OrderList: React.FC<OrderListProps> = props => {
     ? orders.map(order => ({
         ...order,
         paymentStatus: transformPaymentStatus(order.paymentStatus, intl),
-        status: transformOrderStatus(order.status, intl)
+        status: transformOrderStatus(order.status, intl),
       }))
     : undefined;
   return (
@@ -114,7 +111,7 @@ export const OrderList: React.FC<OrderListProps> = props => {
             onClick={() => onSort(OrderListUrlSortField.number)}
             className={classes.colNumber}
           >
-            <FormattedMessage defaultMessage="No. of Order" />
+            <FormattedMessage id="ps0WUQ" defaultMessage="No. of Order" />
           </TableCellHeader>
           <TableCellHeader
             direction={
@@ -126,6 +123,7 @@ export const OrderList: React.FC<OrderListProps> = props => {
             className={classes.colDate}
           >
             <FormattedMessage
+              id="PHUcrU"
               defaultMessage="Date"
               description="date when order was placed"
             />
@@ -140,6 +138,7 @@ export const OrderList: React.FC<OrderListProps> = props => {
             className={classes.colCustomer}
           >
             <FormattedMessage
+              id="5blVMu"
               defaultMessage="Customer"
               description="e-mail or full name"
             />
@@ -154,6 +153,7 @@ export const OrderList: React.FC<OrderListProps> = props => {
             className={classes.colPayment}
           >
             <FormattedMessage
+              id="p+UDec"
               defaultMessage="Payment"
               description="payment status"
             />
@@ -167,10 +167,11 @@ export const OrderList: React.FC<OrderListProps> = props => {
             onClick={() => onSort(OrderListUrlSortField.fulfillment)}
             className={classes.colFulfillment}
           >
-            <FormattedMessage defaultMessage="Fulfillment status" />
+            <FormattedMessage id="NWxomz" defaultMessage="Fulfillment status" />
           </TableCellHeader>
           <TableCellHeader textAlign="right" className={classes.colTotal}>
             <FormattedMessage
+              id="k9hf7F"
               defaultMessage="Total"
               description="total order price"
             />
@@ -179,16 +180,11 @@ export const OrderList: React.FC<OrderListProps> = props => {
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
+            disabled={disabled}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -196,11 +192,11 @@ export const OrderList: React.FC<OrderListProps> = props => {
         {renderCollection(
           orderList,
           order => (
-            <TableRow
+            <TableRowLink
               data-test-id="order-table-row"
               hover={!!order}
               className={!!order ? classes.link : undefined}
-              onClick={order ? onRowClick(order.id) : undefined}
+              href={order && orderUrl(order.id)}
               key={order ? order.id : "skeleton"}
             >
               <TableCell className={classes.colNumber}>
@@ -257,15 +253,18 @@ export const OrderList: React.FC<OrderListProps> = props => {
                   <Skeleton />
                 )}
               </TableCell>
-            </TableRow>
+            </TableRowLink>
           ),
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No orders found" />
+                <FormattedMessage
+                  id="RlfqSV"
+                  defaultMessage="No orders found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

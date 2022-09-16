@@ -11,50 +11,50 @@ const useStyles = makeStyles(
   () => ({
     container: {
       display: "flex",
-      flexDirection: "column"
+      flexDirection: "column",
     },
     horizontalContainer: {
       display: "flex",
       flexDirection: "row",
-      alignItems: "baseline"
-    }
+      alignItems: "baseline",
+    },
   }),
-  { name: "MoneySection" }
+  { name: "MoneySection" },
 );
 
 export const messages = defineMessages({
   discount: {
+    id: "yJynYK",
     defaultMessage: "discount",
     description: "discount value",
-    id: "discount value id"
   },
   fixedAmount: {
+    id: "Zhxu58",
     defaultMessage: "Fixed amount",
     description: "Fixed amount subtitle",
-    id: "fixed amount subtitle id"
   },
 
   newDiscountSectionTitle: {
+    id: "MTl5o6",
     defaultMessage: "New discount value",
     description: "new discount label",
-    id: "new discount label id"
   },
   oldDiscountSectionTitle: {
+    id: "2Sx05f",
     defaultMessage: "Previous discount value",
     description: "Previous discount label",
-    id: "Previous discount label id"
   },
   onlyDiscountSectionTitle: {
+    id: "ojHyj3",
     defaultMessage: "discount value",
     description: "discount value label",
-    id: "discount value label id"
-  }
+  },
 });
 
 export enum MoneySectionType {
   OLD = "old",
   NEW = "new",
-  ONLY = "only"
+  ONLY = "only",
 }
 
 interface MoneySectionProps {
@@ -68,7 +68,7 @@ const MoneySection: React.FC<MoneySectionProps> = ({
   value,
   calculationMode,
   moneyData,
-  sectionType = MoneySectionType.ONLY
+  sectionType = MoneySectionType.ONLY,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();

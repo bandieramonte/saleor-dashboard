@@ -14,19 +14,19 @@ import { FormattedMessage, useIntl } from "react-intl";
 const useStyles = makeStyles(
   theme => ({
     cardTitle: {
-      height: 72
+      height: 72,
     },
     checkbox: {
-      marginBottom: theme.spacing()
+      marginBottom: theme.spacing(),
     },
     content: {
-      paddingTop: theme.spacing()
+      paddingTop: theme.spacing(),
     },
     subtitle: {
-      marginTop: theme.spacing()
-    }
+      marginTop: theme.spacing(),
+    },
   }),
-  { name: "CustomerDetails" }
+  { name: "CustomerDetails" },
 );
 
 export interface CustomerDetailsProps {
@@ -62,10 +62,11 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = props => {
                 component="div"
               >
                 <FormattedMessage
+                  id="MjUyhA"
                   defaultMessage="Active member since {date}"
                   description="section subheader"
                   values={{
-                    date: moment(customer.dateJoined).format("MMM YYYY")
+                    date: moment(customer.dateJoined).format("MMM YYYY"),
                   }}
                 />
               </Typography>
@@ -81,8 +82,9 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = props => {
           className={classes.checkbox}
           disabled={disabled}
           label={intl.formatMessage({
+            id: "+NUzaQ",
             defaultMessage: "User account active",
-            description: "check to mark this account as active"
+            description: "check to mark this account as active",
           })}
           name="isActive"
           onChange={onChange}
@@ -95,8 +97,9 @@ const CustomerDetails: React.FC<CustomerDetailsProps> = props => {
           helperText={getAccountErrorMessage(formErrors.note, intl)}
           name="note"
           label={intl.formatMessage({
+            id: "uUQ+Al",
             defaultMessage: "Note",
-            description: "note about customer"
+            description: "note about customer",
           })}
           value={data.note}
           onChange={onChange}

@@ -9,16 +9,16 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import CustomAppCreatePage, {
-  CustomAppCreatePageFormData
+  CustomAppCreatePageFormData,
 } from "../../components/CustomAppCreatePage";
-import { appsListUrl, customAppUrl } from "../../urls";
+import { customAppUrl } from "../../urls";
 import { messages } from "./messages";
 
 interface CustomAppCreateProps {
   setToken: (token: string) => void;
 }
 export const CustomAppCreate: React.FC<CustomAppCreateProps> = ({
-  setToken
+  setToken,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -29,17 +29,15 @@ export const CustomAppCreate: React.FC<CustomAppCreateProps> = ({
     if (data.appCreate.errors.length === 0) {
       notify({
         status: "success",
-        text: intl.formatMessage(commonMessages.savedChanges)
+        text: intl.formatMessage(commonMessages.savedChanges),
       });
       navigate(customAppUrl(data.appCreate.app.id));
       setToken(data.appCreate.authToken);
     }
   };
 
-  const handleBack = () => navigate(appsListUrl());
-
   const [createApp, createAppOpts] = useAppCreateMutation({
-    onCompleted: onSubmit
+    onCompleted: onSubmit,
   });
 
   const handleSubmit = async (data: CustomAppCreatePageFormData) =>
@@ -50,10 +48,10 @@ export const CustomAppCreate: React.FC<CustomAppCreateProps> = ({
             name: data.name,
             permissions: data.hasFullAccess
               ? shop.permissions.map(permission => permission.code)
-              : data.permissions
-          }
-        }
-      })
+              : data.permissions,
+          },
+        },
+      }),
     );
 
   return (
@@ -62,7 +60,6 @@ export const CustomAppCreate: React.FC<CustomAppCreateProps> = ({
       <CustomAppCreatePage
         disabled={false}
         errors={createAppOpts.data?.appCreate.errors || []}
-        onBack={handleBack}
         onSubmit={handleSubmit}
         permissions={shop?.permissions}
         saveButtonBarState={createAppOpts.status}

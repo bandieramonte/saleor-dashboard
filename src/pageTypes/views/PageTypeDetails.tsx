@@ -1,7 +1,7 @@
-import { attributeUrl } from "@saleor/attributes/urls";
 import AssignAttributeDialog from "@saleor/components/AssignAttributeDialog";
 import AttributeUnassignDialog from "@saleor/components/AttributeUnassignDialog";
 import BulkAttributeUnassignDialog from "@saleor/components/BulkAttributeUnassignDialog";
+import { Button } from "@saleor/components/Button";
 import NotFoundPage from "@saleor/components/NotFoundPage";
 import TypeDeleteWarningDialog from "@saleor/components/TypeDeleteWarningDialog";
 import { WindowTitle } from "@saleor/components/WindowTitle";
@@ -14,13 +14,12 @@ import {
   usePageTypeUpdateMutation,
   useUnassignPageAttributeMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { commonMessages } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import { ReorderEvent } from "@saleor/types";
 import getPageErrorMessage from "@saleor/utils/errors/page";
@@ -31,7 +30,7 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import useAvailablePageAttributeSearch from "../../searches/useAvailablePageAttributesSearch";
 import PageTypeDetailsPage, {
-  PageTypeForm
+  PageTypeForm,
 } from "../components/PageTypeDetailsPage";
 import usePageTypeDelete from "../hooks/usePageTypeDelete";
 import { pageTypeListUrl, pageTypeUrl, PageTypeUrlQueryParams } from "../urls";
@@ -43,7 +42,7 @@ interface PageTypeDetailsProps {
 
 export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
   id,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -53,7 +52,7 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
   const notifySaved = () =>
     notify({
       status: "success",
-      text: intl.formatMessage(commonMessages.savedChanges)
+      text: intl.formatMessage(commonMessages.savedChanges),
     });
 
   const [updatePageType, updatePageTypeOpts] = usePageTypeUpdateMutation({
@@ -64,7 +63,7 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
       ) {
         notifySaved();
       }
-    }
+    },
   });
   const [deletePageType, deletePageTypeOpts] = usePageTypeDeleteMutation({
     onCompleted: deleteData => {
@@ -72,12 +71,13 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Page type deleted"
-          })
+            id: "NGc9kE",
+            defaultMessage: "Page type deleted",
+          }),
         });
         navigate(pageTypeListUrl(), { replace: true });
       }
-    }
+    },
   });
   const [assignAttribute, assignAttributeOpts] = useAssignPageAttributeMutation(
     {
@@ -86,50 +86,48 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
           notifySaved();
           closeModal();
         }
-      }
-    }
+      },
+    },
   );
   const [
     unassignAttribute,
-    unassignAttributeOpts
+    unassignAttributeOpts,
   ] = useUnassignPageAttributeMutation({
     onCompleted: data => {
       if (data.pageAttributeUnassign.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         closeModal();
         attributeListActions.reset();
       }
-    }
+    },
   });
   const [reorderAttribute] = usePageTypeAttributeReorderMutation({
     onCompleted: data => {
       if (data.pageTypeReorderAttributes.errors.length === 0) {
         notifySaved();
       }
-    }
+    },
   });
 
   const pageTypeDeleteData = usePageTypeDelete({
     singleId: id,
-    params
+    params,
   });
 
   const [updateMetadata] = useUpdateMetadataMutation({});
   const [updatePrivateMetadata] = useUpdatePrivateMetadataMutation({});
-
-  const handleBack = () => navigate(pageTypeListUrl());
 
   const handlePageTypeUpdate = async (formData: PageTypeForm) => {
     const result = await updatePageType({
       variables: {
         id,
         input: {
-          name: formData.name
-        }
-      }
+          name: formData.name,
+        },
+      },
     });
 
     return result.data.pageTypeUpdate.errors;
@@ -139,49 +137,49 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
     assignAttribute({
       variables: {
         id,
-        ids: params.ids
-      }
+        ids: params.ids,
+      },
     });
   const handleAttributeUnassign = () =>
     unassignAttribute({
       variables: {
         id,
-        ids: [params.id]
-      }
+        ids: [params.id],
+      },
     });
   const handleBulkAttributeUnassign = () =>
     unassignAttribute({
       variables: {
         id,
-        ids: params.ids
-      }
+        ids: params.ids,
+      },
     });
   const handleAttributeReorder = (event: ReorderEvent) =>
     reorderAttribute({
       variables: {
         move: {
           id: data.pageType.attributes[event.oldIndex].id,
-          sortOrder: event.newIndex - event.oldIndex
+          sortOrder: event.newIndex - event.oldIndex,
         },
-        pageTypeId: id
-      }
+        pageTypeId: id,
+      },
     });
 
   const { data, loading: dataLoading } = usePageTypeDetailsQuery({
-    variables: { id }
+    variables: { id },
   });
 
   const { loadMore, search, result } = useAvailablePageAttributeSearch({
     variables: {
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      id
-    }
+      id,
+    },
   });
 
   const pageType = data?.pageType;
 
   if (pageType === null) {
-    return <NotFoundPage onBack={handleBack} />;
+    return <NotFoundPage backHref={pageTypeListUrl()} />;
   }
 
   const closeModal = () => navigate(pageTypeUrl(id), { replace: true });
@@ -190,7 +188,7 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
     data?.pageType,
     handlePageTypeUpdate,
     variables => updateMetadata({ variables }),
-    variables => updatePrivateMetadata({ variables })
+    variables => updatePrivateMetadata({ variables }),
   );
 
   const loading = updatePageTypeOpts.loading || dataLoading;
@@ -208,26 +206,24 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
           navigate(
             pageTypeUrl(id, {
               action: "assign-attribute",
-              type
-            })
+              type,
+            }),
           )
         }
-        onAttributeClick={attributeId => navigate(attributeUrl(attributeId))}
         onAttributeReorder={handleAttributeReorder}
         onAttributeUnassign={attributeId =>
           navigate(
             pageTypeUrl(id, {
               action: "unassign-attribute",
-              id: attributeId
-            })
+              id: attributeId,
+            }),
           )
         }
-        onBack={handleBack}
         onDelete={() =>
           navigate(
             pageTypeUrl(id, {
-              action: "remove"
-            })
+              action: "remove",
+            }),
           )
         }
         onSubmit={handleSubmit}
@@ -242,17 +238,18 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
                 navigate(
                   pageTypeUrl(id, {
                     action: "unassign-attributes",
-                    ids: attributeListActions.listElements
-                  })
+                    ids: attributeListActions.listElements,
+                  }),
                 )
               }
             >
               <FormattedMessage
+                id="WFG7Zk"
                 defaultMessage="Unassign"
                 description="unassign attribute from page type, button"
               />
             </Button>
-          )
+          ),
         }}
       />
 
@@ -268,13 +265,13 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
           />
           <AssignAttributeDialog
             attributes={mapEdgesToItems(
-              result?.data?.pageType?.availableAttributes
+              result?.data?.pageType?.availableAttributes,
             )}
             confirmButtonState={assignAttributeOpts.status}
             errors={
               assignAttributeOpts.data?.pageAttributeAssign.errors
                 ? assignAttributeOpts.data.pageAttributeAssign.errors.map(err =>
-                    getPageErrorMessage(err, intl)
+                    getPageErrorMessage(err, intl),
                   )
                 : []
             }
@@ -296,10 +293,10 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
                   ...params,
                   ids: ids.includes(attributeId)
                     ? params.ids.filter(
-                        selectedId => selectedId !== attributeId
+                        selectedId => selectedId !== attributeId,
                       )
-                    : [...ids, attributeId]
-                })
+                    : [...ids, attributeId],
+                }),
               );
             }}
           />
@@ -307,8 +304,9 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
       )}
       <BulkAttributeUnassignDialog
         title={intl.formatMessage({
+          id: "Rpfa+t",
           defaultMessage: "Unassign Attribute from Page Type",
-          description: "dialog header"
+          description: "dialog header",
         })}
         attributeQuantity={params.ids?.length}
         confirmButtonState={unassignAttributeOpts.status}
@@ -319,13 +317,14 @@ export const PageTypeDetails: React.FC<PageTypeDetailsProps> = ({
       />
       <AttributeUnassignDialog
         title={intl.formatMessage({
+          id: "/L8wzi",
           defaultMessage: "Unassign Attribute From Page Type",
-          description: "dialog header"
+          description: "dialog header",
         })}
         attributeName={getStringOrPlaceholder(
           data?.pageType.attributes.find(
-            attribute => attribute.id === params.id
-          )?.name
+            attribute => attribute.id === params.id,
+          )?.name,
         )}
         confirmButtonState={unassignAttributeOpts.status}
         onClose={closeModal}

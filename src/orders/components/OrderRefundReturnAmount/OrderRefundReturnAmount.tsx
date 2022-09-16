@@ -4,8 +4,9 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Typography
+  Typography,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardSpacer from "@saleor/components/CardSpacer";
 import CardTitle from "@saleor/components/CardTitle";
 import ControlledCheckbox from "@saleor/components/ControlledCheckbox";
@@ -13,72 +14,76 @@ import Hr from "@saleor/components/Hr";
 import {
   OrderDetailsFragment,
   OrderErrorFragment,
-  OrderRefundDataQuery
+  OrderRefundDataQuery,
 } from "@saleor/graphql";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { defineMessages, FormattedMessage, useIntl } from "react-intl";
 
 import {
   OrderRefundAmountCalculationMode,
   OrderRefundFormData,
-  OrderRefundType
+  OrderRefundType,
 } from "../OrderRefundPage/form";
 import { OrderReturnFormData } from "../OrderReturnPage/form";
 import OrderRefundAmountValues, {
-  OrderRefundAmountValuesProps
+  OrderRefundAmountValuesProps,
 } from "./OrderRefundReturnAmountValues";
 import RefundAmountInput from "./RefundAmountInput";
 
 const useStyles = makeStyles(
   theme => ({
     content: {
-      paddingTop: theme.spacing(1.5)
+      paddingTop: theme.spacing(1.5),
     },
     hr: {
-      margin: theme.spacing(1, 0)
+      margin: theme.spacing(1, 0),
     },
     maxRefundRow: {
-      fontWeight: 600
+      fontWeight: 600,
     },
     priceField: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     refundButton: {
-      marginTop: theme.spacing(2)
+      marginTop: theme.spacing(2),
     },
     refundCaution: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
     },
     root: {
       ...theme.typography.body1,
       lineHeight: 1.9,
-      width: "100%"
+      width: "100%",
     },
     textRight: {
-      textAlign: "right"
-    }
+      textAlign: "right",
+    },
   }),
-  { name: "OrderRefundAmount" }
+  { name: "OrderRefundAmount" },
 );
 
 const messages = defineMessages({
   refundButton: {
+    id: "QkFeOa",
     defaultMessage: "Refund",
-    description: "order refund amount button"
+    description: "order refund amount button",
   },
   refundCannotBeFulfilled: {
+    id: "AKv2BI",
     defaultMessage: "Refunded items can't be fulfilled",
-    description: "order refund subtitle"
+    description: "order refund subtitle",
   },
   returnButton: {
+    id: "bgO+7G",
     defaultMessage: "Return & Replace products",
-    description: "order return amount button"
+    description: "order return amount button",
   },
   returnCannotBeFulfilled: {
+    id: "Uo5/Ov",
     defaultMessage: "Returned items can't be fulfilled",
-    description: "order return subtitle"
-  }
+    description: "order return subtitle",
+  },
 });
 
 interface OrderRefundAmountProps {
@@ -105,7 +110,7 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
     isReturn = false,
     amountData,
     disableSubmitButton,
-    allowNoRefund = false
+    allowNoRefund = false,
   } = props;
   const classes = useStyles(props);
   const intl = useIntl();
@@ -122,7 +127,7 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
     refundTotalAmount,
     selectedProductsValue,
     shipmentCost,
-    replacedProductsValue
+    replacedProductsValue,
   } = amountData;
 
   const isRefundAutomatic =
@@ -166,8 +171,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "0oo+BT",
           defaultMessage: "Refunded Amount",
-          description: "section header"
+          description: "section header",
         })}
       />
       <CardContent className={classes.content}>
@@ -183,8 +189,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
                 value={OrderRefundAmountCalculationMode.NONE}
                 control={<Radio color="primary" />}
                 label={intl.formatMessage({
+                  id: "zzfj8H",
                   defaultMessage: "No refund",
-                  description: "label"
+                  description: "label",
                 })}
               />
             )}
@@ -193,8 +200,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
               value={OrderRefundAmountCalculationMode.AUTOMATIC}
               control={<Radio color="primary" />}
               label={intl.formatMessage({
+                id: "JEIN47",
                 defaultMessage: "Automatic Amount",
-                description: "label"
+                description: "label",
               })}
             />
             {data.amountCalculationMode ===
@@ -215,8 +223,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
                 <ControlledCheckbox
                   checked={data.refundShipmentCosts}
                   label={intl.formatMessage({
+                    id: "EP+jcU",
                     defaultMessage: "Refund shipment costs",
-                    description: "checkbox"
+                    description: "checkbox",
                   })}
                   name="refundShipmentCosts"
                   onChange={onChange}
@@ -239,8 +248,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
               value={OrderRefundAmountCalculationMode.MANUAL}
               control={<Radio color="primary" />}
               label={intl.formatMessage({
+                id: "FOehC/",
                 defaultMessage: "Manual Amount",
-                description: "label"
+                description: "label",
               })}
             />
             {data.amountCalculationMode ===
@@ -250,8 +260,9 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
                   disabled={disabled}
                   checked={data.refundShipmentCosts}
                   label={intl.formatMessage({
+                    id: "EP+jcU",
                     defaultMessage: "Refund shipment costs",
-                    description: "checkbox"
+                    description: "checkbox",
                   })}
                   name="refundShipmentCosts"
                   onChange={onChange}
@@ -308,18 +319,19 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
         >
           {!disableRefundButton && !isReturn ? (
             <FormattedMessage
+              id="8F2D1H"
               defaultMessage="Refund {currency} {amount}"
               description="order refund amount, input button"
               values={{
                 amount: isRefundAutomatic
                   ? parsedRefundTotalAmount.amount.toFixed(2)
                   : Number(selectedRefundAmount).toFixed(2),
-                currency: amountCurrency
+                currency: amountCurrency,
               }}
             />
           ) : (
             intl.formatMessage(
-              isReturn ? messages.returnButton : messages.refundButton
+              isReturn ? messages.returnButton : messages.refundButton,
             )
           )}
         </Button>
@@ -331,7 +343,7 @@ const OrderRefundAmount: React.FC<OrderRefundAmountProps> = props => {
           {intl.formatMessage(
             isReturn
               ? messages.returnCannotBeFulfilled
-              : messages.refundCannotBeFulfilled
+              : messages.refundCannotBeFulfilled,
           )}
         </Typography>
       </CardContent>

@@ -1,11 +1,12 @@
 import { LanguageCodeEnum } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import { pageListProps, searchPageProps } from "../../../fixtures";
 import TranslationsEntitiesList from "../../../translations/components/TranslationsEntitiesList";
 import TranslationsEntitiesListPage, {
-  TranslationsEntitiesListPageProps
+  TranslationsEntitiesListPageProps,
 } from "../../../translations/components/TranslationsEntitiesListPage";
 import Decorator from "../../Decorator";
 
@@ -22,18 +23,19 @@ const props: TranslationsEntitiesListPageProps = {
     onProductsTabClick: () => undefined,
     onSalesTabClick: () => undefined,
     onShippingMethodsTabClick: () => undefined,
-    onVouchersTabClick: () => undefined
+    onVouchersTabClick: () => undefined,
+    onMenuItemsTabClick: () => undefined,
   },
   language: {
     __typename: "LanguageDisplay",
     code: LanguageCodeEnum.EN,
-    language: "English"
+    language: "English",
   },
-  onBack: () => undefined
 };
 
 storiesOf("Views / Translations / Entity list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => (
     <TranslationsEntitiesListPage {...props}>
       <TranslationsEntitiesList
@@ -42,21 +44,15 @@ storiesOf("Views / Translations / Entity list", module)
           {
             completion: { current: 1, max: 3 },
             id: "1",
-            name: "White Hoodie"
+            name: "White Hoodie",
           },
           {
             completion: { current: 2, max: 3 },
             id: "1",
-            name: "Brown Supreme Hoodie"
-          }
+            name: "Brown Supreme Hoodie",
+          },
         ]}
-        onRowClick={() => undefined}
-        onNextPage={() => undefined}
-        onPreviousPage={() => undefined}
-        pageInfo={{
-          hasNextPage: true,
-          hasPreviousPage: false
-        }}
+        getRowHref={() => ""}
       />
     </TranslationsEntitiesListPage>
   ));

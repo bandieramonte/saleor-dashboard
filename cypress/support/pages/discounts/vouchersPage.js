@@ -1,7 +1,6 @@
 import { VOUCHERS_SELECTORS } from "../../../elements/discounts/vouchers";
 import { BUTTON_SELECTORS } from "../../../elements/shared/button-selectors";
-import { voucherDetailsUrl } from "../../../fixtures/urlList";
-import { urlList } from "../../../fixtures/urlList";
+import { urlList, voucherDetailsUrl } from "../../../fixtures/urlList";
 import { ONE_PERMISSION_USERS } from "../../../fixtures/users";
 import { createCheckoutWithVoucher } from "../../api/utils/ordersUtils";
 import { selectChannelInDetailsPages } from "../channelsPage";
@@ -9,7 +8,7 @@ import { selectChannelInDetailsPages } from "../channelsPage";
 export const discountOptions = {
   PERCENTAGE: VOUCHERS_SELECTORS.percentageDiscountRadioButton,
   FIXED: VOUCHERS_SELECTORS.fixedDiscountRadioButton,
-  SHIPPING: VOUCHERS_SELECTORS.shippingDiscountRadioButton
+  SHIPPING: VOUCHERS_SELECTORS.shippingDiscountRadioButton,
 };
 
 export function createVoucher({
@@ -21,7 +20,7 @@ export function createVoucher({
   applyOnePerCustomer,
   onlyStaff,
   minOrderValue,
-  minAmountOfItems
+  minAmountOfItems,
 }) {
   cy.get(VOUCHERS_SELECTORS.createVoucherButton).click();
   selectChannelInDetailsPages(channelName);
@@ -57,7 +56,7 @@ export function createVoucher({
   }
   cy.get(BUTTON_SELECTORS.confirm)
     .click()
-    .confirmationMessageShouldDisappear();
+    .confirmationMessageShouldAppear();
 }
 
 export function setVoucherDate({
@@ -65,7 +64,7 @@ export function setVoucherDate({
   startDate,
   endDate,
   endTime,
-  hasEndDate = false
+  hasEndDate = false,
 }) {
   cy.visit(voucherDetailsUrl(voucherId)).waitForProgressBarToNotBeVisible();
   if (startDate) {
@@ -96,12 +95,12 @@ export function loginAndCreateCheckoutForVoucherWithDiscount({
   applyOnePerCustomer,
   onlyStaff,
   minOrderValue,
-  minAmountOfItems
+  minAmountOfItems,
 }) {
   cy.clearSessionData()
     .loginUserViaRequest("auth", ONE_PERMISSION_USERS.discount)
     .visit(urlList.vouchers);
-  cy.softExpectSkeletonIsVisible();
+  cy.expectSkeletonIsVisible();
   createVoucher({
     voucherCode,
     voucherValue,
@@ -111,7 +110,7 @@ export function loginAndCreateCheckoutForVoucherWithDiscount({
     applyOnePerCustomer,
     onlyStaff,
     minOrderValue,
-    minAmountOfItems
+    minAmountOfItems,
   });
   dataForCheckout.voucherCode = voucherCode;
   return createCheckoutWithVoucher(dataForCheckout);

@@ -16,10 +16,10 @@ const useStyles = makeStyles(
       display: "grid",
       gridColumnGap: theme.spacing(2),
       gridRowGap: theme.spacing(3),
-      gridTemplateColumns: "1fr 1fr"
-    }
+      gridTemplateColumns: "1fr 1fr",
+    },
   }),
-  { name: "CustomerCreateDetails" }
+  { name: "CustomerCreateDetails" },
 );
 
 export interface CustomerCreateDetailsProps {
@@ -37,15 +37,16 @@ const CustomerCreateDetails: React.FC<CustomerCreateDetailsProps> = props => {
 
   const formErrors = getFormErrors(
     ["customerFirstName", "customerLastName", "email"],
-    errors
+    errors,
   );
 
   return (
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "fjPWOA",
           defaultMessage: "Customer Overview",
-          description: "header"
+          description: "header",
         })}
       />
       <CardContent>
@@ -58,7 +59,7 @@ const CustomerCreateDetails: React.FC<CustomerCreateDetailsProps> = props => {
             label={intl.formatMessage(commonMessages.firstName)}
             helperText={getAccountErrorMessage(
               formErrors.customerFirstName,
-              intl
+              intl,
             )}
             type="text"
             value={data.customerFirstName}
@@ -72,7 +73,7 @@ const CustomerCreateDetails: React.FC<CustomerCreateDetailsProps> = props => {
             label={intl.formatMessage(commonMessages.lastName)}
             helperText={getAccountErrorMessage(
               formErrors.customerLastName,
-              intl
+              intl,
             )}
             type="text"
             value={data.customerLastName}

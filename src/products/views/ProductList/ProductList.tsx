@@ -1,21 +1,21 @@
 import { DialogContentText } from "@material-ui/core";
+import { filterable } from "@saleor/attributes/utils/data";
 import ActionDialog from "@saleor/components/ActionDialog";
 import useAppChannel from "@saleor/components/AppLayout/AppChannelContext";
 import DeleteFilterTabDialog from "@saleor/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog, {
-  SaveFilterTabDialogFormData
+  SaveFilterTabDialogFormData,
 } from "@saleor/components/SaveFilterTabDialog";
 import { useShopLimitsQuery } from "@saleor/components/Shop/queries";
 import {
   DEFAULT_INITIAL_PAGINATION_DATA,
   DEFAULT_INITIAL_SEARCH_DATA,
   defaultListSettings,
-  ProductListColumns
+  ProductListColumns,
 } from "@saleor/config";
 import { Task } from "@saleor/containers/BackgroundTasks/types";
 import {
   ProductListQueryVariables,
-  useAvailableInGridAttributesQuery,
   useGridAttributesQuery,
   useInitialProductFilterAttributesQuery,
   useInitialProductFilterCategoriesQuery,
@@ -25,7 +25,7 @@ import {
   useProductCountQuery,
   useProductExportMutation,
   useProductListQuery,
-  useWarehouseListQuery
+  useWarehouseListQuery,
 } from "@saleor/graphql";
 import useBackgroundTask from "@saleor/hooks/useBackgroundTask";
 import useBulkActions from "@saleor/hooks/useBulkActions";
@@ -34,7 +34,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext,
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -42,18 +43,17 @@ import { maybe } from "@saleor/misc";
 import ProductExportDialog from "@saleor/products/components/ProductExportDialog";
 import {
   getAttributeIdFromColumnValue,
-  isAttributeColumnValue
+  isAttributeColumnValue,
 } from "@saleor/products/components/ProductListPage/utils";
 import {
-  productAddUrl,
   productListUrl,
   ProductListUrlDialog,
   ProductListUrlQueryParams,
   ProductListUrlSortField,
-  productUrl
 } from "@saleor/products/urls";
 import useAttributeSearch from "@saleor/searches/useAttributeSearch";
 import useAttributeValueSearch from "@saleor/searches/useAttributeValueSearch";
+import useAvailableInGridAttributesSearch from "@saleor/searches/useAvailableInGridAttributesSearch";
 import useCategorySearch from "@saleor/searches/useCategorySearch";
 import useCollectionSearch from "@saleor/searches/useCollectionSearch";
 import useProductTypeSearch from "@saleor/searches/useProductTypeSearch";
@@ -65,6 +65,7 @@ import { getSortUrlVariables } from "@saleor/utils/sort";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
+import { useSortRedirects } from "../../../hooks/useSortRedirects";
 import ProductListPage from "../../components/ProductListPage";
 import {
   deleteFilterTab,
@@ -74,10 +75,9 @@ import {
   getFiltersCurrentTab,
   getFilterTabs,
   getFilterVariables,
-  saveFilterTab
+  saveFilterTab,
 } from "./filters";
-import { getSortQueryVariables } from "./sort";
-import { useSortRedirects } from "./useSortRedirects";
+import { canBeSorted, DEFAULT_SORT_KEY, getSortQueryVariables } from "./sort";
 import { getAvailableProductKinds, getProductKindOpts } from "./utils";
 
 interface ProductListProps {
@@ -87,97 +87,101 @@ interface ProductListProps {
 export const ProductList: React.FC<ProductListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { queue } = useBackgroundTask();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
-    params.ids
+    params.ids,
   );
   const { updateListSettings, settings } = useListSettings<ProductListColumns>(
-    ListViews.PRODUCT_LIST
+    ListViews.PRODUCT_LIST,
   );
 
   usePaginationReset(productListUrl, params, settings.rowNumber);
 
   const intl = useIntl();
   const {
-    data: initialFilterAttributes
+    data: initialFilterAttributes,
   } = useInitialProductFilterAttributesQuery();
   const {
-    data: initialFilterCategories
+    data: initialFilterCategories,
   } = useInitialProductFilterCategoriesQuery({
     variables: {
-      categories: params.categories
+      categories: params.categories,
     },
-    skip: !params.categories?.length
+    skip: !params.categories?.length,
   });
   const {
-    data: initialFilterCollections
+    data: initialFilterCollections,
   } = useInitialProductFilterCollectionsQuery({
     variables: {
-      collections: params.collections
+      collections: params.collections,
     },
-    skip: !params.collections?.length
+    skip: !params.collections?.length,
   });
   const {
-    data: initialFilterProductTypes
+    data: initialFilterProductTypes,
   } = useInitialProductFilterProductTypesQuery({
     variables: {
-      productTypes: params.productTypes
+      productTypes: params.productTypes,
     },
-    skip: !params.productTypes?.length
+    skip: !params.productTypes?.length,
   });
   const searchCategories = useCategorySearch({
     variables: {
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      first: 5
-    }
+      first: 5,
+    },
   });
   const searchCollections = useCollectionSearch({
     variables: {
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      first: 5
-    }
+      first: 5,
+    },
   });
   const searchProductTypes = useProductTypeSearch({
     variables: {
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      first: 5
-    }
+      first: 5,
+    },
   });
   const searchAttributes = useAttributeSearch({
     variables: {
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      first: 10
-    }
+      first: 10,
+    },
   });
   const [focusedAttribute, setFocusedAttribute] = useState<string>();
   const searchAttributeValues = useAttributeValueSearch({
     variables: {
       id: focusedAttribute,
       ...DEFAULT_INITIAL_SEARCH_DATA,
-      first: 10
+      first: 10,
     },
-    skip: !focusedAttribute
+    skip: !focusedAttribute,
   });
   const warehouses = useWarehouseListQuery({
     variables: {
-      first: 100
+      first: 100,
     },
-    skip: params.action !== "export"
+    skip: params.action !== "export",
   });
   const availableProductKinds = getAvailableProductKinds();
   const { availableChannels } = useAppChannel(false);
   const limitOpts = useShopLimitsQuery({
     variables: {
-      productVariants: true
-    }
+      productVariants: true,
+    },
   });
 
   const selectedChannel = availableChannels.find(
-    channel => channel.slug === params.channel
+    channel => channel.slug === params.channel,
   );
 
-  useSortRedirects(params, !!selectedChannel);
+  useSortRedirects<ProductListUrlSortField>({
+    params,
+    defaultSortField: DEFAULT_SORT_KEY,
+    urlFunc: productListUrl,
+    resetToDefault: !canBeSorted(params.sort, !!selectedChannel),
+  });
 
   const [openModal, closeModal] = createDialogActionHandlers<
     ProductListUrlDialog,
@@ -189,7 +193,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
   const currentTab = getFiltersCurrentTab(params, tabs);
 
   const countAllProducts = useProductCountQuery({
-    skip: params.action !== "export"
+    skip: params.action !== "export",
   });
 
   const [exportProducts, exportProductsOpts] = useProductExportMutation({
@@ -197,33 +201,35 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
       if (data.exportProducts.errors.length === 0) {
         notify({
           text: intl.formatMessage({
+            id: "dPYqy0",
             defaultMessage:
-              "We are currently exporting your requested CSV. As soon as it is available it will be sent to your email address"
+              "We are currently exporting your requested CSV. As soon as it is available it will be sent to your email address",
           }),
           title: intl.formatMessage({
+            id: "5QKsu+",
             defaultMessage: "Exporting CSV",
-            description: "waiting for export to end, header"
-          })
+            description: "waiting for export to end, header",
+          }),
         });
         queue(Task.EXPORT, {
-          id: data.exportProducts.exportFile.id
+          id: data.exportProducts.exportFile.id,
         });
         closeModal();
         reset();
       }
-    }
+    },
   });
 
   const [
     changeFilters,
     resetFilters,
-    handleSearchChange
+    handleSearchChange,
   ] = createFilterHandlers({
     cleanupFn: reset,
     createUrl: productListUrl,
     getFilterQueryParam,
     navigate,
-    params
+    params,
   });
 
   const handleTabChange = (tab: number) => {
@@ -231,8 +237,8 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
     navigate(
       productListUrl({
         activeTab: tab.toString(),
-        ...getFilterTabs()[tab - 1].data
-      })
+        ...getFilterTabs()[tab - 1].data,
+      }),
     );
   };
 
@@ -253,8 +259,8 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         ...params,
         ...getSortUrlVariables(field, params),
         attributeId,
-        ...DEFAULT_INITIAL_PAGINATION_DATA
-      })
+        ...DEFAULT_INITIAL_PAGINATION_DATA,
+      }),
     );
 
   const kindOpts = getProductKindOpts(availableProductKinds, intl);
@@ -271,90 +277,94 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
       ...paginationState,
       filter,
       sort,
-      channel: selectedChannel?.slug
+      channel: selectedChannel?.slug,
     }),
-    [params, settings.rowNumber]
+    [params, settings.rowNumber],
   );
 
-  function filterColumnIds(columns: ProductListColumns[]) {
-    return columns
-      .filter(isAttributeColumnValue)
-      .map(getAttributeIdFromColumnValue);
-  }
-  const filteredColumnIds = filterColumnIds(settings.columns);
+  const filteredColumnIds = settings.columns
+    .filter(isAttributeColumnValue)
+    .map(getAttributeIdFromColumnValue);
 
   const { data, loading, refetch } = useProductListQuery({
     displayLoader: true,
     variables: {
       ...queryVariables,
       hasChannel: !!selectedChannel,
-      hasSelectedAttributes: filteredColumnIds.length > 0
-    }
+      hasSelectedAttributes: filteredColumnIds.length > 0,
+    },
   });
 
-  const availableInGridAttributes = useAvailableInGridAttributesQuery({
-    variables: { first: 24 }
+  const availableInGridAttributesOpts = useAvailableInGridAttributesSearch({
+    variables: {
+      ...DEFAULT_INITIAL_SEARCH_DATA,
+      first: 5,
+    },
   });
   const gridAttributes = useGridAttributesQuery({
-    variables: { ids: filteredColumnIds }
+    variables: { ids: filteredColumnIds },
+    skip: filteredColumnIds.length === 0,
   });
 
   const [
     productBulkDelete,
-    productBulkDeleteOpts
+    productBulkDeleteOpts,
   ] = useProductBulkDeleteMutation({
     onCompleted: data => {
       if (data.productBulkDelete.errors.length === 0) {
         closeModal();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         reset();
         refetch();
         limitOpts.refetch();
       }
-    }
+    },
   });
 
   const filterOpts = getFilterOpts(
     params,
-    mapEdgesToItems(initialFilterAttributes?.attributes) || [],
+    (mapEdgesToItems(initialFilterAttributes?.attributes) || []).filter(
+      filterable,
+    ),
     searchAttributeValues,
     {
       initial: mapEdgesToItems(initialFilterCategories?.categories) || [],
-      search: searchCategories
+      search: searchCategories,
     },
     {
       initial: mapEdgesToItems(initialFilterCollections?.collections) || [],
-      search: searchCollections
+      search: searchCollections,
     },
     {
       initial: mapEdgesToItems(initialFilterProductTypes?.productTypes) || [],
-      search: searchProductTypes
+      search: searchProductTypes,
     },
     kindOpts,
-    channelOpts
+    channelOpts,
   );
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    data?.products?.pageInfo,
+  const paginationValues = usePaginator({
+    pageInfo: data?.products?.pageInfo,
     paginationState,
-    params
-  );
+    queryString: params,
+  });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <ProductListPage
         activeAttributeSortId={params.attributeId}
         sort={{
           asc: params.asc,
-          sort: params.sort
+          sort: params.sort,
         }}
         onSort={handleSort}
         availableInGridAttributes={
-          mapEdgesToItems(availableInGridAttributes?.data?.availableInGrid) ||
-          []
+          mapEdgesToItems(
+            availableInGridAttributesOpts.result?.data?.availableInGrid,
+          ) || []
         }
         currencySymbol={selectedChannel?.currencyCode || ""}
         currentTab={currentTab}
@@ -362,53 +372,27 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         filterOpts={filterOpts}
         gridAttributes={mapEdgesToItems(gridAttributes?.data?.grid) || []}
         totalGridAttributes={maybe(
-          () => availableInGridAttributes.data.availableInGrid.totalCount,
-          0
+          () =>
+            availableInGridAttributesOpts.result.data.availableInGrid
+              .totalCount,
+          0,
         )}
         settings={settings}
-        loading={availableInGridAttributes.loading || gridAttributes.loading}
+        loading={
+          availableInGridAttributesOpts.result.loading || gridAttributes.loading
+        }
         hasMore={maybe(
           () =>
-            availableInGridAttributes.data.availableInGrid.pageInfo.hasNextPage,
-          false
+            availableInGridAttributesOpts.result.data.availableInGrid.pageInfo
+              .hasNextPage,
+          false,
         )}
-        onAdd={() => navigate(productAddUrl())}
         disabled={loading}
         limits={limitOpts.data?.shop.limits}
         products={mapEdgesToItems(data?.products)}
-        onFetchMore={() =>
-          availableInGridAttributes.loadMore(
-            (prev, next) => {
-              if (
-                prev.availableInGrid.pageInfo.endCursor ===
-                next.availableInGrid.pageInfo.endCursor
-              ) {
-                return prev;
-              }
-              return {
-                ...prev,
-                availableInGrid: {
-                  ...prev.availableInGrid,
-                  edges: [
-                    ...prev.availableInGrid.edges,
-                    ...next.availableInGrid.edges
-                  ],
-                  pageInfo: next.availableInGrid.pageInfo
-                }
-              };
-            },
-            {
-              after:
-                availableInGridAttributes.data.availableInGrid.pageInfo
-                  .endCursor
-            }
-          )
-        }
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
+        onColumnQueryChange={availableInGridAttributesOpts.search}
+        onFetchMore={availableInGridAttributesOpts.loadMore}
         onUpdateListSettings={updateListSettings}
-        pageInfo={pageInfo}
-        onRowClick={id => () => navigate(productUrl(id))}
         onAll={resetFilters}
         toolbar={
           <IconButton
@@ -416,7 +400,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
             color="primary"
             onClick={() =>
               openModal("delete", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -436,8 +420,8 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         initialSearch={params.query || ""}
         tabs={getFilterTabs().map(tab => tab.name)}
         onExport={() => openModal("export")}
-        channelsCount={availableChannels?.length}
         selectedChannelId={selectedChannel?.id}
+        columnQuery={availableInGridAttributesOpts.query}
       />
       <ActionDialog
         open={params.action === "delete"}
@@ -445,22 +429,24 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         onClose={closeModal}
         onConfirm={() =>
           productBulkDelete({
-            variables: { ids: params.ids }
+            variables: { ids: params.ids },
           })
         }
         title={intl.formatMessage({
+          id: "F4WdSO",
           defaultMessage: "Delete Products",
-          description: "dialog header"
+          description: "dialog header",
         })}
         variant="delete"
       >
         <DialogContentText>
           <FormattedMessage
+            id="yDkmX7"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this product?} other{Are you sure you want to delete {displayQuantity} products?}}"
             description="dialog content"
             values={{
               counter: params?.ids?.length,
-              displayQuantity: <strong>{params?.ids?.length}</strong>
+              displayQuantity: <strong>{params?.ids?.length}</strong>,
             }}
           />
         </DialogContentText>
@@ -481,8 +467,8 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         confirmButtonState={exportProductsOpts.status}
         errors={exportProductsOpts.data?.exportProducts.errors || []}
         productQuantity={{
-          all: countAllProducts.data?.products.totalCount,
-          filter: data?.products.totalCount
+          all: countAllProducts.data?.products?.totalCount,
+          filter: data?.products?.totalCount,
         }}
         selectedProducts={listElements.length}
         warehouses={mapEdgesToItems(warehouses?.data?.warehouses) || []}
@@ -494,9 +480,9 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
               input: {
                 ...data,
                 filter,
-                ids: listElements
-              }
-            }
+                ids: listElements,
+              },
+            },
           })
         }
       />
@@ -513,7 +499,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         onSubmit={handleFilterTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default ProductList;

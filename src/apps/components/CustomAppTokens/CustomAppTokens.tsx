@@ -3,13 +3,14 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import { AppUpdateMutation } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
 import { renderCollection } from "@saleor/misc";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -33,8 +34,9 @@ const CustomAppTokens: React.FC<CustomAppTokensProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "0Mg8o5",
           defaultMessage: "Tokens",
-          description: "header"
+          description: "header",
         })}
         toolbar={
           <Button
@@ -43,6 +45,7 @@ const CustomAppTokens: React.FC<CustomAppTokensProps> = props => {
             data-test-id="create-token"
           >
             <FormattedMessage
+              id="RMB6fU"
               defaultMessage="Create Token"
               description="button"
             />
@@ -53,16 +56,18 @@ const CustomAppTokens: React.FC<CustomAppTokensProps> = props => {
         <TableHead>
           <TableRow>
             <TableCell className={classes.colNote}>
-              <FormattedMessage defaultMessage="Token Note" />
+              <FormattedMessage id="0DRBjg" defaultMessage="Token Note" />
             </TableCell>
             <TableCell className={classes.colKey}>
               <FormattedMessage
+                id="MAsLIT"
                 defaultMessage="Key"
                 description="custom app token key"
               />
             </TableCell>
             <TableCell className={classes.colActions}>
               <FormattedMessage
+                id="VHuzgq"
                 defaultMessage="Actions"
                 description="table actions"
               />
@@ -94,10 +99,13 @@ const CustomAppTokens: React.FC<CustomAppTokensProps> = props => {
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No tokens found" />
+                  <FormattedMessage
+                    id="bsP4f3"
+                    defaultMessage="No tokens found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

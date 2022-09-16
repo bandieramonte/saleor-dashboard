@@ -10,16 +10,16 @@ const useStyles = makeStyles(
       alignItems: "flex-end",
       display: "flex",
       justifyContent: "space-between",
-      marginBottom: theme.spacing(6)
+      marginBottom: theme.spacing(6),
     },
     pageHeader: {
-      fontWeight: 600 as 600
+      fontWeight: 600 as 600,
     },
     subtitle: {
-      color: theme.typography.caption.color
-    }
+      color: theme.typography.caption.color,
+    },
   }),
-  { name: "HomeHeader" }
+  { name: "HomeHeader" },
 );
 
 interface HomeOrdersCardProps {
@@ -41,11 +41,11 @@ const HomeOrdersCard: React.FC<HomeOrdersCardProps> = props => {
         >
           {userName ? (
             <FormattedMessage
+              id="By5ZBp"
               defaultMessage="Hello there, {userName}"
               description="header"
-              id="homeHeaderText"
               values={{
-                userName
+                userName,
               }}
             />
           ) : (
@@ -55,9 +55,9 @@ const HomeOrdersCard: React.FC<HomeOrdersCardProps> = props => {
         <Typography className={classes.subtitle}>
           {userName ? (
             <FormattedMessage
+              id="aCX8rl"
               defaultMessage="Here is some information we gathered about your store"
               description="subheader"
-              id="homeHeaderTextCaption"
             />
           ) : (
             <Skeleton style={{ width: "10em" }} />

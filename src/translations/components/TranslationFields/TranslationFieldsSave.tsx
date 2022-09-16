@@ -3,7 +3,7 @@ import { buttonMessages } from "@saleor/intl";
 import {
   Button,
   ConfirmButtonTransitionState,
-  makeStyles
+  makeStyles,
 } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -17,17 +17,17 @@ interface TranslationFieldsSaveProps {
 const useStyles = makeStyles(
   theme => ({
     confirmButton: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     root: {
       display: "flex",
       flexDirection: "row-reverse",
-      marginTop: theme.spacing(1)
-    }
+      marginTop: theme.spacing(1),
+    },
   }),
   {
-    name: "TranslationFieldsSave"
-  }
+    name: "TranslationFieldsSave",
+  },
 );
 
 const TranslationFieldsSave: React.FC<TranslationFieldsSaveProps> = props => {
@@ -46,7 +46,11 @@ const TranslationFieldsSave: React.FC<TranslationFieldsSaveProps> = props => {
         <FormattedMessage {...buttonMessages.save} />
       </ConfirmButton>
       <Button onClick={onDiscard} type="submit">
-        <FormattedMessage defaultMessage="Discard" description="button" />
+        <FormattedMessage
+          id="vTN5DZ"
+          defaultMessage="Discard"
+          description="button"
+        />
       </Button>
     </div>
   );

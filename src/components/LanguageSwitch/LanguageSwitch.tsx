@@ -6,7 +6,7 @@ import {
   MenuList as Menu,
   Paper,
   Popper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import ArrowDropDown from "@material-ui/icons/ArrowDropDown";
 import { LanguageCodeEnum, LanguageFragment } from "@saleor/graphql";
@@ -14,21 +14,22 @@ import { makeStyles } from "@saleor/macaw-ui";
 import classNames from "classnames";
 import React from "react";
 import { FormattedMessage } from "react-intl";
+import { Link } from "react-router-dom";
 
 export interface LanguageSwitchProps {
   currentLanguage: LanguageCodeEnum;
   languages: LanguageFragment[];
-  onLanguageChange: (lang: LanguageCodeEnum) => void;
+  getLanguageUrl: (lang: LanguageCodeEnum) => string;
 }
 
 const useStyles = makeStyles(
   theme => ({
     arrow: {
       color: theme.palette.primary.main,
-      transition: theme.transitions.duration.standard + "ms"
+      transition: theme.transitions.duration.standard + "ms",
     },
     container: {
-      paddingBottom: theme.spacing(1)
+      paddingBottom: theme.spacing(1),
     },
     menuContainer: {
       cursor: "pointer",
@@ -36,26 +37,27 @@ const useStyles = makeStyles(
       justifyContent: "space-between",
       minWidth: 90,
       padding: theme.spacing(),
-      position: "relative"
+      position: "relative",
     },
     menuItem: {
-      textAlign: "justify"
+      textAlign: "justify",
     },
     menuPaper: {
       maxHeight: 600,
-      overflow: "scroll"
+      overflow: "scroll",
     },
     popover: {
-      zIndex: 1
+      zIndex: 1,
     },
     rotate: {
-      transform: "rotate(180deg)"
-    }
+      transform: "rotate(180deg)",
+    },
   }),
-  { name: "LanguageSwitch" }
+  { name: "LanguageSwitch" },
 );
+
 const LanguageSwitch: React.FC<LanguageSwitchProps> = props => {
-  const { currentLanguage, languages, onLanguageChange } = props;
+  const { currentLanguage, languages, getLanguageUrl } = props;
   const classes = useStyles(props);
 
   const [isExpanded, setExpandedState] = React.useState(false);
@@ -70,7 +72,7 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = props => {
         <Typography>{currentLanguage}</Typography>
         <ArrowDropDown
           className={classNames(classes.arrow, {
-            [classes.rotate]: isExpanded
+            [classes.rotate]: isExpanded,
           })}
         />
       </Card>
@@ -86,7 +88,7 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = props => {
             {...TransitionProps}
             style={{
               transformOrigin:
-                placement === "bottom" ? "right top" : "right bottom"
+                placement === "bottom" ? "right top" : "right bottom",
             }}
           >
             <Paper className={classes.menuPaper} elevation={8}>
@@ -101,17 +103,19 @@ const LanguageSwitch: React.FC<LanguageSwitchProps> = props => {
                       className={classes.menuItem}
                       onClick={() => {
                         setExpandedState(false);
-                        onLanguageChange(lang.code);
                       }}
                     >
-                      <FormattedMessage
-                        defaultMessage="{languageName} - {languageCode}"
-                        description="button"
-                        values={{
-                          languageCode: lang.code,
-                          languageName: lang.language
-                        }}
-                      />
+                      <Link to={getLanguageUrl(lang.code)}>
+                        <FormattedMessage
+                          id="62T585"
+                          defaultMessage="{languageName} - {languageCode}"
+                          description="button"
+                          values={{
+                            languageCode: lang.code,
+                            languageName: lang.language,
+                          }}
+                        />
+                      </Link>
                     </MenuItem>
                   ))}
                 </Menu>

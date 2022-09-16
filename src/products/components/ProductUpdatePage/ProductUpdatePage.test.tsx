@@ -17,12 +17,15 @@ const channels = createChannelsData(channelsList);
 
 import * as _useNavigator from "@saleor/hooks/useNavigator";
 import Adapter from "enzyme-adapter-react-16";
+import { act } from "react-dom/test-utils";
 import { MemoryRouter } from "react-router-dom";
 
 configure({ adapter: new Adapter() });
 
 const onSubmit = jest.fn();
 const useNavigator = jest.spyOn(_useNavigator, "default");
+jest.mock("@saleor/components/RichTextEditor/RichTextEditor");
+jest.mock("@saleor/utils/richText/useRichText");
 
 (global as any).document.createRange = () => ({
   // eslint-disable-next-line
@@ -31,12 +34,13 @@ const useNavigator = jest.spyOn(_useNavigator, "default");
   setEnd: () => {},
   commonAncestorContainer: {
     nodeName: "BODY",
-    ownerDocument: document
-  }
+    ownerDocument: document,
+  },
 });
 
 const props: ProductUpdatePageProps = {
   ...listActionsProps,
+  productId: "123",
   allChannelsCount: 5,
   categories: [product.category],
   channelsData: [],
@@ -56,12 +60,10 @@ const props: ProductUpdatePageProps = {
   fetchMoreCategories: fetchMoreProps,
   fetchMoreCollections: fetchMoreProps,
   fetchMoreAttributeValues: fetchMoreProps,
-  hasChannelChanged: false,
   header: product.name,
   media: product.media,
   limits,
   onAssignReferencesClick: () => undefined,
-  onBack: () => undefined,
   onChannelsChange: () => undefined,
   onCloseDialog: () => undefined,
   onDelete: () => undefined,
@@ -70,10 +72,7 @@ const props: ProductUpdatePageProps = {
   onMediaUrlUpload: () => undefined,
   onSetDefaultVariant: () => undefined,
   onSubmit,
-  onVariantAdd: () => undefined,
   onVariantReorder: () => undefined,
-  onVariantShow: () => undefined,
-  onVariantsAdd: () => undefined,
   onVariantEndPreorderDialogOpen: () => undefined,
   onWarehouseConfigure: () => undefined,
   openChannelsModal: () => undefined,
@@ -86,24 +85,24 @@ const props: ProductUpdatePageProps = {
   taxTypes,
   variants: product.variants,
   warehouses: warehouseList,
-  attributeValues: []
+  attributeValues: [],
 };
 
 const selectors = {
   dropdown: `[data-test-id="autocomplete-dropdown"]`,
   empty: `[data-test-type="empty"]`,
-  input: `[data-test-id="attribute-value"] input`
+  input: `[data-test-id="attribute-value"] input`,
 };
 
 describe("Product details page", () => {
   useNavigator.mockImplementation();
-  it("can select empty option on attribute", () => {
+  it("can select empty option on attribute", async () => {
     const component = mount(
       <MemoryRouter>
         <Wrapper>
           <ProductUpdatePage {...props} />
         </Wrapper>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
     expect(component.find(selectors.dropdown).exists()).toBeFalsy();
 
@@ -125,12 +124,17 @@ describe("Product details page", () => {
       component
         .find(selectors.input)
         .first()
-        .prop("value")
+        .prop("value"),
     ).toEqual("");
-    component
-      .find("form")
-      .first()
-      .simulate("submit");
+
+    await act(async () => {
+      component
+        .find("form")
+        .first()
+        .simulate("submit");
+      // wait for async function to complete
+      await new Promise(process.nextTick);
+    });
     expect(onSubmit.mock.calls[0][0].attributes[0].value.length).toEqual(0);
   });
 });

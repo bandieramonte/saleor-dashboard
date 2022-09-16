@@ -5,11 +5,11 @@ import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 
 export enum TranslationInputFieldName {
   description = "description",
-  longDescription = "longDescription",
+  shortDescription = "shortDescription",
   name = "name",
   seoDescription = "seoDescription",
   seoTitle = "seoTitle",
-  richText = "richText"
+  richText = "richText",
 }
 
 export enum PageTranslationInputFieldName {
@@ -17,7 +17,7 @@ export enum PageTranslationInputFieldName {
   title = "title",
   seoDescription = "seoDescription",
   seoTitle = "seoTitle",
-  richText = "richText"
+  richText = "richText",
 }
 
 export interface TranslationField<T extends string = string> {
@@ -30,17 +30,16 @@ export interface TranslationField<T extends string = string> {
 }
 
 export interface TranslationsEntitiesPageProps {
+  translationId: string;
   activeField: string;
   disabled: boolean;
   languageCode: string;
   languages: LanguageFragment[];
   saveButtonState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onEdit: (field: string) => void;
   onDiscard: () => void;
-  onLanguageChange: (lang: string) => void;
   onSubmit: (
     field: TranslationField,
-    data: string | OutputData
+    data: string | OutputData,
   ) => SubmitPromise<any[]>;
 }

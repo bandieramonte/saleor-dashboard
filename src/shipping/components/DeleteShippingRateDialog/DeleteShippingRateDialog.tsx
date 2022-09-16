@@ -18,7 +18,7 @@ export const DeleteShippingRateDialog: React.FC<DeleteShippingRateDialogProps> =
   onClose,
   handleConfirm,
   name,
-  open
+  open,
 }) => {
   const intl = useIntl();
   return (
@@ -28,18 +28,19 @@ export const DeleteShippingRateDialog: React.FC<DeleteShippingRateDialogProps> =
       onConfirm={handleConfirm}
       open={open}
       title={intl.formatMessage({
+        id: "nNeWAx",
         defaultMessage: "Delete Shipping Method",
-        description: "dialog header"
+        description: "dialog header",
       })}
       variant="delete"
     >
       <DialogContentText>
         <FormattedMessage
+          id="yOaNWB"
           defaultMessage="Are you sure you want to delete {name}?"
           description="delete shipping method"
-          id="shippingZoneDetailsDialogsDeleteShippingMethod"
           values={{
-            name: getStringOrPlaceholder(name)
+            name: getStringOrPlaceholder(name),
           }}
         />
       </DialogContentText>

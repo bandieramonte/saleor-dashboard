@@ -7,10 +7,11 @@ import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import TooltipTableCellHeader from "@saleor/components/TooltipTableCellHeader";
 import { commonTooltipMessages } from "@saleor/components/TooltipTableCellHeader/messages";
-import { SaleListUrlSortField } from "@saleor/discounts/urls";
+import { SaleListUrlSortField, saleUrl } from "@saleor/discounts/urls";
 import { canBeSorted } from "@saleor/discounts/views/SaleList/sort";
 import { SaleFragment, SaleType } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
@@ -33,49 +34,45 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colEnd: {
-        width: 250
+        width: 250,
       },
       colName: {},
       colStart: {
-        width: 250
+        width: 250,
       },
       colValue: {
-        width: 200
-      }
+        width: 200,
+      },
     },
     colEnd: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colStart: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colValue: {
-      textAlign: "right"
+      textAlign: "right",
     },
     tableRow: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     textOverflow: {
       textOverflow: "ellipsis",
-      overflow: "hidden"
-    }
+      overflow: "hidden",
+    },
   }),
-  { name: "SaleList" }
+  { name: "SaleList" },
 );
 
 const SaleList: React.FC<SaleListProps> = props => {
   const {
     settings,
     disabled,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
-    pageInfo,
     sales,
     selectedChannelId,
     isChecked,
@@ -84,7 +81,7 @@ const SaleList: React.FC<SaleListProps> = props => {
     toggle,
     toggleAll,
     toolbar,
-    filterDependency
+    filterDependency,
   } = props;
 
   const classes = useStyles(props);
@@ -111,7 +108,11 @@ const SaleList: React.FC<SaleListProps> = props => {
           onClick={() => onSort(SaleListUrlSortField.name)}
           className={classes.colName}
         >
-          <FormattedMessage defaultMessage="Name" description="sale name" />
+          <FormattedMessage
+            id="F56hOz"
+            defaultMessage="Name"
+            description="sale name"
+          />
         </TableCellHeader>
         <TableCellHeader
           direction={
@@ -124,6 +125,7 @@ const SaleList: React.FC<SaleListProps> = props => {
           className={classes.colStart}
         >
           <FormattedMessage
+            id="iBSq6l"
             defaultMessage="Starts"
             description="sale start date"
           />
@@ -138,7 +140,11 @@ const SaleList: React.FC<SaleListProps> = props => {
           onClick={() => onSort(SaleListUrlSortField.endDate)}
           className={classes.colEnd}
         >
-          <FormattedMessage defaultMessage="Ends" description="sale end date" />
+          <FormattedMessage
+            id="giF5UV"
+            defaultMessage="Ends"
+            description="sale end date"
+          />
         </TableCellHeader>
         <TooltipTableCellHeader
           direction={
@@ -152,25 +158,23 @@ const SaleList: React.FC<SaleListProps> = props => {
             !canBeSorted(SaleListUrlSortField.value, !!selectedChannelId)
           }
           tooltip={intl.formatMessage(commonTooltipMessages.noFilterSelected, {
-            filterName: filterDependency.label
+            filterName: filterDependency.label,
           })}
           className={classes.colValue}
         >
-          <FormattedMessage defaultMessage="Value" description="sale value" />
+          <FormattedMessage
+            id="XZR590"
+            defaultMessage="Value"
+            description="sale value"
+          />
         </TooltipTableCellHeader>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -180,14 +184,14 @@ const SaleList: React.FC<SaleListProps> = props => {
           sale => {
             const isSelected = sale ? isChecked(sale.id) : false;
             const channel = sale?.channelListings?.find(
-              lisiting => lisiting.channel.id === selectedChannelId
+              lisiting => lisiting.channel.id === selectedChannelId,
             );
             return (
-              <TableRow
+              <TableRowLink
                 className={!!sale ? classes.tableRow : undefined}
                 hover={!!sale}
                 key={sale ? sale.id : "skeleton"}
-                onClick={sale ? onRowClick(sale.id) : undefined}
+                href={sale && saleUrl(sale.id)}
                 selected={isSelected}
               >
                 <TableCell padding="checkbox">
@@ -219,16 +223,13 @@ const SaleList: React.FC<SaleListProps> = props => {
                     <Skeleton />
                   )}
                 </TableCell>
-                <TableCell
-                  className={classes.colValue}
-                  onClick={sale ? onRowClick(sale.id) : undefined}
-                >
+                <TableCell className={classes.colValue}>
                   {sale?.type && channel?.discountValue ? (
                     sale.type === SaleType.FIXED ? (
                       <Money
                         money={{
                           amount: channel.discountValue,
-                          currency: channel.currency
+                          currency: channel.currency,
                         }}
                       />
                     ) : channel?.discountValue ? (
@@ -242,16 +243,16 @@ const SaleList: React.FC<SaleListProps> = props => {
                     <Skeleton />
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No sales found" />
+                <FormattedMessage id="51HE+Q" defaultMessage="No sales found" />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

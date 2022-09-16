@@ -5,10 +5,12 @@ import Skeleton from "@saleor/components/Skeleton";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import { AVATAR_MARGIN } from "@saleor/components/TableCellAvatar/Avatar";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { CategoryDetailsQuery } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
 import { maybe, renderCollection } from "@saleor/misc";
+import { productUrl } from "@saleor/products/urls";
 import { ListActions, ListProps, RelayToFlat } from "@saleor/types";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -17,36 +19,36 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colName: {
-        width: "auto"
-      }
+        width: "auto",
+      },
     },
     colFill: {
       padding: 0,
-      width: "100%"
+      width: "100%",
     },
     colName: {},
     colNameHeader: {
-      marginLeft: AVATAR_MARGIN
+      marginLeft: AVATAR_MARGIN,
     },
     link: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     table: {
-      tableLayout: "fixed"
+      tableLayout: "fixed",
     },
     tableContainer: {
-      overflowX: "scroll"
+      overflowX: "scroll",
     },
     textLeft: {
-      textAlign: "left"
+      textAlign: "left",
     },
     textRight: {
-      textAlign: "right"
-    }
+      textAlign: "right",
+    },
   }),
   {
-    name: "CategoryProductList"
-  }
+    name: "CategoryProductList",
+  },
 );
 
 interface CategoryProductListProps extends ListProps, ListActions {
@@ -57,15 +59,11 @@ export const CategoryProductList: React.FC<CategoryProductListProps> = props => 
   const {
     disabled,
     isChecked,
-    pageInfo,
     products,
     selected,
     toggle,
     toggleAll,
     toolbar,
-    onNextPage,
-    onPreviousPage,
-    onRowClick
   } = props;
 
   const classes = useStyles(props);
@@ -89,21 +87,17 @@ export const CategoryProductList: React.FC<CategoryProductListProps> = props => 
         >
           <TableCell className={classes.colName}>
             <span className={classes.colNameHeader}>
-              <FormattedMessage defaultMessage="Name" description="product" />
+              <FormattedMessage
+                id="VQLIXd"
+                defaultMessage="Name"
+                description="product"
+              />
             </span>
           </TableCell>
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
-              colSpan={numberOfColumns}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
-            />
+            <TablePaginationWithContext colSpan={numberOfColumns} />
           </TableRow>
         </TableFooter>
         <TableBody>
@@ -113,12 +107,12 @@ export const CategoryProductList: React.FC<CategoryProductListProps> = props => 
               const isSelected = product ? isChecked(product.id) : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   data-test-id="product-row"
                   selected={isSelected}
                   hover={!!product}
                   key={product ? product.id : "skeleton"}
-                  onClick={product && onRowClick(product.id)}
+                  href={product && productUrl(product.id)}
                   className={classes.link}
                 >
                   <TableCell padding="checkbox">
@@ -135,16 +129,19 @@ export const CategoryProductList: React.FC<CategoryProductListProps> = props => 
                   >
                     {product ? product.name : <Skeleton />}
                   </TableCellAvatar>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No products found" />
+                  <FormattedMessage
+                    id="Q1Uzbb"
+                    defaultMessage="No products found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

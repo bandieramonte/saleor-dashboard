@@ -25,7 +25,7 @@ const OrderMarkAsPaidDialog: React.FC<OrderMarkAsPaidDialogProps> = ({
   onClose,
   onConfirm,
   open,
-  transactionReference
+  transactionReference,
 }) => {
   const intl = useIntl();
   const errors = useModalDialogErrors(apiErrors, open);
@@ -35,23 +35,31 @@ const OrderMarkAsPaidDialog: React.FC<OrderMarkAsPaidDialogProps> = ({
       confirmButtonState={confirmButtonState}
       open={open}
       title={intl.formatMessage({
+        id: "+B25o/",
         defaultMessage: "Mark Order as Paid",
-        description: "dialog header"
+        description: "dialog header",
       })}
       onClose={onClose}
       onConfirm={onConfirm}
     >
       <DialogContentText>
-        <FormattedMessage defaultMessage="You're going to mark this order as paid." />
+        <FormattedMessage
+          id="sfEbeB"
+          defaultMessage="You're going to mark this order as paid."
+        />
         <br />
-        <FormattedMessage defaultMessage="Please provide a transaction reference using the input below:" />
+        <FormattedMessage
+          id="rwOx2s"
+          defaultMessage="Please provide a transaction reference using the input below:"
+        />
       </DialogContentText>
       <TextField
         fullWidth
         name="transactionReference"
         label={intl.formatMessage({
+          id: "EbVf0Z",
           defaultMessage: "Transaction reference",
-          description: "transaction reference"
+          description: "transaction reference",
         })}
         value={transactionReference}
         onChange={handleTransactionReference}

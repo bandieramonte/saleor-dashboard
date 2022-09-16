@@ -39,22 +39,19 @@ export function saveCollection(alias = "CreateCollection") {
 }
 
 export function updateCollection({ name, description }) {
-  cy.get(COLLECTION_SELECTORS.descriptionInput)
-    .find(SHARED_ELEMENTS.contentEditable)
-    .should("be.visible")
+  cy.get(COLLECTION_SELECTORS.nameInput)
+    .should("be.enabled")
     .get(COLLECTION_SELECTORS.descriptionInput)
-    .click()
-    .get(COLLECTION_SELECTORS.descriptionInput)
-    .find(SHARED_ELEMENTS.contentEditable)
-    .get(COLLECTION_SELECTORS.descriptionInput)
-    .clearAndType(description)
+    .find(COLLECTION_SELECTORS.placeholder)
+    .type(description)
     .get(COLLECTION_SELECTORS.nameInput)
     .clearAndType(name);
   return saveCollection("CollectionUpdate");
 }
 
 export function assignProductsToCollection(productName) {
-  cy.get(COLLECTION_SELECTORS.addProductButton)
+  cy.waitForProgressBarToNotBeVisible()
+    .get(COLLECTION_SELECTORS.addProductButton)
     .click()
     .addAliasToGraphRequest("SearchProducts")
     .get(ASSIGN_ELEMENTS_SELECTORS.searchInput)

@@ -3,7 +3,7 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import MenuDetailsPage, {
-  MenuDetailsPageProps
+  MenuDetailsPageProps,
 } from "../../../navigation/components/MenuDetailsPage";
 import { menu } from "../../../navigation/fixtures";
 import Decorator from "../../Decorator";
@@ -12,13 +12,12 @@ const props: MenuDetailsPageProps = {
   disabled: false,
   errors: [],
   menu,
-  onBack: () => undefined,
   onDelete: () => undefined,
   onItemAdd: () => undefined,
   onItemClick: () => undefined,
   onItemEdit: () => undefined,
   onSubmit: () => undefined,
-  saveButtonState: "default"
+  saveButtonState: "default",
 };
 
 storiesOf("Views / Navigation / Menu details", module)
@@ -32,7 +31,7 @@ storiesOf("Views / Navigation / Menu details", module)
       {...props}
       menu={{
         ...props.menu,
-        items: []
+        items: [],
       }}
     />
   ))
@@ -43,7 +42,7 @@ storiesOf("Views / Navigation / Menu details", module)
         __typename: "MenuError",
         code: MenuErrorCode.INVALID,
         field,
-        message: "Invalid field"
+        message: "Invalid field",
       }))}
     />
   ));

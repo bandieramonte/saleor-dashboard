@@ -3,12 +3,12 @@ import {
   TableCell,
   TableFooter,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { ChannelsAvailabilityDropdown } from "@saleor/components/ChannelsAvailabilityDropdown";
 import {
   getChannelAvailabilityColor,
-  getChannelAvailabilityLabel
+  getChannelAvailabilityLabel,
 } from "@saleor/components/ChannelsAvailabilityDropdown/utils";
 import Checkbox from "@saleor/components/Checkbox";
 import Date from "@saleor/components/Date";
@@ -19,7 +19,8 @@ import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import { AVATAR_MARGIN } from "@saleor/components/TableCellAvatar/Avatar";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import TooltipTableCellHeader from "@saleor/components/TooltipTableCellHeader";
 import { commonTooltipMessages } from "@saleor/components/TooltipTableCellHeader/messages";
 import { ProductListColumns } from "@saleor/config";
@@ -28,19 +29,19 @@ import { makeStyles, Pill } from "@saleor/macaw-ui";
 import { maybe, renderCollection } from "@saleor/misc";
 import {
   getAttributeIdFromColumnValue,
-  isAttributeColumnValue
+  isAttributeColumnValue,
 } from "@saleor/products/components/ProductListPage/utils";
-import { ProductListUrlSortField } from "@saleor/products/urls";
+import { ProductListUrlSortField, productUrl } from "@saleor/products/urls";
 import { canBeSorted } from "@saleor/products/views/ProductList/sort";
 import {
   ChannelProps,
   ListActions,
   ListProps,
   RelayToFlat,
-  SortPage
+  SortPage,
 } from "@saleor/types";
 import TDisplayColumn, {
-  DisplayColumnProps
+  DisplayColumnProps,
 } from "@saleor/utils/columns/DisplayColumn";
 import { getArrowDirection } from "@saleor/utils/sort";
 import classNames from "classnames";
@@ -48,67 +49,71 @@ import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 import { columnsMessages } from "./messages";
+import ProductListAttribute from "./ProductListAttribute";
 
 const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("md")]: {
       colName: {
-        minWidth: 250
+        minWidth: 250,
       },
       colPrice: {
-        width: 300
+        width: 300,
       },
       colPublished: {
-        width: 200
+        width: 200,
       },
       colType: {
-        width: 200
+        width: 200,
       },
       colDate: {
-        width: 200
-      }
+        width: 200,
+      },
     },
     colAttribute: {
-      width: 150
+      width: 200,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      whiteSpace: "nowrap",
     },
     colFill: {
       padding: 0,
-      width: "100%"
+      width: "100%",
     },
     colName: {
       "&$colNameFixed": {
-        width: 250
-      }
+        width: 250,
+      },
     },
     colNameFixed: {},
     colNameHeader: {
-      marginLeft: AVATAR_MARGIN
+      marginLeft: AVATAR_MARGIN,
     },
     colNameWrapper: {
-      display: "block"
+      display: "block",
     },
     colPrice: {
-      textAlign: "right"
+      textAlign: "right",
     },
     colPublished: {},
     colType: {},
     link: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     table: {
-      tableLayout: "fixed"
+      tableLayout: "fixed",
     },
     tableContainer: {
-      overflowX: "scroll"
+      overflowX: "scroll",
     },
     textLeft: {
-      textAlign: "left"
+      textAlign: "left",
     },
     textRight: {
-      textAlign: "right"
-    }
+      textAlign: "right",
+    },
   }),
-  { name: "ProductList" }
+  { name: "ProductList" },
 );
 
 const DisplayColumn = TDisplayColumn as React.FunctionComponent<
@@ -123,7 +128,6 @@ interface ProductListProps
   activeAttributeSortId: string;
   gridAttributes: RelayToFlat<GridAttributesQuery["grid"]>;
   products: RelayToFlat<ProductListQuery["products"]>;
-  loading: boolean;
 }
 
 export const ProductList: React.FC<ProductListProps> = props => {
@@ -133,26 +137,22 @@ export const ProductList: React.FC<ProductListProps> = props => {
     disabled,
     isChecked,
     gridAttributes,
-    pageInfo,
     products,
     selected,
     sort,
     toggle,
     toggleAll,
     toolbar,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
     selectedChannelId,
-    filterDependency
+    filterDependency,
   } = props;
 
   const classes = useStyles(props);
   const intl = useIntl();
   const gridAttributesFromSettings = settings.columns.filter(
-    isAttributeColumnValue
+    isAttributeColumnValue,
   );
   const numberOfColumns =
     (products?.length === 0 ? 1 : 2) + settings.columns.length;
@@ -194,7 +194,7 @@ export const ProductList: React.FC<ProductListProps> = props => {
             data-test-id="col-name-header"
             arrowPosition="right"
             className={classNames(classes.colName, {
-              [classes.colNameFixed]: settings.columns.length > 4
+              [classes.colNameFixed]: settings.columns.length > 4,
             })}
             direction={
               sort.sort === ProductListUrlSortField.name
@@ -204,7 +204,11 @@ export const ProductList: React.FC<ProductListProps> = props => {
             onClick={() => onSort(ProductListUrlSortField.name)}
           >
             <span className={classes.colNameHeader}>
-              <FormattedMessage defaultMessage="Name" description="product" />
+              <FormattedMessage
+                id="VQLIXd"
+                defaultMessage="Name"
+                description="product"
+              />
             </span>
           </TableCellHeader>
           <DisplayColumn column="productType" displayColumns={settings.columns}>
@@ -237,12 +241,12 @@ export const ProductList: React.FC<ProductListProps> = props => {
               disabled={
                 !canBeSorted(
                   ProductListUrlSortField.status,
-                  !!selectedChannelId
+                  !!selectedChannelId,
                 )
               }
               tooltip={intl.formatMessage(
                 commonTooltipMessages.noFilterSelected,
-                { filterName: filterDependency.label }
+                { filterName: filterDependency.label },
               )}
             >
               <FormattedMessage {...columnsMessages.availability} />
@@ -250,7 +254,7 @@ export const ProductList: React.FC<ProductListProps> = props => {
           </DisplayColumn>
           {gridAttributesFromSettings.map(gridAttributeFromSettings => {
             const attributeId = getAttributeIdFromColumnValue(
-              gridAttributeFromSettings
+              gridAttributeFromSettings,
             );
 
             return (
@@ -270,9 +274,9 @@ export const ProductList: React.FC<ProductListProps> = props => {
                 {maybe<React.ReactNode>(
                   () =>
                     gridAttributes.find(
-                      gridAttribute => attributeId === gridAttribute.id
+                      gridAttribute => attributeId === gridAttribute.id,
                     ).name,
-                  <Skeleton />
+                  <Skeleton />,
                 )}
               </TableCellHeader>
             );
@@ -307,7 +311,7 @@ export const ProductList: React.FC<ProductListProps> = props => {
               }
               tooltip={intl.formatMessage(
                 commonTooltipMessages.noFilterSelected,
-                { filterName: filterDependency.label }
+                { filterName: filterDependency.label },
               )}
             >
               <FormattedMessage {...columnsMessages.price} />
@@ -316,16 +320,10 @@ export const ProductList: React.FC<ProductListProps> = props => {
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
+            <TablePaginationWithContext
               colSpan={numberOfColumns}
               settings={settings}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
               onUpdateListSettings={onUpdateListSettings}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
             />
           </TableRow>
         </TableFooter>
@@ -335,15 +333,15 @@ export const ProductList: React.FC<ProductListProps> = props => {
             product => {
               const isSelected = product ? isChecked(product.id) : false;
               const channel = product?.channelListings.find(
-                listing => listing.channel.id === selectedChannelId
+                listing => listing.channel.id === selectedChannelId,
               );
 
               return (
-                <TableRow
+                <TableRowLink
                   selected={isSelected}
                   hover={!!product}
                   key={product ? product.id : "skeleton"}
-                  onClick={product && onRowClick(product.id)}
+                  href={product && productUrl(product.id)}
                   className={classes.link}
                   data-test-id={"id-" + (product ? product?.id : "skeleton")}
                 >
@@ -365,11 +363,13 @@ export const ProductList: React.FC<ProductListProps> = props => {
                           <Typography variant="caption">
                             {product.productType.hasVariants ? (
                               <FormattedMessage
+                                id="X90t9n"
                                 defaultMessage="Configurable"
                                 description="product type"
                               />
                             ) : (
                               <FormattedMessage
+                                id="Jz/Cb+"
                                 defaultMessage="Simple"
                                 description="product type"
                               />
@@ -407,7 +407,7 @@ export const ProductList: React.FC<ProductListProps> = props => {
                         (channel ? (
                           <Pill
                             label={intl.formatMessage(
-                              getChannelAvailabilityLabel(channel)
+                              getChannelAvailabilityLabel(channel),
                             )}
                             color={getChannelAvailabilityColor(channel)}
                           />
@@ -424,22 +424,13 @@ export const ProductList: React.FC<ProductListProps> = props => {
                       key={gridAttribute}
                       data-test-id="attribute"
                       data-test-attribute={getAttributeIdFromColumnValue(
-                        gridAttribute
+                        gridAttribute,
                       )}
                     >
-                      {maybe<React.ReactNode>(() => {
-                        const attribute = product.attributes.find(
-                          attribute =>
-                            attribute.attribute.id ===
-                            getAttributeIdFromColumnValue(gridAttribute)
-                        );
-                        if (attribute) {
-                          return attribute.values
-                            .map(value => value.name)
-                            .join(", ");
-                        }
-                        return "-";
-                      }, <Skeleton />)}
+                      <ProductListAttribute
+                        attribute={gridAttribute}
+                        productAttributes={product?.attributes}
+                      />
                     </TableCell>
                   ))}
                   <DisplayColumn
@@ -472,16 +463,19 @@ export const ProductList: React.FC<ProductListProps> = props => {
                       )}
                     </TableCell>
                   </DisplayColumn>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No products found" />
+                  <FormattedMessage
+                    id="Q1Uzbb"
+                    defaultMessage="No products found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

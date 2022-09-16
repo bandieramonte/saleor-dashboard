@@ -2,7 +2,7 @@ import {
   BulkProductErrorFragment,
   CollectionErrorFragment,
   ProductErrorCode,
-  ProductErrorFragment
+  ProductErrorFragment,
 } from "@saleor/graphql";
 import { defineMessages, IntlShape } from "react-intl";
 
@@ -10,59 +10,73 @@ import commonErrorMessages, { getCommonFormFieldErrorMessage } from "./common";
 
 const messages = defineMessages({
   alreadyExists: {
-    defaultMessage: "A product with this SKU already exists"
+    id: "2NgTCJ",
+    defaultMessage: "A product with this SKU already exists",
   },
   attributeAlreadyAssigned: {
+    id: "aggaJg",
     defaultMessage:
-      "This attribute has already been assigned to this product type"
+      "This attribute has already been assigned to this product type",
   },
   attributeCannotBeAssigned: {
-    defaultMessage: "This attribute cannot be assigned to this product type"
+    id: "u24Ppd",
+    defaultMessage: "This attribute cannot be assigned to this product type",
   },
   attributeRequired: {
+    id: "cd13nN",
     defaultMessage: "All attributes should have value",
-    description: "product attribute error"
+    description: "product attribute error",
   },
   attributeVariantsDisabled: {
-    defaultMessage: "Variants are disabled in this product type"
+    id: "lLwtgs",
+    defaultMessage: "Variants are disabled in this product type",
   },
   duplicated: {
-    defaultMessage: "The same object cannot be in both lists"
+    id: "AY7Tuz",
+    defaultMessage: "The same object cannot be in both lists",
   },
   duplicatedInputItem: {
-    defaultMessage: "Variant with these attributes already exists"
+    id: "pFVX6g",
+    defaultMessage: "Variant with these attributes already exists",
   },
   nameAlreadyTaken: {
-    defaultMessage: "This name is already taken. Please provide another."
+    id: "FuAV5G",
+    defaultMessage: "This name is already taken. Please provide another.",
   },
   priceInvalid: {
-    defaultMessage: "Product price cannot be lower than 0."
+    id: "mYs3tb",
+    defaultMessage: "Product price cannot be lower than 0.",
   },
   skuUnique: {
+    id: "rZf1qL",
     defaultMessage: "SKUs must be unique",
-    description: "bulk variant create error"
+    description: "bulk variant create error",
   },
   unsupportedMediaProvider: {
-    defaultMessage: "Unsupported media provider or incorrect URL"
+    id: "DILs4b",
+    defaultMessage: "Unsupported media provider or incorrect URL",
   },
   variantNoDigitalContent: {
-    defaultMessage: "This variant does not have any digital content"
+    id: "Z6QAbw",
+    defaultMessage: "This variant does not have any digital content",
   },
   variantUnique: {
+    id: "i3Mvj8",
     defaultMessage: "This variant already exists",
-    description: "product attribute error"
+    description: "product attribute error",
   },
   noCategorySet: {
+    id: "3AqOxp",
     defaultMessage: "Product category not set",
-    description: "no category set error"
-  }
+    description: "no category set error",
+  },
 });
 
 function getProductErrorMessage(
   err:
     | Omit<ProductErrorFragment | CollectionErrorFragment, "__typename">
     | undefined,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   if (err) {
     switch (err.code) {
@@ -98,7 +112,7 @@ function getProductErrorMessage(
 
 export function getProductVariantAttributeErrorMessage(
   err: Omit<ProductErrorFragment, "__typename"> | undefined,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   if (err) {
     switch (err.code) {
@@ -114,7 +128,7 @@ export function getProductVariantAttributeErrorMessage(
 
 export function getBulkProductErrorMessage(
   err: BulkProductErrorFragment | undefined,
-  intl: IntlShape
+  intl: IntlShape,
 ): string {
   if (err?.code === ProductErrorCode.UNIQUE && err.field === "sku") {
     return intl.formatMessage(messages.skuUnique);

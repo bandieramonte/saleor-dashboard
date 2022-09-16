@@ -7,15 +7,16 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Money from "@saleor/components/Money";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import { OrderRefundDataQuery } from "@saleor/graphql";
 import { FormsetChange } from "@saleor/hooks/useFormset";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import { renderCollection } from "@saleor/misc";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -27,43 +28,43 @@ const useStyles = makeStyles(
   theme => {
     const inputPadding = {
       paddingBottom: theme.spacing(2),
-      paddingTop: theme.spacing(2)
+      paddingTop: theme.spacing(2),
     };
 
     return {
       cartContent: {
         paddingBottom: 0,
-        paddingTop: 0
+        paddingTop: 0,
       },
       colQuantity: {
         textAlign: "right",
-        width: 210
+        width: 210,
       },
       notice: {
         marginBottom: theme.spacing(1),
-        marginTop: theme.spacing(2)
+        marginTop: theme.spacing(2),
       },
       orderNumber: {
         display: "inline",
-        marginLeft: theme.spacing(1)
+        marginLeft: theme.spacing(1),
       },
       quantityInnerInput: {
-        ...inputPadding
+        ...inputPadding,
       },
       quantityInnerInputNoRemaining: {
-        paddingRight: 0
+        paddingRight: 0,
       },
       remainingQuantity: {
         ...inputPadding,
         color: theme.palette.text.secondary,
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
       },
       setMaximalQuantityButton: {
-        marginTop: theme.spacing(1)
-      }
+        marginTop: theme.spacing(1),
+      },
     };
   },
-  { name: "OrderRefundFulfilledProducts" }
+  { name: "OrderRefundFulfilledProducts" },
 );
 
 interface OrderRefundFulfilledProductsProps {
@@ -82,7 +83,7 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
     disabled,
     orderNumber,
     onRefundedProductQuantityChange,
-    onSetMaximalQuantities
+    onSetMaximalQuantities,
   } = props;
   const classes = useStyles({});
   const intl = useIntl();
@@ -110,6 +111,7 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
           }
         >
           <FormattedMessage
+            id="2W4EBM"
             defaultMessage="Set maximal quantities"
             description="button"
           />
@@ -120,24 +122,28 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
           <TableRow>
             <TableCell>
               <FormattedMessage
+                id="FNT4b+"
                 defaultMessage="Product"
                 description="tabel column header"
               />
             </TableCell>
             <TableCell>
               <FormattedMessage
+                id="5aiFbL"
                 defaultMessage="Price"
                 description="tabel column header"
               />
             </TableCell>
             <TableCell>
               <FormattedMessage
+                id="Tl+7X4"
                 defaultMessage="Refunded Qty"
                 description="tabel column header"
               />
             </TableCell>
             <TableCell>
               <FormattedMessage
+                id="+PclgM"
                 defaultMessage="Total"
                 description="tabel column header"
               />
@@ -149,7 +155,7 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
             fulfillment?.lines,
             line => {
               const selectedLineQuantity = data.refundedFulfilledProductQuantities.find(
-                refundedLine => refundedLine.id === line.id
+                refundedLine => refundedLine.id === line.id,
               );
               const isError =
                 Number(selectedLineQuantity?.value) > line?.quantity ||
@@ -181,14 +187,14 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
                           "data-test-id": "quantityInput" + line?.id,
                           max: (line?.quantity).toString(),
                           min: 0,
-                          style: { textAlign: "right" }
+                          style: { textAlign: "right" },
                         }}
                         fullWidth
                         value={selectedLineQuantity?.value}
                         onChange={event =>
                           onRefundedProductQuantityChange(
                             line.id,
-                            event.target.value
+                            event.target.value,
                           )
                         }
                         InputProps={{
@@ -196,14 +202,15 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
                             <div className={classes.remainingQuantity}>
                               / {line?.quantity}
                             </div>
-                          )
+                          ),
                         }}
                         error={isError}
                         helperText={
                           isError &&
                           intl.formatMessage({
+                            id: "xoyCZ/",
                             defaultMessage: "Improper value",
-                            description: "error message"
+                            description: "error message",
                           })
                         }
                       />
@@ -218,7 +225,7 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
                           ...line?.orderLine.unitPrice.gross,
                           amount:
                             (line?.orderLine.unitPrice.gross.amount || 0) *
-                            Number(selectedLineQuantity?.value)
+                            Number(selectedLineQuantity?.value),
                         }}
                       />
                     )) || <Skeleton />}
@@ -229,10 +236,13 @@ const OrderRefundFulfilledProducts: React.FC<OrderRefundFulfilledProductsProps> 
             () => (
               <TableRow>
                 <TableCell colSpan={4}>
-                  <FormattedMessage defaultMessage="No products found" />
+                  <FormattedMessage
+                    id="Q1Uzbb"
+                    defaultMessage="No products found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </Table>

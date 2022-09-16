@@ -16,19 +16,17 @@ storiesOf("Views / Products / Product variant details", module)
   .addDecorator(Decorator)
   .add("when loaded data", () => (
     <ProductVariantPage
+      productId=""
       defaultWeightUnit="kg"
       header={variant.name || variant.sku}
       errors={[]}
       channels={channels}
       channelErrors={[]}
       variant={variant}
-      onAdd={() => undefined}
-      onBack={() => undefined}
       onDelete={undefined}
       onSetDefaultVariant={() => undefined}
       onMediaSelect={() => undefined}
       onSubmit={() => undefined}
-      onVariantClick={() => undefined}
       onVariantReorder={() => undefined}
       saveButtonBarState="default"
       variantDeactivatePreoderButtonState="default"
@@ -46,20 +44,18 @@ storiesOf("Views / Products / Product variant details", module)
   ))
   .add("when loading data", () => (
     <ProductVariantPage
+      productId=""
       defaultWeightUnit="kg"
       header={undefined}
       errors={[]}
       channels={channels}
       channelErrors={[]}
       loading={true}
-      onBack={() => undefined}
       placeholderImage={placeholderImage}
-      onAdd={() => undefined}
       onDelete={undefined}
       onSetDefaultVariant={() => undefined}
       onMediaSelect={() => undefined}
       onSubmit={() => undefined}
-      onVariantClick={() => undefined}
       onVariantReorder={() => undefined}
       saveButtonBarState="default"
       variantDeactivatePreoderButtonState="default"
@@ -77,19 +73,17 @@ storiesOf("Views / Products / Product variant details", module)
   ))
   .add("no warehouses", () => (
     <ProductVariantPage
+      productId=""
       defaultWeightUnit="kg"
       header={variant.name || variant.sku}
       errors={[]}
       channels={channels}
       channelErrors={[]}
       variant={variant}
-      onAdd={() => undefined}
-      onBack={() => undefined}
       onDelete={undefined}
       onSetDefaultVariant={() => undefined}
       onMediaSelect={() => undefined}
       onSubmit={() => undefined}
-      onVariantClick={() => undefined}
       onVariantReorder={() => undefined}
       saveButtonBarState="default"
       variantDeactivatePreoderButtonState="default"
@@ -107,17 +101,15 @@ storiesOf("Views / Products / Product variant details", module)
   ))
   .add("attribute errors", () => (
     <ProductVariantPage
+      productId=""
       defaultWeightUnit="kg"
       header={variant.name || variant.sku}
       channels={channels}
       variant={variant}
-      onAdd={() => undefined}
-      onBack={() => undefined}
       onDelete={undefined}
       onSetDefaultVariant={() => undefined}
       onMediaSelect={() => undefined}
       onSubmit={() => undefined}
-      onVariantClick={() => undefined}
       onVariantReorder={() => undefined}
       saveButtonBarState="default"
       variantDeactivatePreoderButtonState="default"
@@ -125,22 +117,22 @@ storiesOf("Views / Products / Product variant details", module)
         {
           attributes: [variant.selectionAttributes[0].attribute.id],
           code: ProductErrorCode.REQUIRED,
-          field: "attributes"
+          field: "attributes",
         },
         {
           attributes: null,
           code: ProductErrorCode.UNIQUE,
-          field: "attributes"
+          field: "attributes",
         },
         {
           attributes: null,
           code: ProductErrorCode.ALREADY_EXISTS,
-          field: "sku"
-        }
+          field: "sku",
+        },
       ].map(error => ({
         __typename: "ProductError",
         message: "Generic form error",
-        ...error
+        ...error,
       }))}
       channelErrors={[
         {
@@ -148,8 +140,8 @@ storiesOf("Views / Products / Product variant details", module)
           channels: ["Q2hhbm5lbDox"],
           code: ProductErrorCode.INVALID,
           field: "price",
-          message: "Product price cannot be lower than 0."
-        }
+          message: "Product price cannot be lower than 0.",
+        },
       ]}
       warehouses={warehouseList}
       onWarehouseConfigure={() => undefined}

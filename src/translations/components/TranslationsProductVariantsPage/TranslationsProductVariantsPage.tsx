@@ -1,18 +1,23 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import LanguageSwitch from "@saleor/components/LanguageSwitch";
 import PageHeader from "@saleor/components/PageHeader";
 import {
   LanguageCodeEnum,
-  ProductVariantTranslationFragment
+  ProductVariantTranslationFragment,
 } from "@saleor/graphql";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import {
   TranslationInputFieldName,
-  TranslationsEntitiesPageProps
+  TranslationsEntitiesPageProps,
 } from "@saleor/translations/types";
+import {
+  languageEntitiesUrl,
+  productVariantUrl,
+  TranslatableEntities,
+} from "@saleor/translations/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -28,6 +33,7 @@ export interface TranslationsProductsPageProps
 }
 
 const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
+  translationId,
   activeField,
   disabled,
   languageCode,
@@ -36,31 +42,34 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
   saveButtonState,
   productId,
   variantId,
-  onBack,
   onDiscard,
   onEdit,
-  onLanguageChange,
   onSubmit,
-  onAttributeValueSubmit
+  onAttributeValueSubmit,
 }) => {
   const intl = useIntl();
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink
+        href={languageEntitiesUrl(languageCode, {
+          tab: TranslatableEntities.products,
+        })}
+      >
         {intl.formatMessage(sectionNames.products)}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "98WMlR",
             defaultMessage:
               'Translation Product Variant "{productName}" - {languageCode}',
-            description: "header"
+            description: "header",
           },
           {
             languageCode,
-            productName: getStringOrPlaceholder(data?.name)
-          }
+            productName: getStringOrPlaceholder(data?.name),
+          },
         )}
       >
         <ProductContextSwitcher
@@ -71,7 +80,9 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
         <LanguageSwitch
           currentLanguage={LanguageCodeEnum[languageCode]}
           languages={languages}
-          onLanguageChange={onLanguageChange}
+          getLanguageUrl={lang =>
+            productVariantUrl(lang, productId, translationId)
+          }
         />
       </PageHeader>
       <TranslationFields
@@ -82,13 +93,14 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Variant Name"
+              id: "T1f2Yl",
+              defaultMessage: "Variant Name",
             }),
             name: TranslationInputFieldName.name,
             translation: data?.translation?.name || null,
             type: "short" as "short",
-            value: data?.name
-          }
+            value: data?.name,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}
@@ -109,17 +121,18 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
                 id: attrVal.attributeValue.id,
                 displayName: intl.formatMessage(
                   {
+                    id: "PajjqE",
                     defaultMessage: "Attribute {number}",
-                    description: "attribute list"
+                    description: "attribute list",
                   },
                   {
-                    number: i + 1
-                  }
+                    number: i + 1,
+                  },
                 ),
                 name: attrVal?.name,
                 translation: attrVal?.translation?.richText || null,
                 type: "rich" as "rich",
-                value: attrVal?.richText
+                value: attrVal?.richText,
               })) || []
             }
             saveButtonState={saveButtonState}

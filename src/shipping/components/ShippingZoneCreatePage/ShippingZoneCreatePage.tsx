@@ -1,3 +1,4 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import CountryList from "@saleor/components/CountryList";
@@ -7,8 +8,10 @@ import PageHeader from "@saleor/components/PageHeader";
 import Savebar from "@saleor/components/Savebar";
 import { CountryFragment, ShippingErrorFragment } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { shippingZonesListUrl } from "@saleor/shipping/urls";
 import React from "react";
 import { defineMessages, useIntl } from "react-intl";
 
@@ -23,17 +26,20 @@ export interface ShippingZoneCreateFormData {
 
 const messages = defineMessages({
   countries: {
+    id: "55LMJv",
     defaultMessage: "Countries",
-    description: "country list header"
+    description: "country list header",
   },
   createZone: {
+    id: "6fxdUO",
     defaultMessage: "Create New Shipping Zone",
-    description: "section header"
+    description: "section header",
   },
   noCountriesAssigned: {
+    id: "y7mfbl",
     defaultMessage:
-      "Currently, there are no countries assigned to this shipping zone"
-  }
+      "Currently, there are no countries assigned to this shipping zone",
+  },
 });
 
 export interface ShippingZoneCreatePageProps {
@@ -42,7 +48,6 @@ export interface ShippingZoneCreatePageProps {
   disabled: boolean;
   errors: ShippingErrorFragment[];
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: ShippingZoneCreateFormData) => SubmitPromise;
 }
 
@@ -51,18 +56,19 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
   restWorldCountries,
   disabled,
   errors,
-  onBack,
   onSubmit,
-  saveButtonBarState
+  saveButtonBarState,
 }) => {
   const intl = useIntl();
+  const navigate = useNavigator();
+
   const [isModalOpened, setModalStatus] = React.useState(false);
   const toggleModal = () => setModalStatus(!isModalOpened);
 
   const initialForm: ShippingZoneCreateFormData = {
     countries: [],
     description: "",
-    name: ""
+    name: "",
   };
 
   return (
@@ -75,7 +81,7 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
       {({ change, data, isSaveDisabled, submit }) => (
         <>
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={shippingZonesListUrl()}>
               {intl.formatMessage(sectionNames.shipping)}
             </Backlink>
             <PageHeader title={intl.formatMessage(messages.createZone)} />
@@ -90,7 +96,7 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
                 <CardSpacer />
                 <CountryList
                   countries={data.countries.map(selectedCountry =>
-                    countries.find(country => country.code === selectedCountry)
+                    countries.find(country => country.code === selectedCountry),
                   )}
                   disabled={disabled}
                   emptyText={intl.formatMessage(messages.noCountriesAssigned)}
@@ -100,9 +106,9 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
                       target: {
                         name: "countries",
                         value: data.countries.filter(
-                          country => country !== countryCode
-                        )
-                      }
+                          country => country !== countryCode,
+                        ),
+                      },
                     } as any)
                   }
                   title={intl.formatMessage(messages.countries)}
@@ -111,7 +117,7 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
             </Grid>
             <Savebar
               disabled={isSaveDisabled}
-              onCancel={onBack}
+              onCancel={() => navigate(shippingZonesListUrl())}
               onSubmit={submit}
               state={saveButtonBarState}
             />
@@ -122,8 +128,8 @@ const ShippingZoneCreatePage: React.FC<ShippingZoneCreatePageProps> = ({
               change({
                 target: {
                   name: "countries",
-                  value: formData.countries
-                }
+                  value: formData.countries,
+                },
               } as any);
               toggleModal();
             }}

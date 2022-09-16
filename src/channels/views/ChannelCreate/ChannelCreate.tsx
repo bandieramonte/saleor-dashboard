@@ -1,11 +1,16 @@
 import { FormData } from "@saleor/channels/components/ChannelForm/ChannelForm";
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import PageHeader from "@saleor/components/PageHeader";
 import { WindowTitle } from "@saleor/components/WindowTitle";
 import { DEFAULT_INITIAL_SEARCH_DATA } from "@saleor/config";
 import {
   ChannelCreateMutation,
-  useChannelCreateMutation
+  ChannelErrorFragment,
+  useChannelCreateMutation,
+  useChannelReorderWarehousesMutation,
+  useShippingZonesCountQuery,
+  useWarehousesCountQuery,
 } from "@saleor/graphql";
 import { getSearchFetchMoreProps } from "@saleor/hooks/makeTopLevelSearch/utils";
 import useNavigator from "@saleor/hooks/useNavigator";
@@ -13,15 +18,17 @@ import useNotifier from "@saleor/hooks/useNotifier";
 import { getDefaultNotifierSuccessErrorData } from "@saleor/hooks/useNotifier/utils";
 import useShop from "@saleor/hooks/useShop";
 import { sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { extractMutationErrors } from "@saleor/misc";
 import useShippingZonesSearch from "@saleor/searches/useShippingZonesSearch";
+import useWarehouseSearch from "@saleor/searches/useWarehouseSearch";
+import getChannelsErrorMessage from "@saleor/utils/errors/channels";
 import currencyCodes from "currency-codes";
 import React from "react";
 import { useIntl } from "react-intl";
 
 import ChannelDetailsPage from "../../pages/ChannelDetailsPage";
 import { channelPath, channelsListUrl } from "../../urls";
+import { calculateItemsOrderMoves } from "../ChannelDetails/handlers";
 
 export const ChannelCreateView = ({}) => {
   const navigate = useNavigator();
@@ -29,90 +36,161 @@ export const ChannelCreateView = ({}) => {
   const intl = useIntl();
   const shop = useShop();
 
-  const handleBack = () => navigate(channelsListUrl());
+  const handleError = (error: ChannelErrorFragment) => {
+    notify({
+      status: "error",
+      text: getChannelsErrorMessage(error, intl),
+    });
+  };
 
   const [createChannel, createChannelOpts] = useChannelCreateMutation({
-    onCompleted: ({
-      channelCreate: { errors, channel }
-    }: ChannelCreateMutation) => {
+    onCompleted: ({ channelCreate: { errors } }: ChannelCreateMutation) => {
       notify(getDefaultNotifierSuccessErrorData(errors, intl));
-
-      if (!errors.length) {
-        navigate(channelPath(channel.id));
-      }
-    }
+    },
   });
 
-  const handleSubmit = ({
+  const [reorderChannelWarehouses] = useChannelReorderWarehousesMutation({
+    onCompleted: data => {
+      const errors = data.channelReorderWarehouses.errors;
+      if (errors.length) {
+        errors.forEach(error => handleError(error));
+      }
+
+      navigate(channelPath(data.channelReorderWarehouses.channel?.id));
+    },
+  });
+
+  const handleSubmit = async ({
     shippingZonesIdsToAdd,
     shippingZonesIdsToRemove,
+    warehousesIdsToAdd,
+    warehousesIdsToRemove,
+    warehousesToDisplay,
+    shippingZonesToDisplay,
     currencyCode,
+    allocationStrategy,
     ...rest
-  }: FormData) =>
-    extractMutationErrors(
-      createChannel({
+  }: FormData) => {
+    const createChannelMutation = createChannel({
+      variables: {
+        input: {
+          ...rest,
+          currencyCode: currencyCode.toUpperCase(),
+          addShippingZones: shippingZonesIdsToAdd,
+          addWarehouses: warehousesIdsToAdd,
+          stockSettings: {
+            allocationStrategy,
+          },
+        },
+      },
+    });
+
+    const result = await createChannelMutation;
+    const errors = await extractMutationErrors(createChannelMutation);
+
+    if (!errors?.length) {
+      const moves = calculateItemsOrderMoves(
+        result.data?.channelCreate.channel?.warehouses,
+        warehousesToDisplay,
+      );
+
+      await reorderChannelWarehouses({
         variables: {
-          input: {
-            ...rest,
-            currencyCode: currencyCode.toUpperCase(),
-            addShippingZones: shippingZonesIdsToAdd
-          }
-        }
-      })
-    );
+          channelId: result.data?.channelCreate.channel?.id,
+          moves,
+        },
+      });
+    }
+
+    return errors;
+  };
+
+  const {
+    data: shippingZonesCountData,
+    loading: shippingZonesCountLoading,
+  } = useShippingZonesCountQuery();
 
   const {
     loadMore: fetchMoreShippingZones,
     search: searchShippingZones,
-    result: searchShippingZonesResult
+    result: searchShippingZonesResult,
   } = useShippingZonesSearch({
-    variables: DEFAULT_INITIAL_SEARCH_DATA
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
+  });
+
+  const {
+    data: warehousesCountData,
+    loading: warehousesCountLoading,
+  } = useWarehousesCountQuery();
+
+  const {
+    loadMore: fetchMoreWarehouses,
+    search: searchWarehouses,
+    result: searchWarehousesResult,
+  } = useWarehouseSearch({
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
   });
 
   const currencyCodeChoices = currencyCodes.data.map(currencyData => ({
     label: intl.formatMessage(
       {
+        id: "J7mFhU",
         defaultMessage: "{code} - {countries}",
-        description: "currency code select"
+        description: "currency code select",
       },
       {
         code: currencyData.code,
-        countries: currencyData.countries.join(",")
-      }
+        countries: currencyData.countries.join(","),
+      },
     ),
-    value: currencyData.code
+    value: currencyData.code,
   }));
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage({
+          id: "OrMr/k",
           defaultMessage: "Create Channel",
-          description: "window title"
+          description: "window title",
         })}
       />
       <Container>
-        <Backlink onClick={handleBack}>
+        <Backlink href={channelsListUrl()}>
           {intl.formatMessage(sectionNames.channels)}
         </Backlink>
         <PageHeader
           title={intl.formatMessage({
+            id: "DnghuS",
             defaultMessage: "New Channel",
-            description: "channel create"
+            description: "channel create",
           })}
         />
         <ChannelDetailsPage
+          allShippingZonesCount={
+            shippingZonesCountData?.shippingZones?.totalCount
+          }
           searchShippingZones={searchShippingZones}
           searchShippingZonesData={searchShippingZonesResult.data}
           fetchMoreShippingZones={getSearchFetchMoreProps(
             searchShippingZonesResult,
-            fetchMoreShippingZones
+            fetchMoreShippingZones,
           )}
-          disabled={createChannelOpts.loading}
+          allWarehousesCount={warehousesCountData?.warehouses?.totalCount}
+          searchWarehouses={searchWarehouses}
+          searchWarehousesData={searchWarehousesResult.data}
+          fetchMoreWarehouses={getSearchFetchMoreProps(
+            searchWarehousesResult,
+            fetchMoreWarehouses,
+          )}
+          disabled={
+            createChannelOpts.loading ||
+            shippingZonesCountLoading ||
+            warehousesCountLoading
+          }
           errors={createChannelOpts?.data?.channelCreate?.errors || []}
           currencyCodes={currencyCodeChoices}
           onSubmit={handleSubmit}
-          onBack={handleBack}
           saveButtonBarState={createChannelOpts.status}
           countries={shop?.countries || []}
         />

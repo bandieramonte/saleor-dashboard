@@ -2,16 +2,19 @@ import {
   CircularProgress,
   Divider,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { UserContextError } from "@saleor/auth/types";
+import { passwordResetUrl } from "@saleor/auth/urls";
+import { Button } from "@saleor/components/Button";
 import { FormSpacer } from "@saleor/components/FormSpacer";
 import { AvailableExternalAuthenticationsQuery } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
 import { commonMessages } from "@saleor/intl";
-import { Button, EyeIcon, IconButton } from "@saleor/macaw-ui";
+import { EyeIcon, IconButton } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
+import { Link } from "react-router-dom";
 
 import useStyles from "../styles";
 import LoginForm, { LoginFormData } from "./form";
@@ -23,7 +26,6 @@ export interface LoginCardProps {
   loading: boolean;
   externalAuthentications?: AvailableExternalAuthenticationsQuery["shop"]["availableExternalAuthentications"];
   onExternalAuthentication: (pluginId: string) => void;
-  onPasswordRecovery: () => void;
   onSubmit?: (event: LoginFormData) => SubmitPromise;
 }
 
@@ -34,8 +36,7 @@ const LoginCard: React.FC<LoginCardProps> = props => {
     loading,
     externalAuthentications = [],
     onExternalAuthentication,
-    onPasswordRecovery,
-    onSubmit
+    onSubmit,
   } = props;
 
   const classes = useStyles(props);
@@ -56,6 +57,7 @@ const LoginCard: React.FC<LoginCardProps> = props => {
         <>
           <Typography variant="h3" className={classes.header}>
             <FormattedMessage
+              id="vzgZ3U"
               defaultMessage="Sign In"
               description="card header"
             />
@@ -74,7 +76,7 @@ const LoginCard: React.FC<LoginCardProps> = props => {
             onChange={handleChange}
             value={data.email}
             inputProps={{
-              "data-test-id": "email"
+              "data-test-id": "email",
             }}
             disabled={disabled}
           />
@@ -84,14 +86,15 @@ const LoginCard: React.FC<LoginCardProps> = props => {
               fullWidth
               autoComplete="password"
               label={intl.formatMessage({
-                defaultMessage: "Password"
+                id: "5sg7KC",
+                defaultMessage: "Password",
               })}
               name="password"
               onChange={handleChange}
               type={showPassword ? "text" : "password"}
               value={data.password}
               inputProps={{
-                "data-test-id": "password"
+                "data-test-id": "password",
               }}
               disabled={disabled}
             />
@@ -107,13 +110,14 @@ const LoginCard: React.FC<LoginCardProps> = props => {
             </IconButton>
           </div>
           <Typography
-            component="a"
+            component={Link}
             className={classes.link}
-            onClick={onPasswordRecovery}
+            to={passwordResetUrl}
             variant="body2"
             data-test-id="reset-password-link"
           >
             <FormattedMessage
+              id="3tbL7x"
               defaultMessage="Forgot password?"
               description="description"
             />
@@ -127,7 +131,11 @@ const LoginCard: React.FC<LoginCardProps> = props => {
               type="submit"
               data-test-id="submit"
             >
-              <FormattedMessage defaultMessage="Sign in" description="button" />
+              <FormattedMessage
+                id="AubJ/S"
+                defaultMessage="Sign in"
+                description="button"
+              />
             </Button>
           </div>
           {externalAuthentications.length > 0 && (
@@ -137,6 +145,7 @@ const LoginCard: React.FC<LoginCardProps> = props => {
               <FormSpacer />
               <Typography>
                 <FormattedMessage
+                  id="ENBELI"
                   defaultMessage="or login using"
                   description="description"
                 />

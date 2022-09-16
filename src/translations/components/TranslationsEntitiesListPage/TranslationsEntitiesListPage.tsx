@@ -1,20 +1,19 @@
 import { Card } from "@material-ui/core";
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import PageHeader from "@saleor/components/PageHeader";
 import FilterTabs, { FilterTab } from "@saleor/components/TableFilter";
 import { LanguageFragment } from "@saleor/graphql";
-import { Backlink } from "@saleor/macaw-ui";
 import { maybe } from "@saleor/misc";
 import React from "react";
 import { useIntl } from "react-intl";
 
-import { TranslatableEntities } from "../../urls";
+import { languageListUrl, TranslatableEntities } from "../../urls";
 
 export interface TranslationsEntitiesListPageProps {
   children: React.ReactNode;
   filters: TranslationsEntitiesFilters;
   language: LanguageFragment;
-  onBack: () => void;
 }
 
 export interface TranslationsEntitiesFilters {
@@ -27,6 +26,7 @@ export interface TranslationsEntitiesFilters {
   onPagesTabClick: () => void;
   onAttributesTabClick: () => void;
   onShippingMethodsTabClick: () => void;
+  onMenuItemsTabClick: () => void;
 }
 
 export type TranslationsEntitiesListFilterTab = keyof typeof TranslatableEntities;
@@ -39,11 +39,12 @@ const tabs: TranslationsEntitiesListFilterTab[] = [
   "vouchers",
   "pages",
   "attributes",
-  "shippingMethods"
+  "shippingMethods",
+  "menuItems",
 ];
 
 const TranslationsEntitiesListPage: React.FC<TranslationsEntitiesListPageProps> = props => {
-  const { filters, language, onBack, children } = props;
+  const { filters, language, children } = props;
 
   const intl = useIntl();
   const queryTab = tabs.indexOf(filters.current);
@@ -51,71 +52,88 @@ const TranslationsEntitiesListPage: React.FC<TranslationsEntitiesListPageProps> 
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink href={languageListUrl}>
         {intl.formatMessage({
-          defaultMessage: "Languages"
+          id: "GsBRWL",
+          defaultMessage: "Languages",
         })}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "FemBUF",
             defaultMessage: "Translations to {language}",
-            description: "header"
+            description: "header",
           },
           {
-            language: maybe(() => language.language, "...")
-          }
+            language: maybe(() => language.language, "..."),
+          },
         )}
       />
       <Card>
         <FilterTabs currentTab={currentTab}>
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Categories"
+              id: "VKb1MS",
+              defaultMessage: "Categories",
             })}
             onClick={filters.onCategoriesTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Collections"
+              id: "ulh3kf",
+              defaultMessage: "Collections",
             })}
             onClick={filters.onCollectionsTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Products"
+              id: "7NFfmz",
+              defaultMessage: "Products",
             })}
             onClick={filters.onProductsTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Sales"
+              id: "c8nvms",
+              defaultMessage: "Sales",
             })}
             onClick={filters.onSalesTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Vouchers"
+              id: "etP0+D",
+              defaultMessage: "Vouchers",
             })}
             onClick={filters.onVouchersTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Pages"
+              id: "CxfKLC",
+              defaultMessage: "Pages",
             })}
             onClick={filters.onPagesTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Attributes"
+              id: "+xTpT1",
+              defaultMessage: "Attributes",
             })}
             onClick={filters.onAttributesTabClick}
           />
           <FilterTab
             label={intl.formatMessage({
-              defaultMessage: "Shipping methods"
+              id: "RzsKm8",
+              defaultMessage: "Shipping methods",
             })}
             onClick={filters.onShippingMethodsTabClick}
+          />
+          <FilterTab
+            label={intl.formatMessage({
+              id: "AcMzwj",
+              defaultMessage: "Menu items",
+            })}
+            onClick={filters.onMenuItemsTabClick}
           />
         </FilterTabs>
         {children}

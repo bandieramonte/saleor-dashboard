@@ -1,4 +1,6 @@
 import { ChannelCollectionData } from "@saleor/channels/utils";
+import { collectionListUrl } from "@saleor/collections/urls";
+import { Backlink } from "@saleor/components/Backlink";
 import { CardSpacer } from "@saleor/components/CardSpacer";
 import ChannelsAvailabilityCard from "@saleor/components/ChannelsAvailabilityCard";
 import { Container } from "@saleor/components/Container";
@@ -10,11 +12,12 @@ import SeoForm from "@saleor/components/SeoForm";
 import {
   CollectionChannelListingErrorFragment,
   CollectionErrorFragment,
-  PermissionEnum
+  PermissionEnum,
 } from "@saleor/graphql";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -29,7 +32,6 @@ export interface CollectionCreatePageProps {
   disabled: boolean;
   errors: CollectionErrorFragment[];
   saveButtonBarState: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: CollectionCreateData) => SubmitPromise;
   onChannelsChange: (data: ChannelCollectionData[]) => void;
   openChannelsModal: () => void;
@@ -42,12 +44,12 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
   disabled,
   errors,
   saveButtonBarState,
-  onBack,
   onChannelsChange,
   openChannelsModal,
-  onSubmit
+  onSubmit,
 }: CollectionCreatePageProps) => {
   const intl = useIntl();
+  const navigate = useNavigator();
 
   return (
     <CollectionCreateForm
@@ -58,13 +60,14 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
     >
       {({ change, data, handlers, submit, isSaveDisabled }) => (
         <Container>
-          <Backlink onClick={onBack}>
+          <Backlink href={collectionListUrl()}>
             {intl.formatMessage(sectionNames.collections)}
           </Backlink>
           <PageHeader
             title={intl.formatMessage({
+              id: "Fxa6xp",
               defaultMessage: "Add Collection",
-              description: "page header"
+              description: "page header",
             })}
           />
           <Grid>
@@ -74,7 +77,6 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
                 disabled={disabled}
                 errors={errors}
                 onChange={change}
-                onDescriptionChange={handlers.changeDescription}
               />
               <CardSpacer />
               <CollectionImage
@@ -83,7 +85,7 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
                     ? {
                         __typename: "Image",
                         alt: data.backgroundImageAlt,
-                        url: data.backgroundImage.url
+                        url: data.backgroundImage.url,
                       }
                     : null
                 }
@@ -93,9 +95,9 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
                       name: "backgroundImage",
                       value: {
                         url: null,
-                        value: null
-                      }
-                    }
+                        value: null,
+                      },
+                    },
                   } as any)
                 }
                 onImageUpload={file =>
@@ -104,9 +106,9 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
                       name: "backgroundImage",
                       value: {
                         url: URL.createObjectURL(file),
-                        value: file
-                      }
-                    }
+                        value: file,
+                      },
+                    },
                   } as any)
                 }
                 onChange={change}
@@ -119,8 +121,9 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
                 disabled={disabled}
                 descriptionPlaceholder=""
                 helperText={intl.formatMessage({
+                  id: "Rj8LxK",
                   defaultMessage:
-                    "Add search engine title and description to make this collection easier to find"
+                    "Add search engine title and description to make this collection easier to find",
                 })}
                 slug={data.slug}
                 slugPlaceholder={data.name}
@@ -135,18 +138,19 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
               <ChannelsAvailabilityCard
                 messages={{
                   hiddenLabel: intl.formatMessage({
+                    id: "V8FhTt",
                     defaultMessage: "Hidden",
-                    description: "collection label"
+                    description: "collection label",
                   }),
 
                   visibleLabel: intl.formatMessage({
+                    id: "9vQR6c",
                     defaultMessage: "Visible",
-                    description: "collection label"
-                  })
+                    description: "collection label",
+                  }),
                 }}
                 managePermissions={[PermissionEnum.MANAGE_PRODUCTS]}
                 errors={channelsErrors}
-                selectedChannelsCount={data.channelListings.length}
                 allChannelsCount={channelsCount}
                 channels={data.channelListings}
                 disabled={disabled}
@@ -158,7 +162,7 @@ const CollectionCreatePage: React.FC<CollectionCreatePageProps> = ({
           <Savebar
             state={saveButtonBarState}
             disabled={isSaveDisabled}
-            onCancel={onBack}
+            onCancel={() => navigate(collectionListUrl())}
             onSubmit={submit}
           />
         </Container>

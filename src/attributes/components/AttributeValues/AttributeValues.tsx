@@ -3,28 +3,35 @@ import {
   TableCell,
   TableFooter,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import {
   SortableTableBody,
-  SortableTableRow
+  SortableTableRow,
 } from "@saleor/components/SortableTable";
 import TablePagination from "@saleor/components/TablePagination";
 import {
   AttributeInputTypeEnum,
-  AttributeValueListFragment
+  AttributeValueListFragment,
 } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { renderCollection, stopPropagation } from "@saleor/misc";
-import { ListProps, RelayToFlat, ReorderAction } from "@saleor/types";
+import {
+  ListProps,
+  PaginateListProps,
+  RelayToFlat,
+  ReorderAction,
+} from "@saleor/types";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
 export interface AttributeValuesProps
-  extends Pick<ListProps, Exclude<keyof ListProps, "onRowClick">> {
+  extends Pick<ListProps, Exclude<keyof ListProps, "getRowHref">>,
+    PaginateListProps {
   disabled: boolean;
   values: RelayToFlat<AttributeValueListFragment>;
   onValueAdd: () => void;
@@ -37,35 +44,35 @@ export interface AttributeValuesProps
 const useStyles = makeStyles(
   theme => ({
     columnSwatch: {
-      width: 100
+      width: 100,
     },
     columnAdmin: {
-      width: 300
+      width: 300,
     },
     columnDrag: {
-      width: theme.spacing(6 + 1.5)
+      width: theme.spacing(6 + 1.5),
     },
     columnStore: {
-      width: "auto"
+      width: "auto",
     },
     dragIcon: {
-      cursor: "grab"
+      cursor: "grab",
     },
     iconCell: {
-      width: 84
+      width: 84,
     },
     link: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     swatch: {
       width: 32,
       height: 32,
       borderRadius: 4,
       backgroundSize: "cover",
-      backgroundPosition: "center"
-    }
+      backgroundPosition: "center",
+    },
   }),
-  { name: "AttributeValues" }
+  { name: "AttributeValues" },
 );
 
 const AttributeValues: React.FC<AttributeValuesProps> = ({
@@ -80,7 +87,7 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
   pageInfo,
   onNextPage,
   onPreviousPage,
-  inputType
+  inputType,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();
@@ -92,8 +99,9 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "J3uE0t",
           defaultMessage: "Attribute Values",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
           <Button
@@ -103,6 +111,7 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
             data-test-id="assign-value-button"
           >
             <FormattedMessage
+              id="+iVKR1"
               defaultMessage="Assign value"
               description="assign attribute value button"
             />
@@ -116,6 +125,7 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
             {isSwatch && (
               <TableCell className={classes.columnSwatch}>
                 <FormattedMessage
+                  id="NUevU9"
                   defaultMessage="Swatch"
                   description="attribute values list: slug column header"
                 />
@@ -123,12 +133,14 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
             )}
             <TableCell className={classes.columnAdmin}>
               <FormattedMessage
+                id="3psvRS"
                 defaultMessage="Admin"
                 description="attribute values list: slug column header"
               />
             </TableCell>
             <TableCell className={classes.columnStore}>
               <FormattedMessage
+                id="H60H6L"
                 defaultMessage="Default Store View"
                 description="attribute values list: name column header"
               />
@@ -155,7 +167,7 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
           {renderCollection(
             values,
             (value, valueIndex) => (
-              <SortableTableRow
+              <SortableTableRow<"row">
                 className={!!value ? classes.link : undefined}
                 hover={!!value}
                 onClick={!!value ? () => onValueUpdate(value.id) : undefined}
@@ -196,12 +208,13 @@ const AttributeValues: React.FC<AttributeValuesProps> = ({
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
                   <FormattedMessage
+                    id="g5zIpS"
                     defaultMessage="No values found"
                     description="No attribute values found"
                   />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </SortableTableBody>
       </ResponsiveTable>

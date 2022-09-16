@@ -4,21 +4,25 @@ import {
   TableFooter,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { StaffListQuery } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
 import {
   getUserInitials,
   getUserName,
   maybe,
-  renderCollection
+  renderCollection,
 } from "@saleor/misc";
-import { StaffListUrlSortField } from "@saleor/staff/urls";
+import {
+  StaffListUrlSortField,
+  staffMemberDetailsUrl,
+} from "@saleor/staff/urls";
 import { ListProps, RelayToFlat, SortPage } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import classNames from "classnames";
@@ -36,36 +40,36 @@ const useStyles = makeStyles(
       justifyContent: "center",
       marginRight: theme.spacing(1),
       overflow: "hidden",
-      width: 47
+      width: 47,
     },
     avatarDefault: {
       "& div": {
         color: theme.palette.primary.contrastText,
-        lineHeight: "47px"
+        lineHeight: "47px",
       },
       background: theme.palette.primary.main,
       height: 47,
       textAlign: "center",
-      width: 47
+      width: 47,
     },
     avatarImage: {
       pointerEvents: "none",
-      width: "100%"
+      width: "100%",
     },
     colEmail: {
-      width: 400
+      width: 400,
     },
     statusText: {
-      color: "#9E9D9D"
+      color: "#9E9D9D",
     },
     tableRow: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     wideColumn: {
-      width: "80%"
-    }
+      width: "80%",
+    },
   }),
-  { name: "StaffList" }
+  { name: "StaffList" },
 );
 
 interface StaffListProps extends ListProps, SortPage<StaffListUrlSortField> {
@@ -78,14 +82,10 @@ const StaffList: React.FC<StaffListProps> = props => {
   const {
     settings,
     disabled,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
-    pageInfo,
     sort,
-    staffMembers
+    staffMembers,
   } = props;
 
   const classes = useStyles(props);
@@ -110,6 +110,7 @@ const StaffList: React.FC<StaffListProps> = props => {
             className={classes.wideColumn}
           >
             <FormattedMessage
+              id="W32xfN"
               defaultMessage="Name"
               description="staff member full name"
             />
@@ -122,24 +123,17 @@ const StaffList: React.FC<StaffListProps> = props => {
             }
             onClick={() => onSort(StaffListUrlSortField.email)}
           >
-            <FormattedMessage defaultMessage="Email Address" />
+            <FormattedMessage id="xxQxLE" defaultMessage="Email Address" />
           </TableCellHeader>
         </TableRow>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
+            disabled={disabled}
             settings={settings}
-            hasNextPage={
-              pageInfo && !disabled ? pageInfo.hasNextPage : undefined
-            }
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : undefined
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -147,12 +141,12 @@ const StaffList: React.FC<StaffListProps> = props => {
         {renderCollection(
           staffMembers,
           staffMember => (
-            <TableRow
+            <TableRowLink
               className={classNames({
-                [classes.tableRow]: !!staffMember
+                [classes.tableRow]: !!staffMember,
               })}
               hover={!!staffMember}
-              onClick={!!staffMember ? onRowClick(staffMember.id) : undefined}
+              href={staffMember && staffMemberDetailsUrl(staffMember.id)}
               key={staffMember ? staffMember.id : "skeleton"}
             >
               <TableCell>
@@ -176,29 +170,34 @@ const StaffList: React.FC<StaffListProps> = props => {
                     () =>
                       staffMember.isActive
                         ? intl.formatMessage({
+                            id: "9Zlogd",
                             defaultMessage: "Active",
-                            description: "staff member status"
+                            description: "staff member status",
                           })
                         : intl.formatMessage({
+                            id: "7WzUxn",
                             defaultMessage: "Inactive",
-                            description: "staff member status"
+                            description: "staff member status",
                           }),
-                    <Skeleton />
+                    <Skeleton />,
                   )}
                 </Typography>
               </TableCell>
               <TableCell>
                 {maybe<React.ReactNode>(() => staffMember.email, <Skeleton />)}
               </TableCell>
-            </TableRow>
+            </TableRowLink>
           ),
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No staff members found" />
+                <FormattedMessage
+                  id="xJQX5t"
+                  defaultMessage="No staff members found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

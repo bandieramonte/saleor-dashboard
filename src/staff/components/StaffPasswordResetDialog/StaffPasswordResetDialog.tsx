@@ -3,7 +3,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import ConfirmButton from "@saleor/components/ConfirmButton";
@@ -32,7 +32,7 @@ export interface StaffPasswordResetDialogProps extends DialogProps {
 
 const initialForm: StaffPasswordResetDialogFormData = {
   newPassword: "",
-  oldPassword: ""
+  oldPassword: "",
 };
 
 const StaffPasswordResetDialog: React.FC<StaffPasswordResetDialogProps> = ({
@@ -40,20 +40,21 @@ const StaffPasswordResetDialog: React.FC<StaffPasswordResetDialogProps> = ({
   errors,
   open,
   onClose,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
   const dialogErrors = useModalDialogErrors(errors, open);
 
   const formErrors = getFormErrors(
     ["oldPassword", "newPassword"],
-    dialogErrors
+    dialogErrors,
   );
 
   return (
     <Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
       <DialogTitle>
         <FormattedMessage
+          id="+kb2lM"
           defaultMessage="Change Password"
           description="dialog header"
         />
@@ -67,11 +68,12 @@ const StaffPasswordResetDialog: React.FC<StaffPasswordResetDialogProps> = ({
                 fullWidth
                 helperText={getAccountErrorMessage(
                   formErrors.oldPassword,
-                  intl
+                  intl,
                 )}
                 label={intl.formatMessage({
+                  id: "GXdwyR",
                   defaultMessage: "Previous Password",
-                  description: "input label"
+                  description: "input label",
                 })}
                 name="oldPassword"
                 type="password"
@@ -84,13 +86,15 @@ const StaffPasswordResetDialog: React.FC<StaffPasswordResetDialogProps> = ({
                 helperText={
                   getAccountErrorMessage(formErrors.newPassword, intl) ||
                   intl.formatMessage({
+                    id: "qEJT8e",
                     defaultMessage:
-                      "New password must be at least 8 characters long"
+                      "New password must be at least 8 characters long",
                   })
                 }
                 label={intl.formatMessage({
+                  id: "cMFlOp",
                   defaultMessage: "New Password",
-                  description: "input label"
+                  description: "input label",
                 })}
                 name="newPassword"
                 type="password"

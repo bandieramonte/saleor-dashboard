@@ -1,10 +1,10 @@
 import { Card } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import Container from "@saleor/components/Container";
 import FilterBar from "@saleor/components/FilterBar";
 import PageHeader from "@saleor/components/PageHeader";
 import { OrderDraftListQuery, RefreshLimitsQuery } from "@saleor/graphql";
 import { sectionNames } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import { OrderDraftListUrlSortField } from "@saleor/orders/urls";
 import {
   FilterPageProps,
@@ -12,7 +12,7 @@ import {
   PageListProps,
   RelayToFlat,
   SortPage,
-  TabPageProps
+  TabPageProps,
 } from "@saleor/types";
 import { hasLimits, isLimitReached } from "@saleor/utils/limits";
 import React from "react";
@@ -23,7 +23,7 @@ import OrderLimitReached from "../OrderLimitReached";
 import {
   createFilterStructure,
   OrderDraftFilterKeys,
-  OrderDraftListFilterOpts
+  OrderDraftListFilterOpts,
 } from "./filters";
 
 export interface OrderDraftListPageProps
@@ -34,6 +34,7 @@ export interface OrderDraftListPageProps
     TabPageProps {
   limits: RefreshLimitsQuery["shop"]["limits"];
   orders: RelayToFlat<OrderDraftListQuery["draftOrders"]>;
+  onAdd: () => void;
 }
 
 const OrderDraftListPage: React.FC<OrderDraftListPageProps> = ({
@@ -64,13 +65,14 @@ const OrderDraftListPage: React.FC<OrderDraftListPageProps> = ({
           hasLimits(limits, "orders") &&
           intl.formatMessage(
             {
+              id: "w2eTzO",
               defaultMessage: "{count}/{max} orders",
-              description: "placed orders counter"
+              description: "placed orders counter",
             },
             {
               count: limits.currentUsage.orders,
-              max: limits.allowedUsage.orders
-            }
+              max: limits.allowedUsage.orders,
+            },
           )
         }
       >
@@ -80,6 +82,7 @@ const OrderDraftListPage: React.FC<OrderDraftListPageProps> = ({
           onClick={onAdd}
         >
           <FormattedMessage
+            id="LshEVn"
             defaultMessage="Create order"
             description="button"
           />
@@ -89,14 +92,16 @@ const OrderDraftListPage: React.FC<OrderDraftListPageProps> = ({
       <Card>
         <FilterBar
           allTabLabel={intl.formatMessage({
+            id: "7a1S4K",
             defaultMessage: "All Drafts",
-            description: "tab name"
+            description: "tab name",
           })}
           currentTab={currentTab}
           filterStructure={structure}
           initialSearch={initialSearch}
           searchPlaceholder={intl.formatMessage({
-            defaultMessage: "Search Draft"
+            id: "NJEe12",
+            defaultMessage: "Search Draft",
           })}
           tabs={tabs}
           onAll={onAll}

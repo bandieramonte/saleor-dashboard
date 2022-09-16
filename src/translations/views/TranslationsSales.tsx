@@ -1,7 +1,7 @@
 import {
   LanguageCodeEnum,
   useSaleTranslationDetailsQuery,
-  useUpdateSaleTranslationsMutation
+  useUpdateSaleTranslationsMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -14,11 +14,6 @@ import { useIntl } from "react-intl";
 
 import TranslationsSalesPage from "../components/TranslationsSalesPage";
 import { TranslationField, TranslationInputFieldName } from "../types";
-import {
-  languageEntitiesUrl,
-  languageEntityUrl,
-  TranslatableEntities
-} from "../urls";
 import { getParsedTranslationInputData } from "../utils";
 
 export interface TranslationsSalesQueryParams {
@@ -33,7 +28,7 @@ export interface TranslationsSalesProps {
 const TranslationsSales: React.FC<TranslationsSalesProps> = ({
   id,
   languageCode,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -41,32 +36,32 @@ const TranslationsSales: React.FC<TranslationsSalesProps> = ({
   const intl = useIntl();
 
   const saleTranslations = useSaleTranslationDetailsQuery({
-    variables: { id, language: languageCode }
+    variables: { id, language: languageCode },
   });
 
   const [
     updateTranslations,
-    updateTranslationsOpts
+    updateTranslationsOpts,
   ] = useUpdateSaleTranslationsMutation({
     onCompleted: data => {
       if (data.saleTranslate.errors.length === 0) {
         saleTranslations.refetch();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         navigate("?", { replace: true });
       }
-    }
+    },
   });
 
   const onEdit = (field: string) =>
     navigate(
       "?" +
         stringifyQs({
-          activeField: field
+          activeField: field,
         }),
-      { replace: true }
+      { replace: true },
     );
 
   const onDiscard = () => {
@@ -75,7 +70,7 @@ const TranslationsSales: React.FC<TranslationsSalesProps> = ({
 
   const handleSubmit = (
     { name: fieldName }: TranslationField<TranslationInputFieldName>,
-    data: string
+    data: string,
   ) =>
     extractMutationErrors(
       updateTranslations({
@@ -83,35 +78,26 @@ const TranslationsSales: React.FC<TranslationsSalesProps> = ({
           id,
           input: getParsedTranslationInputData({
             data,
-            fieldName
+            fieldName,
           }),
-          language: languageCode
-        }
-      })
+          language: languageCode,
+        },
+      }),
     );
 
   const translation = saleTranslations?.data?.translation;
 
   return (
     <TranslationsSalesPage
+      translationId={id}
       activeField={params.activeField}
       disabled={saleTranslations.loading || updateTranslationsOpts.loading}
       languages={shop?.languages || []}
       languageCode={languageCode}
       saveButtonState={updateTranslationsOpts.status}
-      onBack={() =>
-        navigate(
-          languageEntitiesUrl(languageCode, {
-            tab: TranslatableEntities.sales
-          })
-        )
-      }
       onEdit={onEdit}
       onDiscard={onDiscard}
       onSubmit={handleSubmit}
-      onLanguageChange={lang =>
-        navigate(languageEntityUrl(lang, TranslatableEntities.sales, id))
-      }
       data={
         translation?.__typename === "SaleTranslatableContent"
           ? translation

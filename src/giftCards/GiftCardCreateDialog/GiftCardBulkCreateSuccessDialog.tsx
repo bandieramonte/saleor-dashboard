@@ -3,9 +3,9 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography
+  Typography,
 } from "@material-ui/core";
-import { Button } from "@saleor/macaw-ui";
+import { Button } from "@saleor/components/Button";
 import { DialogProps } from "@saleor/types";
 import React, { useState } from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -20,7 +20,7 @@ interface GiftCardBulkCreateSuccessDialogProps extends DialogProps {
 const GiftCardBulkCreateSuccessDialog: React.FC<GiftCardBulkCreateSuccessDialogProps> = ({
   open,
   onClose,
-  idsToExport
+  idsToExport,
 }) => {
   const intl = useIntl();
   const [openEmailExport, setOpenEmailExport] = useState(false);

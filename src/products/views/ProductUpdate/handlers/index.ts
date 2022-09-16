@@ -2,12 +2,12 @@ import { FetchResult } from "@apollo/client";
 import {
   getAttributesAfterFileAttributesUpdate,
   mergeAttributeValueDeleteErrors,
-  mergeFileUploadErrors
+  mergeFileUploadErrors,
 } from "@saleor/attributes/utils/data";
 import {
   handleDeleteMultipleAttributeValues,
   handleUploadMultipleFiles,
-  prepareAttributesInput
+  prepareAttributesInput,
 } from "@saleor/attributes/utils/handlers";
 import { ChannelData } from "@saleor/channels/utils";
 import { VALUES_PAGINATE_BY } from "@saleor/config";
@@ -36,10 +36,13 @@ import {
   StockErrorFragment,
   UploadErrorFragment,
   VariantCreateMutation,
-  VariantCreateMutationVariables
+  VariantCreateMutationVariables,
 } from "@saleor/graphql";
 import { ProductUpdatePageSubmitData } from "@saleor/products/components/ProductUpdatePage";
-import { mapFormsetStockToStockInput } from "@saleor/products/utils/data";
+import {
+  getAttributeInputFromProduct,
+  mapFormsetStockToStockInput,
+} from "@saleor/products/utils/data";
 import { ReorderEvent } from "@saleor/types";
 import { move } from "@saleor/utils/lists";
 import { getParsedDataForJsonStringField } from "@saleor/utils/richText/misc";
@@ -50,7 +53,7 @@ import {
   getSimpleChannelsVariables,
   getSimpleProductErrors,
   getSimpleProductVariables,
-  getVariantChannelsInput
+  getVariantChannelsInput,
 } from "./utils";
 
 type SubmitErrors = Array<
@@ -66,13 +69,13 @@ export function createUpdateHandler(
   product: ProductFragment,
   allChannels: ChannelData[],
   uploadFile: (
-    variables: FileUploadMutationVariables
+    variables: FileUploadMutationVariables,
   ) => Promise<FetchResult<FileUploadMutation>>,
   updateProduct: (
-    variables: ProductUpdateMutationVariables
+    variables: ProductUpdateMutationVariables,
   ) => Promise<FetchResult<ProductUpdateMutation>>,
   updateSimpleProduct: (
-    variables: SimpleProductUpdateMutationVariables
+    variables: SimpleProductUpdateMutationVariables,
   ) => Promise<FetchResult<SimpleProductUpdateMutation>>,
   updateChannels: (options: {
     variables: ProductChannelListingUpdateMutationVariables;
@@ -84,31 +87,31 @@ export function createUpdateHandler(
     variables: VariantCreateMutationVariables;
   }) => Promise<FetchResult<VariantCreateMutation>>,
   deleteAttributeValue: (
-    variables: AttributeValueDeleteMutationVariables
-  ) => Promise<FetchResult<AttributeValueDeleteMutation>>
+    variables: AttributeValueDeleteMutationVariables,
+  ) => Promise<FetchResult<AttributeValueDeleteMutation>>,
 ) {
   return async (data: ProductUpdatePageSubmitData) => {
     let errors: SubmitErrors = [];
 
     const uploadFilesResult = await handleUploadMultipleFiles(
       data.attributesWithNewFileValue,
-      uploadFile
+      uploadFile,
     );
 
     const deleteAttributeValuesResult = await handleDeleteMultipleAttributeValues(
       data.attributesWithNewFileValue,
       product?.attributes,
-      deleteAttributeValue
+      deleteAttributeValue,
     );
 
     errors = [
       ...errors,
       ...mergeFileUploadErrors(uploadFilesResult),
-      ...mergeAttributeValueDeleteErrors(deleteAttributeValuesResult)
+      ...mergeAttributeValueDeleteErrors(deleteAttributeValuesResult),
     ];
     const updatedFileAttributes = getAttributesAfterFileAttributesUpdate(
       data.attributesWithNewFileValue,
-      uploadFilesResult
+      uploadFilesResult,
     );
 
     const productVariables: ProductUpdateMutationVariables = {
@@ -116,30 +119,35 @@ export function createUpdateHandler(
       input: {
         attributes: prepareAttributesInput({
           attributes: data.attributes,
-          updatedFileAttributes
+          prevAttributes: getAttributeInputFromProduct(product),
+          updatedFileAttributes,
         }),
         category: data.category,
         chargeTaxes: data.chargeTaxes,
         collections: data.collections,
+        shortDescription: data.shortDescription,
         description: getParsedDataForJsonStringField(data.description),
-        longDescription: getParsedDataForJsonStringField(data.longDescription),
         name: data.name,
         rating: data.rating,
         seo: {
           description: data.seoDescription,
-          title: data.seoTitle
+          title: data.seoTitle,
         },
         slug: data.slug,
-        taxCode: data.changeTaxCode ? data.taxCode : null
+        taxCode: data.changeTaxCode ? data.taxCode : null,
       },
-      firstValues: VALUES_PAGINATE_BY
+      firstValues: VALUES_PAGINATE_BY,
     };
 
     if (product.productType.hasVariants) {
       const result = await updateProduct(productVariables);
       errors = [...errors, ...result.data.productUpdate.errors];
 
-      await updateChannels(getChannelsVariables(product, allChannels, data));
+      if (product.variants.length === 0) {
+        await updateChannels(getSimpleChannelsVariables(data, product));
+      } else {
+        await updateChannels(getChannelsVariables(product, allChannels, data));
+      }
     } else {
       if (!product.variants.length) {
         const productVariantResult = await productVariantCreate({
@@ -148,17 +156,17 @@ export function createUpdateHandler(
               attributes:
                 product.productType.variantAttributes?.map(attribute => ({
                   id: attribute.id,
-                  values: attribute.choices.edges.map(value => value.node.slug)
+                  values: attribute.choices.edges.map(value => value.node.slug),
                 })) || [],
               product: product.id,
               sku: data.sku,
-              stocks: data.updateStocks.map(mapFormsetStockToStockInput)
-            }
-          }
+              stocks: data.updateStocks.map(mapFormsetStockToStockInput),
+            },
+          },
         });
         errors = [
           ...errors,
-          ...productVariantResult.data.productVariantCreate.errors
+          ...productVariantResult.data.productVariantCreate.errors,
         ];
 
         const variantId =
@@ -168,16 +176,16 @@ export function createUpdateHandler(
           updateVariantChannels({
             variables: {
               id: variantId,
-              input: getVariantChannelsInput(data)
-            }
+              input: getVariantChannelsInput(data),
+            },
           });
 
           await updateChannels(
-            getChannelsVariables(product, allChannels, data)
+            getChannelsVariables(product, allChannels, data),
           );
 
           const result = await updateSimpleProduct(
-            getSimpleProductVariables(productVariables, data, variantId)
+            getSimpleProductVariables(productVariables, data, variantId),
           );
           errors = [...errors, ...getSimpleProductErrors(result.data)];
         }
@@ -186,8 +194,8 @@ export function createUpdateHandler(
           getSimpleProductVariables(
             productVariables,
             data,
-            product.variants[0].id
-          )
+            product.variants[0].id,
+          ),
         );
         errors = [...errors, ...getSimpleProductErrors(result.data)];
 
@@ -196,8 +204,8 @@ export function createUpdateHandler(
         updateVariantChannels({
           variables: {
             id: product.variants[0].id,
-            input: getVariantChannelsInput(data)
-          }
+            input: getVariantChannelsInput(data),
+          },
         });
       }
     }
@@ -208,28 +216,28 @@ export function createUpdateHandler(
 
 export function createImageUploadHandler(
   id: string,
-  createProductImage: (variables: ProductMediaCreateMutationVariables) => void
+  createProductImage: (variables: ProductMediaCreateMutationVariables) => void,
 ) {
   return (file: File) =>
     createProductImage({
       alt: "",
       image: file,
-      product: id
+      product: id,
     });
 }
 
 export function createImageReorderHandler(
   product: ProductFragment,
   reorderProductImages: (
-    variables: ProductMediaReorderMutationVariables
-  ) => void
+    variables: ProductMediaReorderMutationVariables,
+  ) => void,
 ) {
   return ({ newIndex, oldIndex }: ReorderEvent) => {
     let ids = product.media.map(image => image.id);
     ids = arrayMove(ids, oldIndex, newIndex);
     reorderProductImages({
       mediaIds: ids,
-      productId: product.id
+      productId: product.id,
     });
   };
 }
@@ -243,8 +251,8 @@ export function createVariantReorderHandler<
 >(
   product: T,
   reorderProductVariants: (
-    variables: ProductVariantReorderMutationVariables
-  ) => void
+    variables: ProductVariantReorderMutationVariables,
+  ) => void,
 ) {
   return ({ newIndex, oldIndex }: ReorderEvent) => {
     const oldVariantOrder = [...product.variants];
@@ -254,16 +262,16 @@ export function createVariantReorderHandler<
         product.variants[oldIndex],
         product!.variants,
         areVariantsEqual,
-        newIndex
-      )
+        newIndex,
+      ),
     ];
 
     reorderProductVariants({
       move: {
         id: oldVariantOrder[oldIndex].id,
-        sortOrder: newIndex - oldIndex
+        sortOrder: newIndex - oldIndex,
       },
-      productId: product.id
+      productId: product.id,
     });
   };
 }

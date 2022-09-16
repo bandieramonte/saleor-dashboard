@@ -1,10 +1,11 @@
 import { Card, CardContent, Typography } from "@material-ui/core";
 import AddressFormatter from "@saleor/components/AddressFormatter";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import { Hr } from "@saleor/components/Hr";
 import { CustomerDetailsFragment } from "@saleor/graphql";
 import { buttonMessages } from "@saleor/intl";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -14,20 +15,20 @@ const useStyles = makeStyles(
   theme => ({
     label: {
       fontWeight: 600,
-      marginBottom: theme.spacing(1)
-    }
+      marginBottom: theme.spacing(1),
+    },
   }),
-  { name: "CustomerAddresses" }
+  { name: "CustomerAddresses" },
 );
 
 export interface CustomerAddressesProps {
   customer: CustomerDetailsFragment;
   disabled: boolean;
-  onAddressManageClick: () => void;
+  manageAddressHref: string;
 }
 
 const CustomerAddresses: React.FC<CustomerAddressesProps> = props => {
-  const { customer, disabled, onAddressManageClick } = props;
+  const { customer, disabled, manageAddressHref } = props;
   const classes = useStyles(props);
 
   const intl = useIntl();
@@ -36,15 +37,16 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "BfJGij",
           defaultMessage: "Address Information",
-          description: "header"
+          description: "header",
         })}
         toolbar={
           <Button
             data-test-id="manage-addresses"
             disabled={disabled}
             variant="tertiary"
-            onClick={onAddressManageClick}
+            href={manageAddressHref}
           >
             <FormattedMessage {...buttonMessages.manage} />
           </Button>
@@ -57,6 +59,7 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = props => {
             <CardContent>
               <Typography className={classes.label}>
                 <FormattedMessage
+                  id="biVFKU"
                   defaultMessage="Billing Address"
                   description="subsection header"
                 />
@@ -68,12 +71,13 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = props => {
           )}
           {maybe(
             () =>
-              customer.defaultBillingAddress && customer.defaultShippingAddress
+              customer.defaultBillingAddress && customer.defaultShippingAddress,
           ) && <Hr />}
           {maybe(() => customer.defaultShippingAddress) && (
             <CardContent>
               <Typography className={classes.label}>
                 <FormattedMessage
+                  id="Zd3Eew"
                   defaultMessage="Shipping Address"
                   description="subsection header"
                 />
@@ -88,13 +92,17 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = props => {
         maybe(() => customer.defaultShippingAddress) === null ? (
         <CardContent>
           <Typography>
-            <FormattedMessage defaultMessage="This customer has no addresses yet" />
+            <FormattedMessage
+              id="3d1RXL"
+              defaultMessage="This customer has no addresses yet"
+            />
           </Typography>
         </CardContent>
       ) : (
         <CardContent>
           <Typography className={classes.label}>
             <FormattedMessage
+              id="bHdFph"
               defaultMessage="Address"
               description="subsection header"
             />

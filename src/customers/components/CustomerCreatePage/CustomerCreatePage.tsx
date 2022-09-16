@@ -1,18 +1,21 @@
+import { Backlink } from "@saleor/components/Backlink";
 import { CardSpacer } from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Form from "@saleor/components/Form";
 import Grid from "@saleor/components/Grid";
 import PageHeader from "@saleor/components/PageHeader";
 import Savebar from "@saleor/components/Savebar";
+import { customerListUrl } from "@saleor/customers/urls";
 import {
   AccountErrorFragment,
   AddressInput,
-  CustomerCreateDataQuery
+  CustomerCreateDataQuery,
 } from "@saleor/graphql";
 import useAddressValidation from "@saleor/hooks/useAddressValidation";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
 import { extractMutationErrors } from "@saleor/misc";
 import createSingleAutocompleteSelectHandler from "@saleor/utils/handlers/singleAutocompleteSelectChangeHandler";
 import { mapCountriesToChoices } from "@saleor/utils/maps";
@@ -50,7 +53,7 @@ const initialForm: CustomerCreatePageFormData & AddressTypeInput = {
   phone: "",
   postalCode: "",
   streetAddress1: "",
-  streetAddress2: ""
+  streetAddress2: "",
 };
 
 export interface CustomerCreatePageProps {
@@ -58,7 +61,6 @@ export interface CustomerCreatePageProps {
   disabled: boolean;
   errors: AccountErrorFragment[];
   saveButtonBar: ConfirmButtonTransitionState;
-  onBack: () => void;
   onSubmit: (data: CustomerCreatePageSubmitData) => SubmitPromise;
 }
 
@@ -67,16 +69,16 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
   disabled,
   errors: apiErrors,
   saveButtonBar,
-  onBack,
-  onSubmit
+  onSubmit,
 }: CustomerCreatePageProps) => {
   const intl = useIntl();
+  const navigate = useNavigator();
 
   const [countryDisplayName, setCountryDisplayName] = React.useState("");
   const countryChoices = mapCountriesToChoices(countries);
   const {
     errors: validationErrors,
-    submit: handleSubmitWithAddress
+    submit: handleSubmitWithAddress,
   } = useAddressValidation<CustomerCreatePageFormData, void>(formData =>
     onSubmit({
       address: {
@@ -90,19 +92,19 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
         phone: formData.phone,
         postalCode: formData.postalCode,
         streetAddress1: formData.streetAddress1,
-        streetAddress2: formData.streetAddress2
+        streetAddress2: formData.streetAddress2,
       },
       customerFirstName: formData.customerFirstName,
       customerLastName: formData.customerLastName,
       email: formData.email,
-      note: formData.note
-    })
+      note: formData.note,
+    }),
   );
 
   const errors = [...apiErrors, ...validationErrors];
 
   const handleSubmit = (
-    formData: CustomerCreatePageFormData & AddressTypeInput
+    formData: CustomerCreatePageFormData & AddressTypeInput,
   ) => {
     const areAddressInputFieldsModified = ([
       "city",
@@ -114,7 +116,7 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
       "phone",
       "postalCode",
       "streetAddress1",
-      "streetAddress2"
+      "streetAddress2",
     ] as Array<keyof AddressTypeInput>)
       .map(key => formData[key])
       .some(field => field !== "");
@@ -129,8 +131,8 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
         customerFirstName: formData.customerFirstName,
         customerLastName: formData.customerLastName,
         email: formData.email,
-        note: formData.note
-      })
+        note: formData.note,
+      }),
     );
   };
 
@@ -145,18 +147,19 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
         const handleCountrySelect = createSingleAutocompleteSelectHandler(
           change,
           setCountryDisplayName,
-          countryChoices
+          countryChoices,
         );
 
         return (
           <Container>
-            <Backlink onClick={onBack}>
+            <Backlink href={customerListUrl()}>
               <FormattedMessage {...sectionNames.customers} />
             </Backlink>
             <PageHeader
               title={intl.formatMessage({
+                id: "N76zUg",
                 defaultMessage: "Create Customer",
-                description: "page header"
+                description: "page header",
               })}
             />
             <Grid>
@@ -190,7 +193,7 @@ const CustomerCreatePage: React.FC<CustomerCreatePageProps> = ({
               disabled={isSaveDisabled}
               state={saveButtonBar}
               onSubmit={submit}
-              onCancel={onBack}
+              onCancel={() => navigate(customerListUrl())}
             />
           </Container>
         );

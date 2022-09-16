@@ -1,28 +1,27 @@
 import { DialogContentText } from "@material-ui/core";
-import { categoryUrl } from "@saleor/categories/urls";
 import {
   ChannelSaleData,
   createChannelsDataWithSaleDiscountPrice,
-  createSortedChannelsDataFromSale
+  createSortedChannelsDataFromSale,
 } from "@saleor/channels/utils";
-import { collectionUrl } from "@saleor/collections/urls";
 import ActionDialog from "@saleor/components/ActionDialog";
 import useAppChannel from "@saleor/components/AppLayout/AppChannelContext";
 import AssignCategoriesDialog from "@saleor/components/AssignCategoryDialog";
 import AssignCollectionDialog from "@saleor/components/AssignCollectionDialog";
 import AssignProductDialog from "@saleor/components/AssignProductDialog";
 import AssignVariantDialog from "@saleor/components/AssignVariantDialog";
+import { Button } from "@saleor/components/Button";
 import ChannelsAvailabilityDialog from "@saleor/components/ChannelsAvailabilityDialog";
 import { WindowTitle } from "@saleor/components/WindowTitle";
 import { DEFAULT_INITIAL_SEARCH_DATA, PAGINATE_BY } from "@saleor/config";
 import SaleDetailsPage, {
-  SaleDetailsPageTab
+  SaleDetailsPageTab,
 } from "@saleor/discounts/components/SaleDetailsPage";
 import {
   saleListUrl,
   saleUrl,
   SaleUrlDialog,
-  SaleUrlQueryParams
+  SaleUrlQueryParams,
 } from "@saleor/discounts/urls";
 import {
   useSaleCataloguesAddMutation,
@@ -31,20 +30,19 @@ import {
   useSaleDetailsQuery,
   useSaleUpdateMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useChannels from "@saleor/hooks/useChannels";
 import useLocalPaginator, {
-  useSectionLocalPaginationState
+  useSectionLocalPaginationState,
 } from "@saleor/hooks/useLocalPaginator";
 import useLocalStorage from "@saleor/hooks/useLocalStorage";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
+import { PaginatorContext } from "@saleor/hooks/usePaginator";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import { maybe } from "@saleor/misc";
-import { productUrl, productVariantEditPath } from "@saleor/products/urls";
 import useCategorySearch from "@saleor/searches/useCategorySearch";
 import useCollectionSearch from "@saleor/searches/useCollectionSearch";
 import useProductSearch from "@saleor/searches/useProductSearch";
@@ -69,39 +67,39 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
-    params.ids
+    params.ids,
   );
   const intl = useIntl();
   const {
     loadMore: loadMoreCategories,
     search: searchCategories,
-    result: searchCategoriesOpts
+    result: searchCategoriesOpts,
   } = useCategorySearch({
-    variables: DEFAULT_INITIAL_SEARCH_DATA
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
   });
   const {
     loadMore: loadMoreCollections,
     search: searchCollections,
-    result: searchCollectionsOpts
+    result: searchCollectionsOpts,
   } = useCollectionSearch({
-    variables: DEFAULT_INITIAL_SEARCH_DATA
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
   });
   const {
     loadMore: loadMoreProducts,
     search: searchProducts,
-    result: searchProductsOpts
+    result: searchProductsOpts,
   } = useProductSearch({
-    variables: DEFAULT_INITIAL_SEARCH_DATA
+    variables: DEFAULT_INITIAL_SEARCH_DATA,
   });
 
   const { availableChannels } = useAppChannel(false);
 
   const [activeTab, setActiveTab] = useState<SaleDetailsPageTab>(
-    SaleDetailsPageTab.categories
+    SaleDetailsPageTab.categories,
   );
   const [paginationState, setPaginationState] = useSectionLocalPaginationState(
     PAGINATE_BY,
-    activeTab
+    activeTab,
   );
   const paginate = useLocalPaginator(setPaginationState);
   const changeTab = (tab: SaleDetailsPageTab) => {
@@ -113,8 +111,8 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
     displayLoader: true,
     variables: {
       id,
-      ...paginationState
-    }
+      ...paginationState,
+    },
   });
 
   const [openModal, closeModal] = createDialogActionHandlers<
@@ -124,7 +122,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
 
   const allChannels: ChannelSaleData[] = createChannelsDataWithSaleDiscountPrice(
     data?.sale,
-    availableChannels
+    availableChannels,
   );
   const saleChannelsChoices = createSortedChannelsDataFromSale(data?.sale);
 
@@ -138,15 +136,15 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
     isChannelSelected,
     isChannelsModalOpen,
     setCurrentChannels,
-    toggleAllChannels
+    toggleAllChannels,
   } = useChannels(
     saleChannelsChoices,
     params?.action,
     {
       closeModal,
-      openModal
+      openModal,
     },
-    { formId: SALE_UPDATE_FORM_ID }
+    { formId: SALE_UPDATE_FORM_ID },
   );
 
   const [selectedChannel] = useLocalStorage("salesListChannel", "");
@@ -154,7 +152,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
   const notifySaved = () =>
     notify({
       status: "success",
-      text: intl.formatMessage(commonMessages.savedChanges)
+      text: intl.formatMessage(commonMessages.savedChanges),
     });
 
   const [saleUpdate, saleUpdateOpts] = useSaleUpdateMutation({
@@ -162,7 +160,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
       if (data.saleUpdate.errors.length === 0) {
         notifySaved();
       }
-    }
+    },
   });
 
   const [saleDelete, saleDeleteOpts] = useSaleDeleteMutation({
@@ -171,24 +169,24 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         notifySaved();
         navigate(saleListUrl(), { replace: true });
       }
-    }
+    },
   });
 
   const [
     saleCataloguesAdd,
-    saleCataloguesAddOpts
+    saleCataloguesAddOpts,
   ] = useSaleCataloguesAddMutation({
     onCompleted: data => {
       if (data.saleCataloguesAdd.errors.length === 0) {
         notifySaved();
         closeModal();
       }
-    }
+    },
   });
 
   const [
     saleCataloguesRemove,
-    saleCataloguesRemoveOpts
+    saleCataloguesRemoveOpts,
   ] = useSaleCataloguesRemoveMutation({
     onCompleted: data => {
       if (data.saleCataloguesRemove.errors.length === 0) {
@@ -196,7 +194,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         closeModal();
         reset();
       }
-    }
+    },
   });
 
   const canOpenBulkActionDialog = maybe(() => params.ids.length > 0);
@@ -216,9 +214,9 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         ...paginationState,
         id,
         input: {
-          categories: ids
-        }
-      }
+          categories: ids,
+        },
+      },
     });
 
   const handleCollectionsUnassign = (ids: string[]) =>
@@ -227,9 +225,9 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         ...paginationState,
         id,
         input: {
-          collections: ids
-        }
-      }
+          collections: ids,
+        },
+      },
     });
 
   const handleProductsUnassign = (ids: string[]) =>
@@ -238,9 +236,9 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         ...paginationState,
         id,
         input: {
-          products: ids
-        }
-      }
+          products: ids,
+        },
+      },
     });
 
   const handleVariantsUnassign = (ids: string[]) =>
@@ -249,30 +247,30 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         ...paginationState,
         id,
         input: {
-          variants: ids
-        }
-      }
+          variants: ids,
+        },
+      },
     });
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
+  const { pageInfo, ...paginationValues } = paginate(
     tabPageInfo,
-    paginationState
+    paginationState,
   );
 
   const handleUpdate = createUpdateHandler(
     data?.sale,
     saleChannelsChoices,
-    variables => saleUpdate({ variables })
+    variables => saleUpdate({ variables }),
   );
   const handleSubmit = createMetadataUpdateHandler(
     data?.sale,
     handleUpdate,
     variables => updateMetadata({ variables }),
-    variables => updatePrivateMetadata({ variables })
+    variables => updatePrivateMetadata({ variables }),
   );
 
   return (
-    <>
+    <PaginatorContext.Provider value={{ ...pageInfo, ...paginationValues }}>
       <WindowTitle title={intl.formatMessage(sectionNames.sales)} />
       {!!allChannels?.length && (
         <ChannelsAvailabilityDialog
@@ -283,7 +281,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           onClose={handleChannelsModalClose}
           open={isChannelsModalOpen}
           title={intl.formatMessage(
-            messages.saleDetailsChannelAvailabilityDialogHeader
+            messages.saleDetailsChannelAvailabilityDialogHeader,
           )}
           selected={channelListElements.length}
           confirmButtonState="default"
@@ -295,48 +293,36 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         sale={maybe(() => data.sale)}
         allChannelsCount={allChannels?.length}
         channelListings={currentChannels}
-        hasChannelChanged={
-          saleChannelsChoices?.length !== currentChannels?.length
-        }
         disabled={loading || saleCataloguesRemoveOpts.loading}
         errors={saleUpdateOpts.data?.saleUpdate.errors || []}
         selectedChannelId={selectedChannel}
-        pageInfo={pageInfo}
         openChannelsModal={handleChannelsModalOpen}
         onChannelsChange={setCurrentChannels}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onCategoryAssign={() => openModal("assign-category")}
-        onCategoryClick={id => () => navigate(categoryUrl(id))}
         onCollectionAssign={() => openModal("assign-collection")}
         onCollectionUnassign={collectionId =>
           openModal("unassign-collection", {
-            ids: [collectionId]
+            ids: [collectionId],
           })
         }
         onCategoryUnassign={categoryId =>
           openModal("unassign-category", {
-            ids: [categoryId]
+            ids: [categoryId],
           })
         }
-        onCollectionClick={id => () => navigate(collectionUrl(id))}
         onProductAssign={() => openModal("assign-product")}
         onProductUnassign={productId =>
           openModal("unassign-product", {
-            ids: [productId]
+            ids: [productId],
           })
         }
-        onProductClick={id => () => navigate(productUrl(id))}
         onVariantAssign={() => openModal("assign-variant")}
         onVariantUnassign={variantId =>
           openModal("unassign-variant", {
-            ids: [variantId]
+            ids: [variantId],
           })
         }
-        onVariantClick={(productId, variantId) => () =>
-          navigate(productVariantEditPath(productId, variantId))}
         activeTab={activeTab}
-        onBack={() => navigate(saleListUrl())}
         onTabClick={changeTab}
         onSubmit={handleSubmit}
         onRemove={() => openModal("remove")}
@@ -345,7 +331,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           <Button
             onClick={() =>
               openModal("unassign-category", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -356,7 +342,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           <Button
             onClick={() =>
               openModal("unassign-collection", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -367,7 +353,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           <Button
             onClick={() =>
               openModal("unassign-product", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -378,7 +364,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           <Button
             onClick={() =>
               openModal("unassign-variant", {
-                ids: listElements
+                ids: listElements,
               })
             }
           >
@@ -404,13 +390,13 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               ...paginationState,
               id,
               input: {
-                variants: variants.map(variant => variant.id)
-              }
-            }
+                variants: variants.map(variant => variant.id),
+              },
+            },
           })
         }
         products={mapEdgesToItems(searchProductsOpts?.data?.search)?.filter(
-          suggestedProduct => suggestedProduct.id
+          suggestedProduct => suggestedProduct.id,
         )}
       />
       <AssignProductDialog
@@ -427,18 +413,18 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               ...paginationState,
               id,
               input: {
-                products
-              }
-            }
+                products,
+              },
+            },
           })
         }
         products={mapEdgesToItems(searchProductsOpts?.data?.search)?.filter(
-          suggestedProduct => suggestedProduct.id
+          suggestedProduct => suggestedProduct.id,
         )}
       />
       <AssignCategoriesDialog
         categories={mapEdgesToItems(searchCategoriesOpts?.data?.search)?.filter(
-          suggestedCategory => suggestedCategory.id
+          suggestedCategory => suggestedCategory.id,
         )}
         confirmButtonState={saleCataloguesAddOpts.status}
         hasMore={searchCategoriesOpts.data?.search.pageInfo.hasNextPage}
@@ -453,15 +439,15 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               ...paginationState,
               id,
               input: {
-                categories
-              }
-            }
+                categories,
+              },
+            },
           })
         }
       />
       <AssignCollectionDialog
         collections={mapEdgesToItems(
-          searchCollectionsOpts?.data?.search
+          searchCollectionsOpts?.data?.search,
         )?.filter(suggestedCategory => suggestedCategory.id)}
         confirmButtonState={saleCataloguesAddOpts.status}
         hasMore={searchCollectionsOpts.data?.search.pageInfo.hasNextPage}
@@ -476,22 +462,22 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               ...paginationState,
               id,
               input: {
-                collections
-              }
-            }
+                collections,
+              },
+            },
           })
         }
       />
       <ActionDialog
         open={params.action === "unassign-category" && canOpenBulkActionDialog}
         title={intl.formatMessage(
-          messages.saleDetailsUnassignCategoryDialogHeader
+          messages.saleDetailsUnassignCategoryDialogHeader,
         )}
         confirmButtonState={saleCataloguesRemoveOpts.status}
         onClose={closeModal}
         onConfirm={() => handleCategoriesUnassign(params.ids)}
         confirmButtonLabel={intl.formatMessage(
-          messages.saleDetailsUnassignCategory
+          messages.saleDetailsUnassignCategory,
         )}
       >
         {canOpenBulkActionDialog && (
@@ -500,7 +486,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               {...messages.saleDetailsUnassignCategoryDialog}
               values={{
                 counter: params.ids.length,
-                displayQuantity: <strong>{params.ids.length}</strong>
+                displayQuantity: <strong>{params.ids.length}</strong>,
               }}
             />
           </DialogContentText>
@@ -511,13 +497,13 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           params.action === "unassign-collection" && canOpenBulkActionDialog
         }
         title={intl.formatMessage(
-          messages.saleDetailsUnassignCollectionDialogHeader
+          messages.saleDetailsUnassignCollectionDialogHeader,
         )}
         confirmButtonState={saleCataloguesRemoveOpts.status}
         onClose={closeModal}
         onConfirm={() => handleCollectionsUnassign(params.ids)}
         confirmButtonLabel={intl.formatMessage(
-          messages.saleDetailsUnassignCollection
+          messages.saleDetailsUnassignCollection,
         )}
       >
         {canOpenBulkActionDialog && (
@@ -526,7 +512,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               {...messages.saleDetailsUnassignCollectionDialog}
               values={{
                 counter: params.ids.length,
-                displayQuantity: <strong>{params.ids.length}</strong>
+                displayQuantity: <strong>{params.ids.length}</strong>,
               }}
             />
           </DialogContentText>
@@ -535,13 +521,13 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
       <ActionDialog
         open={params.action === "unassign-product" && canOpenBulkActionDialog}
         title={intl.formatMessage(
-          messages.saleDetailsUnassignProductDialogHeader
+          messages.saleDetailsUnassignProductDialogHeader,
         )}
         confirmButtonState={saleCataloguesRemoveOpts.status}
         onClose={closeModal}
         onConfirm={() => handleProductsUnassign(params.ids)}
         confirmButtonLabel={intl.formatMessage(
-          messages.saleDetailsUnassignProduct
+          messages.saleDetailsUnassignProduct,
         )}
       >
         {canOpenBulkActionDialog && (
@@ -550,7 +536,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               {...messages.saleDetailsUnassignCategoryDialog}
               values={{
                 counter: params.ids.length,
-                displayQuantity: <strong>{params.ids.length}</strong>
+                displayQuantity: <strong>{params.ids.length}</strong>,
               }}
             />
           </DialogContentText>
@@ -559,13 +545,13 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
       <ActionDialog
         open={params.action === "unassign-variant" && canOpenBulkActionDialog}
         title={intl.formatMessage(
-          messages.saleDetailsUnassignVariantDialogHeader
+          messages.saleDetailsUnassignVariantDialogHeader,
         )}
         confirmButtonState={saleCataloguesRemoveOpts.status}
         onClose={closeModal}
         onConfirm={() => handleVariantsUnassign(params.ids)}
         confirmButtonLabel={intl.formatMessage(
-          messages.saleDetailsUnassignVariant
+          messages.saleDetailsUnassignVariant,
         )}
       >
         {canOpenBulkActionDialog && (
@@ -574,7 +560,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
               {...messages.saleDetailsUnassignVariantDialog}
               values={{
                 counter: params.ids.length,
-                displayQuantity: <strong>{params.ids.length}</strong>
+                displayQuantity: <strong>{params.ids.length}</strong>,
               }}
             />
           </DialogContentText>
@@ -588,7 +574,7 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
         variant="delete"
         onConfirm={() =>
           saleDelete({
-            variables: { id }
+            variables: { id },
           })
         }
       >
@@ -596,12 +582,12 @@ export const SaleDetails: React.FC<SaleDetailsProps> = ({ id, params }) => {
           <FormattedMessage
             {...messages.saleDetailsUnassignDialogDelete}
             values={{
-              saleName: <strong>{maybe(() => data.sale.name, "...")}</strong>
+              saleName: <strong>{maybe(() => data.sale.name, "...")}</strong>,
             }}
           />
         </DialogContentText>
       </ActionDialog>
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default SaleDetails;

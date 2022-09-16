@@ -1,10 +1,11 @@
 import { Card, TableBody, TableCell, TableRow } from "@material-ui/core";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import { CountryFragment } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import classNames from "classnames";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -24,48 +25,48 @@ const useStyles = makeStyles(
   theme => ({
     iconCell: {
       "&:last-child": {
-        paddingRight: theme.spacing(2)
+        paddingRight: theme.spacing(2),
       },
-      width: `calc(48px + ${theme.spacing(4)})`
+      width: `calc(48px + ${theme.spacing(4)})`,
     },
     indicator: {
       color: theme.palette.text.disabled,
       display: "inline-block",
       left: 0,
       marginRight: theme.spacing(0.5),
-      position: "absolute"
+      position: "absolute",
     },
     offsetCell: {
       "&:first-child": {
-        paddingLeft: theme.spacing(3)
+        paddingLeft: theme.spacing(3),
       },
-      position: "relative"
+      position: "relative",
     },
     pointer: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     root: {
       "&:last-child": {
-        paddingBottom: 0
+        paddingBottom: 0,
       },
-      paddingTop: 0
+      paddingTop: 0,
     },
     rotate: {
-      transform: "rotate(180deg)"
+      transform: "rotate(180deg)",
     },
     textRight: {
-      textAlign: "right"
+      textAlign: "right",
     },
     toLeft: {
       "&:first-child": {
-        paddingLeft: 0
-      }
+        paddingLeft: 0,
+      },
     },
     wideColumn: {
-      width: "100%"
-    }
+      width: "100%",
+    },
   }),
-  { name: "CountryList" }
+  { name: "CountryList" },
 );
 
 const CountryList: React.FC<CountryListProps> = props => {
@@ -75,7 +76,7 @@ const CountryList: React.FC<CountryListProps> = props => {
     emptyText,
     title,
     onCountryAssign,
-    onCountryUnassign
+    onCountryUnassign,
   } = props;
   const classes = useStyles(props);
 
@@ -97,6 +98,7 @@ const CountryList: React.FC<CountryListProps> = props => {
             data-test-id="assign-country"
           >
             <FormattedMessage
+              id="zZCCqz"
               defaultMessage="Assign countries"
               description="button"
             />
@@ -110,10 +112,11 @@ const CountryList: React.FC<CountryListProps> = props => {
               className={classNames(classes.wideColumn, classes.toLeft)}
             >
               <FormattedMessage
+                id="62Ywh2"
                 defaultMessage="{number} Countries"
                 description="number of countries"
                 values={{
-                  number: getStringOrPlaceholder(countries?.length.toString())
+                  number: getStringOrPlaceholder(countries?.length.toString()),
                 }}
               />
             </TableCell>
@@ -124,7 +127,7 @@ const CountryList: React.FC<CountryListProps> = props => {
                 <ArrowDropDownIcon
                   data-test-id="countries-drop-down-icon"
                   className={classNames({
-                    [classes.rotate]: !isCollapsed
+                    [classes.rotate]: !isCollapsed,
                   })}
                 />
               </IconButton>
@@ -149,7 +152,7 @@ const CountryList: React.FC<CountryListProps> = props => {
                           {country.country}
                         </>
                       ),
-                      <Skeleton />
+                      <Skeleton />,
                     )}
                   </TableCell>
                   <TableCell
@@ -172,7 +175,7 @@ const CountryList: React.FC<CountryListProps> = props => {
                     {emptyText}
                   </TableCell>
                 </TableRow>
-              )
+              ),
             )}
         </TableBody>
       </ResponsiveTable>

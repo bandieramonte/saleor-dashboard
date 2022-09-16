@@ -8,7 +8,7 @@ import { useIntl } from "react-intl";
 import urlJoin from "url-join";
 
 import ResetPasswordPage, {
-  ResetPasswordPageFormData
+  ResetPasswordPageFormData,
 } from "../components/ResetPasswordPage";
 import { newPasswordUrl, passwordResetSuccessUrl } from "../urls";
 
@@ -19,7 +19,7 @@ const ResetPasswordView: React.FC = () => {
 
   const [
     requestPasswordReset,
-    requestPasswordResetOpts
+    requestPasswordResetOpts,
   ] = useRequestPasswordResetMutation({
     onCompleted: data => {
       if (data.requestPasswordReset.errors.length === 0) {
@@ -30,15 +30,16 @@ const ResetPasswordView: React.FC = () => {
         ) {
           setError(
             intl.formatMessage({
+              id: "C0JLNW",
               defaultMessage:
-                "Provided email address does not exist in our database."
-            })
+                "Provided email address does not exist in our database.",
+            }),
           );
         } else {
           setError(intl.formatMessage(commonMessages.somethingWentWrong));
         }
       }
-    }
+    },
   });
 
   const handleSubmit = (data: ResetPasswordPageFormData) =>
@@ -49,17 +50,16 @@ const ResetPasswordView: React.FC = () => {
           redirectUrl: urlJoin(
             window.location.origin,
             APP_MOUNT_URI === "/" ? "" : APP_MOUNT_URI,
-            newPasswordUrl().replace(/\?/, "")
-          )
-        }
-      })
+            newPasswordUrl().replace(/\?/, ""),
+          ),
+        },
+      }),
     );
 
   return (
     <ResetPasswordPage
       disabled={requestPasswordResetOpts.loading}
       error={error}
-      onBack={() => navigate(APP_MOUNT_URI)}
       onSubmit={handleSubmit}
     />
   );

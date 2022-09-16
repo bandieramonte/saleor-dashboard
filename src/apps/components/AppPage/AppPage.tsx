@@ -1,11 +1,13 @@
 import { Typography } from "@material-ui/core";
+import { appsListPath } from "@saleor/apps/urls";
+import { Backlink } from "@saleor/components/Backlink";
+import { Button } from "@saleor/components/Button";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Grid from "@saleor/components/Grid";
 import Hr from "@saleor/components/Hr";
 import { AppQuery } from "@saleor/graphql";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, Button } from "@saleor/macaw-ui";
 import classNames from "classnames";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -17,17 +19,17 @@ import useSettingsBreadcrumbs from "./useSettingsBreadcrumbs";
 export interface AppPageProps {
   data: AppQuery["app"];
   url: string;
-  navigateToAbout: () => void;
-  onBack: () => void;
   onError: () => void;
+  aboutHref: string;
+  refetch?: () => void;
 }
 
 export const AppPage: React.FC<AppPageProps> = ({
   data,
   url,
-  navigateToAbout,
-  onBack,
-  onError
+  aboutHref,
+  onError,
+  refetch,
 }) => {
   const intl = useIntl();
   const classes = useStyles({});
@@ -35,7 +37,7 @@ export const AppPage: React.FC<AppPageProps> = ({
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink href={appsListPath}>
         {intl.formatMessage(sectionNames.apps)}
       </Backlink>
       <Grid variant="uniform">
@@ -44,7 +46,7 @@ export const AppPage: React.FC<AppPageProps> = ({
             <Typography
               className={classNames(
                 classes.breadcrumb,
-                classes.breadcrumbDisabled
+                classes.breadcrumbDisabled,
               )}
               variant="h5"
             >
@@ -63,30 +65,10 @@ export const AppPage: React.FC<AppPageProps> = ({
           </div>
         </div>
         <div className={classes.appSettingsHeader}>
-          <Button onClick={navigateToAbout} variant="primary">
-            <FormattedMessage defaultMessage="About" description="button" />
-          </Button>
-          <Button
-            component="a"
-            href={data?.homepageUrl}
-            variant="primary"
-            data-tc="open-app"
-            target="_blank"
-          >
+          <Button href={aboutHref} variant="primary">
             <FormattedMessage
-              defaultMessage="App home page"
-              description="button"
-            />
-          </Button>
-          <Button
-            component="a"
-            href={data?.supportUrl}
-            variant="primary"
-            data-tc="open-support"
-            target="_blank"
-          >
-            <FormattedMessage
-              defaultMessage="Support/FAQ"
+              id="UCHtG6"
+              defaultMessage="About"
               description="button"
             />
           </Button>
@@ -104,10 +86,10 @@ export const AppPage: React.FC<AppPageProps> = ({
             appToken={data.accessToken}
             onError={onError}
             appId={data.id}
+            refetch={refetch}
           />
         )}
       </div>
-      <CardSpacer />
     </Container>
   );
 };

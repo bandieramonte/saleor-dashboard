@@ -6,7 +6,7 @@ import {
   useCustomerAddressesQuery,
   useRemoveCustomerAddressMutation,
   useSetCustomerDefaultAddressMutation,
-  useUpdateCustomerAddressMutation
+  useUpdateCustomerAddressMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -22,7 +22,6 @@ import {
   customerAddressesUrl,
   CustomerAddressesUrlDialog,
   CustomerAddressesUrlQueryParams,
-  customerUrl
 } from "../urls";
 
 interface CustomerAddressesProps {
@@ -32,7 +31,7 @@ interface CustomerAddressesProps {
 
 const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
   id,
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -50,58 +49,58 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
         closeModal();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const [
     createCustomerAddress,
-    createCustomerAddressOpts
+    createCustomerAddressOpts,
   ] = useCreateCustomerAddressMutation({
     onCompleted: data => {
       if (data.addressCreate.errors.length === 0) {
         closeModal();
       }
-    }
+    },
   });
 
   const [
     updateCustomerAddress,
-    updateCustomerAddressOpts
+    updateCustomerAddressOpts,
   ] = useUpdateCustomerAddressMutation({
     onCompleted: data => {
       if (data.addressUpdate.errors.length === 0) {
         closeModal();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const [
     removeCustomerAddress,
-    removeCustomerAddressOpts
+    removeCustomerAddressOpts,
   ] = useRemoveCustomerAddressMutation({
     onCompleted: data => {
       if (data.addressDelete.errors.length === 0) {
         closeModal();
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
 
   const customerData = useCustomerAddressesQuery({
     displayLoader: true,
     variables: {
-      id
-    }
+      id,
+    },
   });
 
   const countryChoices = shop?.countries || [];
@@ -113,20 +112,19 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
         customer={customerData?.data?.user}
         disabled={customerData?.loading}
         onAdd={() => openModal("add")}
-        onBack={() => navigate(customerUrl(id))}
         onEdit={id =>
           openModal("edit", {
-            id
+            id,
           })
         }
         onRemove={id =>
           openModal("remove", {
-            id
+            id,
           })
         }
         onSetAsDefault={(addressId, type) =>
           setCustomerDefaultAddress({
-            variables: { addressId, type, userId: id }
+            variables: { addressId, type, userId: id },
           })
         }
       />
@@ -142,14 +140,14 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
           createCustomerAddress({
             variables: {
               id,
-              input
-            }
+              input,
+            },
           })
         }
       />
       <CustomerAddressDialog
         address={customerData?.data?.user.addresses.find(
-          addr => addr.id === params.id
+          addr => addr.id === params.id,
         )}
         confirmButtonState={updateCustomerAddressOpts.status}
         countries={countryChoices}
@@ -161,8 +159,8 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
           updateCustomerAddress({
             variables: {
               id: params.id,
-              input
-            }
+              input,
+            },
           })
         }
       />
@@ -170,21 +168,25 @@ const CustomerAddresses: React.FC<CustomerAddressesProps> = ({
         open={params.action === "remove"}
         variant="delete"
         title={intl.formatMessage({
+          id: "qLOBff",
           defaultMessage: "Delete Address",
-          description: "dialog header"
+          description: "dialog header",
         })}
         confirmButtonState={removeCustomerAddressOpts.status}
         onClose={closeModal}
         onConfirm={() =>
           removeCustomerAddress({
             variables: {
-              id: params.id
-            }
+              id: params.id,
+            },
           })
         }
       >
         <DialogContentText>
-          <FormattedMessage defaultMessage="Are you sure you want to delete this address from users address book?" />
+          <FormattedMessage
+            id="/kWzY1"
+            defaultMessage="Are you sure you want to delete this address from users address book?"
+          />
         </DialogContentText>
       </ActionDialog>
     </>

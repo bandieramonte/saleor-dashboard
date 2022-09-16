@@ -17,7 +17,7 @@ const OrderBulkCancelDialog: React.FC<OrderBulkCancelDialogProps> = ({
   numberOfOrders,
   open,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
 
@@ -27,18 +27,20 @@ const OrderBulkCancelDialog: React.FC<OrderBulkCancelDialogProps> = ({
       open={open}
       variant="delete"
       title={intl.formatMessage({
+        id: "NJbzcP",
         defaultMessage: "Cancel Orders",
-        description: "dialog header"
+        description: "dialog header",
       })}
       onClose={onClose}
       onConfirm={onConfirm}
     >
       <DialogContentText>
         <FormattedMessage
+          id="i+JSEZ"
           defaultMessage="{counter,plural,one{Are you sure you want to cancel this order?} other{Are you sure you want to cancel {displayQuantity} orders?}}"
           values={{
             counter: numberOfOrders,
-            displayQuantity: <strong>{numberOfOrders}</strong>
+            displayQuantity: <strong>{numberOfOrders}</strong>,
           }}
         />
       </DialogContentText>

@@ -1,5 +1,6 @@
 import { Card, CardContent } from "@material-ui/core";
 import HorizontalSpacer from "@saleor/apps/components/HorizontalSpacer";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import { Hr } from "@saleor/components/Hr";
 import Money from "@saleor/components/Money";
@@ -8,9 +9,9 @@ import {
   OrderAction,
   OrderDetailsFragment,
   OrderDiscountType,
-  OrderStatus
+  OrderStatus,
 } from "@saleor/graphql";
-import { Button, makeStyles, Pill } from "@saleor/macaw-ui";
+import { makeStyles, Pill } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -19,31 +20,31 @@ import { orderPaymentMessages, paymentButtonMessages } from "./messages";
 import {
   extractOrderGiftCardUsedAmount,
   extractOutstandingBalance,
-  extractRefundedAmount
+  extractRefundedAmount,
 } from "./utils";
 
 const useStyles = makeStyles(
   theme => ({
     header: {
       display: "flex",
-      justifyContent: "space-between"
+      justifyContent: "space-between",
     },
     root: {
       ...theme.typography.body1,
       lineHeight: 1.9,
-      width: "100%"
+      width: "100%",
     },
     textRight: {
-      textAlign: "right"
+      textAlign: "right",
     },
     totalRow: {
-      fontWeight: 600
+      fontWeight: 600,
     },
     titleContainer: {
-      display: "flex"
-    }
+      display: "flex",
+    },
   }),
-  { name: "OrderPayment" }
+  { name: "OrderPayment" },
 );
 
 interface OrderPaymentProps {
@@ -61,12 +62,12 @@ const OrderPayment: React.FC<OrderPaymentProps> = props => {
   const intl = useIntl();
 
   const canCapture = maybe(() => order.actions, []).includes(
-    OrderAction.CAPTURE
+    OrderAction.CAPTURE,
   );
   const canVoid = maybe(() => order.actions, []).includes(OrderAction.VOID);
   const canRefund = maybe(() => order.actions, []).includes(OrderAction.REFUND);
   const canMarkAsPaid = maybe(() => order.actions, []).includes(
-    OrderAction.MARK_AS_PAID
+    OrderAction.MARK_AS_PAID,
   );
   const payment = transformPaymentStatus(order?.paymentStatus, intl);
   const refundedAmount = extractRefundedAmount(order);
@@ -158,7 +159,7 @@ const OrderPayment: React.FC<OrderPaymentProps> = props => {
                     values={{
                       quantity: order.lines
                         .map(line => line.quantity)
-                        .reduce((curr, prev) => prev + curr, 0)
+                        .reduce((curr, prev) => prev + curr, 0),
                     }}
                   />
                 )}
@@ -253,7 +254,7 @@ const OrderPayment: React.FC<OrderPaymentProps> = props => {
                   <Money
                     money={{
                       amount: usedGiftCardAmount,
-                      currency: order?.total?.gross?.currency
+                      currency: order?.total?.gross?.currency,
                     }}
                   />
                 </td>

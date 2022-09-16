@@ -1,12 +1,13 @@
 import placeholderImage from "@assets/images/placeholder255x255.png";
 import { ProductErrorCode } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import CategoryUpdatePage, {
   CategoryPageTab,
-  CategoryUpdatePageProps
+  CategoryUpdatePageProps,
 } from "../../../categories/components/CategoryUpdatePage";
 import { category as categoryFixture } from "../../../categories/fixtures";
 import { listActionsProps } from "../../../fixtures";
@@ -16,35 +17,27 @@ const category = categoryFixture(placeholderImage);
 
 const updateProps: Omit<CategoryUpdatePageProps, "classes"> = {
   category,
+  categoryId: "123",
   changeTab: undefined,
   currentTab: CategoryPageTab.categories,
   disabled: false,
   errors: [],
-  onAddCategory: undefined,
-  onAddProduct: undefined,
-  onBack: () => undefined,
-  onCategoryClick: () => undefined,
+  addProductHref: "",
   onDelete: () => undefined,
   onImageDelete: () => undefined,
   onImageUpload: () => undefined,
-  onNextPage: undefined,
-  onPreviousPage: undefined,
-  onProductClick: () => undefined,
   onSubmit: () => undefined,
-  pageInfo: {
-    hasNextPage: true,
-    hasPreviousPage: true
-  },
   productListToolbar: null,
   products: mapEdgesToItems(category.products),
   saveButtonBarState: "default",
   subcategories: mapEdgesToItems(category.children),
   subcategoryListToolbar: null,
-  ...listActionsProps
+  ...listActionsProps,
 };
 
 storiesOf("Views / Categories / Update category", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <CategoryUpdatePage {...updateProps} />)
   .add("products", () => (
     <CategoryUpdatePage
@@ -57,7 +50,7 @@ storiesOf("Views / Categories / Update category", module)
       {...updateProps}
       category={{
         ...category,
-        backgroundImage: null
+        backgroundImage: null,
       }}
     />
   ))
@@ -87,16 +80,16 @@ storiesOf("Views / Categories / Update category", module)
         {
           code: ProductErrorCode.REQUIRED,
           field: "name",
-          message: "Product field name required"
+          message: "Product field name required",
         },
         {
           code: ProductErrorCode.REQUIRED,
           field: "description",
-          message: "Product field description required"
-        }
+          message: "Product field description required",
+        },
       ].map(err => ({
         __typename: "ProductError",
-        ...err
+        ...err,
       }))}
     />
   ));

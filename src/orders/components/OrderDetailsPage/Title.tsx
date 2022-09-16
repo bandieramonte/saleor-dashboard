@@ -12,13 +12,13 @@ const useStyles = makeStyles(
   theme => ({
     container: {
       alignItems: "center",
-      display: "flex"
+      display: "flex",
     },
     statusContainer: {
-      marginLeft: theme.spacing(2)
-    }
+      marginLeft: theme.spacing(2),
+    },
   }),
-  { name: "OrderDetailsTitle" }
+  { name: "OrderDetailsTitle" },
 );
 
 const Title: React.FC<TitleProps> = props => {
@@ -35,8 +35,8 @@ const Title: React.FC<TitleProps> = props => {
   return (
     <div className={classes.container}>
       {intl.formatMessage(
-        { defaultMessage: "Order #{orderNumber}" },
-        { orderNumber: order?.number }
+        { id: "AqXzM2", defaultMessage: "Order #{orderNumber}" },
+        { orderNumber: order?.number },
       )}
       <div className={classes.statusContainer}>
         <Pill label={localized} color={status} />

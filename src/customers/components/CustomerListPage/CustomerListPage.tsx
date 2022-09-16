@@ -1,19 +1,22 @@
 import { Card } from "@material-ui/core";
 import { useUserPermissions } from "@saleor/auth/hooks/useUserPermissions";
+import { Button } from "@saleor/components/Button";
 import Container from "@saleor/components/Container";
 import FilterBar from "@saleor/components/FilterBar";
 import PageHeader from "@saleor/components/PageHeader";
-import { CustomerListUrlSortField } from "@saleor/customers/urls";
+import {
+  customerAddUrl,
+  CustomerListUrlSortField,
+} from "@saleor/customers/urls";
 import { ListCustomersQuery } from "@saleor/graphql";
 import { sectionNames } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import {
   FilterPageProps,
   ListActions,
   PageListProps,
   RelayToFlat,
   SortPage,
-  TabPageProps
+  TabPageProps,
 } from "@saleor/types";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
@@ -22,7 +25,7 @@ import CustomerList from "../CustomerList/CustomerList";
 import {
   createFilterStructure,
   CustomerFilterKeys,
-  CustomerListFilterOpts
+  CustomerListFilterOpts,
 } from "./filters";
 
 export interface CustomerListPageProps
@@ -38,7 +41,6 @@ const CustomerListPage: React.FC<CustomerListPageProps> = ({
   currentTab,
   filterOpts,
   initialSearch,
-  onAdd,
   onAll,
   onFilterChange,
   onSearchChange,
@@ -58,10 +60,11 @@ const CustomerListPage: React.FC<CustomerListPageProps> = ({
       <PageHeader title={intl.formatMessage(sectionNames.customers)}>
         <Button
           variant="primary"
-          onClick={onAdd}
+          href={customerAddUrl}
           data-test-id="create-customer"
         >
           <FormattedMessage
+            id="QLVddq"
             defaultMessage="Create customer"
             description="button"
           />
@@ -70,14 +73,16 @@ const CustomerListPage: React.FC<CustomerListPageProps> = ({
       <Card>
         <FilterBar
           allTabLabel={intl.formatMessage({
+            id: "xQK2EC",
             defaultMessage: "All Customers",
-            description: "tab name"
+            description: "tab name",
           })}
           currentTab={currentTab}
           filterStructure={structure}
           initialSearch={initialSearch}
           searchPlaceholder={intl.formatMessage({
-            defaultMessage: "Search Customer"
+            id: "2mRLis",
+            defaultMessage: "Search Customer",
           })}
           tabs={tabs}
           onAll={onAll}

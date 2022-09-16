@@ -8,9 +8,8 @@ import AppPage, { AppPageProps } from "./AppPage";
 const props: AppPageProps = {
   data: appDetails,
   url: appDetails.appUrl,
-  navigateToAbout: () => undefined,
-  onBack: () => undefined,
-  onError: () => undefined
+  aboutHref: "",
+  onError: () => undefined,
 };
 
 storiesOf("Views / Apps / App", module)

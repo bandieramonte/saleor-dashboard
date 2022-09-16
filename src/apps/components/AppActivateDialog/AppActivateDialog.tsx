@@ -18,38 +18,42 @@ const AppActivateDialog: React.FC<AppActivateDialogProps> = ({
   open,
   name,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
 
   return (
     <ActionDialog
       confirmButtonLabel={intl.formatMessage({
+        id: "D3E2b5",
         defaultMessage: "Activate",
-        description: "button label"
+        description: "button label",
       })}
       confirmButtonState={confirmButtonState}
       open={open}
       onClose={onClose}
       onConfirm={onConfirm}
       title={intl.formatMessage({
+        id: "YHNozE",
         defaultMessage: "Activate App",
-        description: "dialog header"
+        description: "dialog header",
       })}
       variant="default"
     >
       <DialogContentText>
         {["", null].includes(name) ? (
           <FormattedMessage
+            id="Q47ovw"
             defaultMessage="Are you sure you want to activate this app? Activating will start gathering events."
             description="activate app"
           />
         ) : (
           <FormattedMessage
+            id="JbUg2b"
             defaultMessage="Are you sure you want to activate {name}? Activating will start gathering events."
             description="activate app"
             values={{
-              name: <strong>{getStringOrPlaceholder(name)}</strong>
+              name: <strong>{getStringOrPlaceholder(name)}</strong>,
             }}
           />
         )}

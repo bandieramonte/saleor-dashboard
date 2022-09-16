@@ -6,50 +6,50 @@ import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles(
   theme => ({
     clickableRow: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     colName: {
       textAlign: "left",
-      width: "auto"
+      width: "auto",
     },
     colPrice: {
       textAlign: "right",
-      width: 150
+      width: 150,
     },
     colQuantity: {
       textAlign: "center",
-      width: 110
+      width: 110,
     },
     colSku: {
       textAlign: "right",
       textOverflow: "ellipsis",
-      width: 140
+      width: 140,
     },
     colTotal: {
       textAlign: "right",
-      width: 170
+      width: 170,
     },
     infoLabel: {
-      display: "inline-block"
+      display: "inline-block",
     },
     infoLabelWithMargin: {
-      marginBottom: theme.spacing()
+      marginBottom: theme.spacing(),
     },
     infoRow: {
-      padding: theme.spacing(2, 3)
+      padding: theme.spacing(2, 3),
     },
     orderNumber: {
       display: "inline",
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     statusBar: {
-      paddingTop: 0
+      paddingTop: 0,
     },
     table: {
-      tableLayout: "fixed"
-    }
+      tableLayout: "fixed",
+    },
   }),
-  { name: "TableHeader" }
+  { name: "TableHeader" },
 );
 
 const TableHeader = () => {
@@ -68,30 +68,35 @@ const TableHeader = () => {
         <TableRow>
           <TableCell className={classes.colName}>
             <FormattedMessage
+              id="WE8IFE"
               defaultMessage="Product"
               description="product name"
             />
           </TableCell>
           <TableCell className={classes.colSku}>
             <FormattedMessage
+              id="8J81ri"
               defaultMessage="SKU"
               description="ordered product sku"
             />
           </TableCell>
           <TableCell className={classes.colQuantity}>
             <FormattedMessage
+              id="tvpAXl"
               defaultMessage="Quantity"
               description="ordered product quantity"
             />
           </TableCell>
           <TableCell className={classes.colPrice}>
             <FormattedMessage
+              id="b810WJ"
               defaultMessage="Price"
               description="product price"
             />
           </TableCell>
           <TableCell className={classes.colTotal}>
             <FormattedMessage
+              id="qT6YYk"
               defaultMessage="Total"
               description="order line total price"
             />

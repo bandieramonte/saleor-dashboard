@@ -4,7 +4,7 @@ export function createCollection(name, slug = name) {
       name:"${name}",
       slug:"${name}"
     }){
-      collectionErrors{
+      errors{
         field
         message
       }
@@ -46,7 +46,7 @@ export function deleteCollection(collectionId) {
       collection{
         id
       }
-      collectionErrors{
+      errors{
         field
         message
       }
@@ -61,7 +61,41 @@ export function addProductToCollection({ collectionId, productId }) {
       collectionId: "${collectionId}"
       products: ["${productId}"]
     ) {
+      collection{
+        products(first:100){
+          totalCount
+          edges{
+            node{
+              id
+              name
+            }
+          }
+        }
+      }
       errors {
+        message
+      }
+    }
+  }`;
+  return cy.sendRequestWithQuery(mutation);
+}
+
+export function addChannelToCollection({
+  collectionId,
+  channelId,
+  isPublished = true,
+}) {
+  const mutation = `mutation collectionChannelListingUpdate {
+    collectionChannelListingUpdate(
+      id: "${collectionId}", 
+      input: {
+        addChannels: {
+          channelId: "${channelId}"
+          isPublished: ${isPublished}
+        }
+      }) {
+      errors {
+       field
         message
       }
     }

@@ -7,7 +7,7 @@ interface ProductVariantSetDefaultProps {
 }
 
 const ProductVariantSetDefault: React.FC<ProductVariantSetDefaultProps> = ({
-  onSetDefaultVariant
+  onSetDefaultVariant,
 }) => {
   const intl = useIntl();
 
@@ -16,12 +16,13 @@ const ProductVariantSetDefault: React.FC<ProductVariantSetDefaultProps> = ({
       menuItems={[
         {
           label: intl.formatMessage({
+            id: "SZH0fw",
             defaultMessage: "Set as default",
-            description: "set variant as default, button"
+            description: "set variant as default, button",
           }),
           onSelect: onSetDefaultVariant,
-          testId: "setDefault"
-        }
+          testId: "setDefault",
+        },
       ]}
       data-test-id="menu"
     />

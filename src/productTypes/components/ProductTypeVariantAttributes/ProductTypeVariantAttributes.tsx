@@ -1,17 +1,20 @@
 import { Card, TableCell, TableRow, Tooltip } from "@material-ui/core";
 import HelpOutline from "@material-ui/icons/HelpOutline";
+import { attributeUrl } from "@saleor/attributes/urls";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import {
   SortableTableBody,
-  SortableTableRow
+  SortableTableRow,
 } from "@saleor/components/SortableTable";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableHead from "@saleor/components/TableHead";
 import { ProductAttributeType, ProductTypeDetailsQuery } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
-import { maybe, renderCollection, stopPropagation } from "@saleor/misc";
+import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
+import { maybe, renderCollection } from "@saleor/misc";
 import { ListActions, ReorderAction } from "@saleor/types";
 import capitalize from "lodash/capitalize";
 import React, { useEffect } from "react";
@@ -21,41 +24,41 @@ const useStyles = makeStyles(
   {
     colAction: {
       "&:last-child": {
-        paddingRight: 0
+        paddingRight: 0,
       },
-      width: 80
+      width: 80,
     },
     colGrab: {
-      width: 60
+      width: 60,
     },
     colName: {
-      width: 200
+      width: 200,
     },
     colSlug: {
-      width: 200
+      width: 200,
     },
     colVariant: {
-      width: 150
+      width: 150,
     },
     colVariantContent: {
       display: "flex",
-      alignItems: "center"
+      alignItems: "center",
     },
     colVariantDisabled: {
       fill: "#28234A",
       fillOpacity: 0.6,
       "&:hover": {
-        fillOpacity: 1
-      }
+        fillOpacity: 1,
+      },
     },
     link: {
-      cursor: "pointer"
+      cursor: "pointer",
     },
     textLeft: {
-      textAlign: "left"
-    }
+      textAlign: "left",
+    },
   },
-  { name: "ProductTypeAttributes" }
+  { name: "ProductTypeAttributes" },
 );
 
 interface ProductTypeVariantAttributesProps extends ListActions {
@@ -65,24 +68,22 @@ interface ProductTypeVariantAttributesProps extends ListActions {
   testId?: string;
   selectedVariantAttributes: string[];
   onAttributeAssign: (type: ProductAttributeType) => void;
-  onAttributeClick: (id: string) => void;
   onAttributeReorder: ReorderAction;
   onAttributeUnassign: (id: string) => void;
-  onAttributeVariantSelection?: (isActive: boolean) => void;
-  setSelectedVariantAttributes?: (data: string[]) => void;
+  setSelectedVariantAttributes: (data: string[]) => void;
 }
 
 function handleContainerAssign(
   variantID: string,
   isSelected: boolean,
   selectedAttributes: string[],
-  setSelectedAttributes: (data: string[]) => void
+  setSelectedAttributes: (data: string[]) => void,
 ) {
   if (isSelected) {
     setSelectedAttributes(
       selectedAttributes.filter(
-        selectedContainer => selectedContainer !== variantID
-      )
+        selectedContainer => selectedContainer !== variantID,
+      ),
     );
   } else {
     setSelectedAttributes([...selectedAttributes, variantID]);
@@ -103,12 +104,10 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
     type,
     testId,
     onAttributeAssign,
-    onAttributeClick,
     onAttributeReorder,
     onAttributeUnassign,
-    onAttributeVariantSelection,
     setSelectedVariantAttributes,
-    selectedVariantAttributes
+    selectedVariantAttributes,
   } = props;
   const classes = useStyles(props);
 
@@ -119,7 +118,7 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
     setSelectedVariantAttributes(
       assignedVariantAttributes
         .map(elem => (elem.variantSelection ? elem.attribute.id : undefined))
-        .filter(Boolean) || []
+        .filter(Boolean) || [],
     );
   }, []);
 
@@ -127,8 +126,9 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
     <Card data-test-id="variant-attributes">
       <CardTitle
         title={intl.formatMessage({
+          id: "skEK/i",
           defaultMessage: "Variant Attributes",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
           <Button
@@ -137,6 +137,7 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
             onClick={() => onAttributeAssign(ProductAttributeType[type])}
           >
             <FormattedMessage
+              id="uxPpRx"
               defaultMessage="Assign attribute"
               description="button"
             />
@@ -159,22 +160,24 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
             dragRows
             selected={selected}
             items={assignedVariantAttributes?.map(
-              selectedAttribute => selectedAttribute.attribute
+              selectedAttribute => selectedAttribute.attribute,
             )}
             toggleAll={toggleAll}
             toolbar={toolbar}
           >
             <TableCell className={classes.colName}>
-              <FormattedMessage defaultMessage="Attribute name" />
+              <FormattedMessage id="kTr2o8" defaultMessage="Attribute name" />
             </TableCell>
             <TableCell className={classes.colName}>
               <FormattedMessage
+                id="nf3XSt"
                 defaultMessage="Slug"
                 description="attribute internal name"
               />
             </TableCell>
             <TableCell className={classes.colName}>
               <FormattedMessage
+                id="4k9rMQ"
                 defaultMessage="Variant Selection"
                 description="variant attribute checkbox"
               />
@@ -191,16 +194,16 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
                 ? isChecked(attribute.id)
                 : false;
               const isSelected = !!selectedVariantAttributes.find(
-                selectedAttribute => selectedAttribute === attribute.id
+                selectedAttribute => selectedAttribute === attribute.id,
               );
               const variantSelectionDisabled = ![
                 "DROPDOWN",
                 "BOOLEAN",
                 "SWATCH",
-                "NUMERIC"
+                "NUMERIC",
               ].includes(attribute.inputType);
               const readableAttributeInputType = capitalize(
-                attribute.inputType.split("_").join(" ")
+                attribute.inputType.split("_").join(" "),
               );
 
               return (
@@ -208,11 +211,7 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
                   selected={isVariantSelected}
                   className={!!attribute ? classes.link : undefined}
                   hover={!!attribute}
-                  onClick={
-                    !!attribute
-                      ? () => onAttributeClick(attribute.id)
-                      : undefined
-                  }
+                  href={attribute ? attributeUrl(attribute.id) : undefined}
                   key={maybe(() => attribute.id)}
                   index={attributeIndex || 0}
                   data-test-id={"id-" + +maybe(() => attribute.id)}
@@ -245,23 +244,21 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
                         checked={isSelected}
                         disabled={disabled || variantSelectionDisabled}
                         disableClickPropagation
-                        onChange={() => {
-                          onAttributeVariantSelection(true);
+                        onChange={() =>
                           handleContainerAssign(
                             attribute.id,
                             isSelected,
                             selectedVariantAttributes,
-                            setSelectedVariantAttributes
-                          );
-                        }}
+                            setSelectedVariantAttributes,
+                          )
+                        }
                       />
                       {!!variantSelectionDisabled && (
                         <Tooltip
                           title={
                             <FormattedMessage
-                              defaultMessage={
-                                "{inputType} attributes cannot be used as variant selection attributes."
-                              }
+                              id="vlLyvk"
+                              defaultMessage="{inputType} attributes cannot be used as variant selection attributes."
                               values={{ inputType: readableAttributeInputType }}
                             />
                           }
@@ -272,14 +269,14 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
                     </div>
                   </TableCell>
                   <TableCell className={classes.colAction}>
-                    <IconButton
-                      data-test-id="delete-icon"
-                      onClick={stopPropagation(() =>
-                        onAttributeUnassign(attribute.id)
-                      )}
-                    >
-                      <DeleteIcon color="primary" />
-                    </IconButton>
+                    <TableButtonWrapper>
+                      <IconButton
+                        data-test-id="delete-icon"
+                        onClick={() => onAttributeUnassign(attribute.id)}
+                      >
+                        <DeleteIcon color="primary" />
+                      </IconButton>
+                    </TableButtonWrapper>
                   </TableCell>
                 </SortableTableRow>
               );
@@ -287,10 +284,13 @@ const ProductTypeVariantAttributes: React.FC<ProductTypeVariantAttributesProps> 
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No attributes found" />
+                  <FormattedMessage
+                    id="ztQgD8"
+                    defaultMessage="No attributes found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </SortableTableBody>
       </ResponsiveTable>

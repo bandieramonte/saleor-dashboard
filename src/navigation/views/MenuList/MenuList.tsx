@@ -1,11 +1,11 @@
 import { DialogContentText } from "@material-ui/core";
 import ActionDialog from "@saleor/components/ActionDialog";
-import { configurationMenuUrl } from "@saleor/configuration";
+import { Button } from "@saleor/components/Button";
 import {
   useMenuBulkDeleteMutation,
   useMenuCreateMutation,
   useMenuDeleteMutation,
-  useMenuListQuery
+  useMenuListQuery,
 } from "@saleor/graphql";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useListSettings from "@saleor/hooks/useListSettings";
@@ -13,10 +13,10 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext,
 } from "@saleor/hooks/usePaginator";
-import { commonMessages } from "@saleor/intl";
-import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { buttonMessages, commonMessages } from "@saleor/intl";
 import { getStringOrPlaceholder, maybe } from "@saleor/misc";
 import { getById } from "@saleor/orders/components/OrderReturnPage/utils";
 import { ListViews } from "@saleor/types";
@@ -37,12 +37,11 @@ interface MenuListProps {
 const MenuList: React.FC<MenuListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
-    params.ids
+    params.ids,
   );
   const { updateListSettings, settings } = useListSettings(
-    ListViews.NAVIGATION_LIST
+    ListViews.NAVIGATION_LIST,
   );
 
   usePaginationReset(menuListUrl, params, settings.rowNumber);
@@ -55,29 +54,29 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         ...params,
         action: undefined,
         id: undefined,
-        ids: undefined
+        ids: undefined,
       }),
-      { replace: true }
+      { replace: true },
     );
 
   const paginationState = createPaginationState(settings.rowNumber, params);
   const queryVariables = React.useMemo(
     () => ({
       ...paginationState,
-      sort: getSortQueryVariables(params)
+      sort: getSortQueryVariables(params),
     }),
-    [params, settings.rowNumber]
+    [params, settings.rowNumber],
   );
   const { data, loading, refetch } = useMenuListQuery({
     displayLoader: true,
-    variables: queryVariables
+    variables: queryVariables,
   });
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.menus.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.menus.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params,
+  });
 
   const [menuCreate, menuCreateOpts] = useMenuCreateMutation({
     onCompleted: data => {
@@ -85,13 +84,13 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         notify({
           status: "success",
           text: intl.formatMessage({
+            id: "ugnggZ",
             defaultMessage: "Created menu",
-            id: "menuListCreatedMenu"
-          })
+          }),
         });
         navigate(menuUrl(data.menuCreate.menu.id));
       }
-    }
+    },
   });
 
   const [menuDelete, menuDeleteOpts] = useMenuDeleteMutation({
@@ -100,14 +99,14 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         notify({
           status: "success",
           text: intl.formatMessage({
+            id: "OwG/0z",
             defaultMessage: "Deleted menu",
-            id: "menuListDeletedMenu"
-          })
+          }),
         });
         closeModal();
         refetch();
       }
-    }
+    },
   });
 
   const [menuBulkDelete, menuBulkDeleteOpts] = useMenuBulkDeleteMutation({
@@ -115,66 +114,52 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
       if (data.menuBulkDelete.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         closeModal();
         reset();
         refetch();
       }
-    }
+    },
   });
 
   const handleSort = createSortHandler(navigate, menuListUrl, params);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <MenuListPage
         disabled={loading}
         menus={mapEdgesToItems(data?.menus)}
         settings={settings}
-        onAdd={() =>
-          navigate(
-            menuListUrl({
-              action: "add"
-            })
-          )
-        }
-        onBack={() => navigate(configurationMenuUrl)}
         onDelete={id =>
           navigate(
             menuListUrl({
               action: "remove",
-              id
-            })
+              id,
+            }),
           )
         }
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onUpdateListSettings={updateListSettings}
-        onRowClick={id => () => navigate(menuUrl(id))}
         onSort={handleSort}
-        pageInfo={pageInfo}
         isChecked={isSelected}
         selected={listElements.length}
         sort={getSortParams(params)}
         toggle={toggle}
         toggleAll={toggleAll}
         toolbar={
-          <IconButton
-            variant="secondary"
-            color="primary"
+          <Button
             onClick={() =>
               navigate(
                 menuListUrl({
                   ...params,
                   action: "remove-many",
-                  ids: listElements
-                })
+                  ids: listElements,
+                }),
               )
             }
           >
-            <DeleteIcon />
-          </IconButton>
+            <FormattedMessage {...buttonMessages.remove} />
+          </Button>
         }
       />
       <MenuCreateDialog
@@ -185,7 +170,7 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         onClose={closeModal}
         onConfirm={formData =>
           menuCreate({
-            variables: { input: formData }
+            variables: { input: formData },
           })
         }
       />
@@ -196,25 +181,25 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         onConfirm={() =>
           menuDelete({
             variables: {
-              id: params.id
-            }
+              id: params.id,
+            },
           })
         }
         variant="delete"
         title={intl.formatMessage({
+          id: "QzseV7",
           defaultMessage: "Delete Menu",
           description: "dialog header",
-          id: "menuListDeleteMenuHeader"
         })}
       >
         <DialogContentText>
           <FormattedMessage
+            id="bj1U23"
             defaultMessage="Are you sure you want to delete {menuName}?"
-            id="menuListDeleteMenuContent"
             values={{
               menuName: getStringOrPlaceholder(
-                mapEdgesToItems(data?.menus)?.find(getById(params.id))?.name
-              )
+                mapEdgesToItems(data?.menus)?.find(getById(params.id))?.name,
+              ),
             }}
           />
         </DialogContentText>
@@ -228,33 +213,33 @@ const MenuList: React.FC<MenuListProps> = ({ params }) => {
         onConfirm={() =>
           menuBulkDelete({
             variables: {
-              ids: params.ids
-            }
+              ids: params.ids,
+            },
           })
         }
         variant="delete"
         title={intl.formatMessage({
+          id: "1LBYpE",
           defaultMessage: "Delete Menus",
           description: "dialog header",
-          id: "menuListDeleteMenusHeader"
         })}
       >
         <DialogContentText>
           <FormattedMessage
+            id="svK+kv"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this menu?} other{Are you sure you want to delete {displayQuantity} menus?}}"
-            id="menuListDeleteMenusContent"
             values={{
               counter: maybe(() => params.ids.length.toString(), "..."),
               displayQuantity: (
                 <strong>
                   {maybe(() => params.ids.length.toString(), "...")}
                 </strong>
-              )
+              ),
             }}
           />
         </DialogContentText>
       </ActionDialog>
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default MenuList;

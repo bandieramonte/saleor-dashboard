@@ -12,9 +12,10 @@ import WarehousesSection from "./WarehousesSection";
 
 const messages = defineMessages({
   title: {
+    id: "t/R8nK",
     defaultMessage: "Settings",
-    description: "ShippingZoneSettingsCard title"
-  }
+    description: "ShippingZoneSettingsCard title",
+  },
 });
 
 export interface ShippingZoneSettingsCardProps {
@@ -44,7 +45,7 @@ export const ShippingZoneSettingsCard: React.FC<ShippingZoneSettingsCardProps> =
   onWarehouseChange,
   allChannels,
   onChannelChange,
-  channelsDisplayValues
+  channelsDisplayValues,
 }) => {
   const intl = useIntl();
 

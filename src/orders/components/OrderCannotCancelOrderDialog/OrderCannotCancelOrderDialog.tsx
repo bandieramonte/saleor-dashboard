@@ -3,10 +3,11 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import { buttonMessages } from "@saleor/intl";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import { DialogProps } from "@saleor/types";
 import React from "react";
 import { FormattedMessage } from "react-intl";
@@ -14,17 +15,17 @@ import { FormattedMessage } from "react-intl";
 const useStyles = makeStyles(
   theme => ({
     button: {
-      backgroundColor: theme.palette.error.main
-    }
+      backgroundColor: theme.palette.error.main,
+    },
   }),
   {
-    name: "OrderCannotCancelOrderDialog"
-  }
+    name: "OrderCannotCancelOrderDialog",
+  },
 );
 
 const OrderCannotCancelOrderDialog: React.FC<DialogProps> = ({
   open,
-  onClose
+  onClose,
 }) => {
   const classes = useStyles({});
 
@@ -32,13 +33,17 @@ const OrderCannotCancelOrderDialog: React.FC<DialogProps> = ({
     <Dialog onClose={onClose} open={open} maxWidth="sm">
       <DialogTitle>
         <FormattedMessage
+          id="NhQboB"
           defaultMessage="Saleor couldn’t cancel order"
           description="dialog header"
         />
       </DialogTitle>
       <DialogContent>
         <DialogContentText>
-          <FormattedMessage defaultMessage="There are still fulfillments created for this order. Cancel the fulfillments first before you cancel the order." />
+          <FormattedMessage
+            id="b+jcaN"
+            defaultMessage="There are still fulfillments created for this order. Cancel the fulfillments first before you cancel the order."
+          />
         </DialogContentText>
       </DialogContent>
       <DialogActions>

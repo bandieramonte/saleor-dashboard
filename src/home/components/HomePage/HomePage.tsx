@@ -24,19 +24,19 @@ const useStyles = makeStyles(
       gridColumnGap: theme.spacing(3),
       gridTemplateColumns: "1fr 1fr",
       [theme.breakpoints.down("sm")]: {
-        gridColumnGap: theme.spacing(1)
+        gridColumnGap: theme.spacing(1),
       },
       [theme.breakpoints.down("xs")]: {
-        gridTemplateColumns: "1fr"
-      }
+        gridTemplateColumns: "1fr",
+      },
     },
     icon: {
       "& path": {
-        fill: theme.palette.primary.main
-      }
-    }
+        fill: theme.palette.primary.main,
+      },
+    },
   }),
-  { name: "HomePage" }
+  { name: "HomePage" },
 );
 
 export interface HomePageProps {
@@ -48,11 +48,10 @@ export interface HomePageProps {
   sales: HomeQuery["salesToday"]["gross"];
   topProducts: RelayToFlat<HomeQuery["productTopToday"]> | null;
   userName: string;
-  onCreateNewChannelClick: () => void;
-  onOrdersToCaptureClick: () => void;
-  onOrdersToFulfillClick: () => void;
-  onProductClick: (productId: string, variantId: string) => void;
-  onProductsOutOfStockClick: () => void;
+  createNewChannelHref: string;
+  ordersToFulfillHref: string;
+  ordersToCaptureHref: string;
+  productsOutOfStockHref: string;
   noChannel: boolean;
 }
 
@@ -62,16 +61,15 @@ const HomePage: React.FC<HomePageProps> = props => {
     orders,
     sales,
     topProducts,
-    onProductClick,
     activities,
-    onCreateNewChannelClick,
-    onOrdersToCaptureClick,
-    onOrdersToFulfillClick,
-    onProductsOutOfStockClick,
+    createNewChannelHref,
+    ordersToFulfillHref,
+    ordersToCaptureHref,
+    productsOutOfStockHref,
     ordersToCapture = 0,
     ordersToFulfill = 0,
     productsOutOfStock = 0,
-    noChannel
+    noChannel,
   } = props;
 
   const classes = useStyles(props);
@@ -127,10 +125,10 @@ const HomePage: React.FC<HomePageProps> = props => {
             </div>
           </RequirePermissions>
           <HomeNotificationTable
-            onCreateNewChannelClick={onCreateNewChannelClick}
-            onOrdersToCaptureClick={onOrdersToCaptureClick}
-            onOrdersToFulfillClick={onOrdersToFulfillClick}
-            onProductsOutOfStockClick={onProductsOutOfStockClick}
+            createNewChannelHref={createNewChannelHref}
+            ordersToFulfillHref={ordersToFulfillHref}
+            ordersToCaptureHref={ordersToCaptureHref}
+            productsOutOfStockHref={productsOutOfStockHref}
             ordersToCapture={ordersToCapture}
             ordersToFulfill={ordersToFulfill}
             productsOutOfStock={productsOutOfStock}
@@ -141,12 +139,11 @@ const HomePage: React.FC<HomePageProps> = props => {
             <RequirePermissions
               requiredPermissions={[
                 PermissionEnum.MANAGE_ORDERS,
-                PermissionEnum.MANAGE_PRODUCTS
+                PermissionEnum.MANAGE_PRODUCTS,
               ]}
             >
               <HomeProductListCard
                 testId="top-products"
-                onRowClick={onProductClick}
                 topProducts={topProducts}
               />
               <CardSpacer />

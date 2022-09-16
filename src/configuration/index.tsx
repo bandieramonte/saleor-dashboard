@@ -38,183 +38,190 @@ export function createConfigurationMenu(intl: IntlShape): MenuSection[] {
   return [
     {
       label: intl.formatMessage({
-        defaultMessage: "Attributes and Product Types"
+        id: "HP6m+q",
+        defaultMessage: "Attributes and Product Types",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "19/lwV",
             defaultMessage: "Determine attributes used to create product types",
-            id: "configurationMenuAttributes"
           }),
           icon: <Attributes />,
           permissions: [
             PermissionEnum.MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES,
-            PermissionEnum.MANAGE_PAGE_TYPES_AND_ATTRIBUTES
+            PermissionEnum.MANAGE_PAGE_TYPES_AND_ATTRIBUTES,
           ],
           title: intl.formatMessage(sectionNames.attributes),
           url: attributeListUrl(),
-          testId: "configuration-menu-attributes"
+          testId: "configuration-menu-attributes",
         },
         {
           description: intl.formatMessage({
+            id: "n0RwMK",
             defaultMessage: "Define types of products you sell",
-            id: "configurationMenuProductTypes"
           }),
           icon: <ProductTypes />,
           permissions: [PermissionEnum.MANAGE_PRODUCT_TYPES_AND_ATTRIBUTES],
           title: intl.formatMessage(sectionNames.productTypes),
           url: productTypeListUrl(),
-          testId: "configuration-menu-product-types"
-        }
-      ]
+          testId: "configuration-menu-product-types",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Product Settings"
+        id: "jFrdB5",
+        defaultMessage: "Product Settings",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "EIULpW",
             defaultMessage: "Manage how your store charges tax",
-            id: "configurationMenuTaxes"
           }),
           icon: <Taxes />,
           permissions: [PermissionEnum.MANAGE_SETTINGS],
           title: intl.formatMessage(sectionNames.taxes),
           url: taxSection,
-          testId: "configuration-menu-taxes"
-        }
-      ]
+          testId: "configuration-menu-taxes",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Staff Settings"
+        id: "UN+yTt",
+        defaultMessage: "Staff Settings",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "RQUkVW",
             defaultMessage: "Manage your employees and their permissions",
-            id: "configurationMenuStaff"
           }),
           icon: <StaffMembers />,
           permissions: [PermissionEnum.MANAGE_STAFF],
           title: intl.formatMessage(sectionNames.staff),
           url: staffListUrl(),
-          testId: "configuration-menu-staff"
+          testId: "configuration-menu-staff",
         },
         {
           description: intl.formatMessage({
+            id: "ivJ1qt",
             defaultMessage:
               "Manage your permission groups and their permissions",
-            id: "configurationMenuPermissionGroups"
           }),
           icon: <PermissionGroups />,
           permissions: [PermissionEnum.MANAGE_STAFF],
           title: intl.formatMessage(sectionNames.permissionGroups),
           url: permissionGroupListUrl(),
-          testId: "configuration-menu-permission-groups"
-        }
-      ]
+          testId: "configuration-menu-permission-groups",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Shipping Settings"
+        id: "gTr0qE",
+        defaultMessage: "Shipping Settings",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "zxs6G3",
             defaultMessage: "Manage how you ship out orders",
-            id: "configurationMenuShipping"
           }),
           icon: <ShippingMethods />,
           permissions: [PermissionEnum.MANAGE_SHIPPING],
           title: intl.formatMessage(sectionNames.shipping),
           url: shippingZonesListUrl(),
-          testId: "configurationMenuShipping"
+          testId: "configurationMenuShipping",
         },
         {
           description: intl.formatMessage({
+            id: "5RmuD+",
             defaultMessage: "Manage and update your warehouse information",
-            id: "configurationMenuWarehouses"
           }),
           icon: <Warehouses />,
           permissions: [PermissionEnum.MANAGE_PRODUCTS],
           title: intl.formatMessage(sectionNames.warehouses),
           url: warehouseSection,
-          testId: "configuration-menu-warehouses"
-        }
-      ]
+          testId: "configuration-menu-warehouses",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Multichannel"
+        id: "MWSacl",
+        defaultMessage: "Multichannel",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "8vJCJ4",
             defaultMessage: "Define and manage your sales channels",
-            id: "configurationMenuChannels"
           }),
           icon: <Channels />,
           permissions: [PermissionEnum.MANAGE_CHANNELS],
           title: intl.formatMessage(sectionNames.channels),
           url: channelsListUrl(),
-          testId: "configuration-menu-channels"
-        }
-      ]
+          testId: "configuration-menu-channels",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Content Management"
+        id: "HjXnIf",
+        defaultMessage: "Content Management",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "JPH/uP",
             defaultMessage: "Define types of content pages used in your store",
-            id: "configurationMenuPageTypes"
           }),
           icon: <PageTypes />,
           permissions: [
             PermissionEnum.MANAGE_PAGES,
-            PermissionEnum.MANAGE_PAGE_TYPES_AND_ATTRIBUTES
+            PermissionEnum.MANAGE_PAGE_TYPES_AND_ATTRIBUTES,
           ],
           title: intl.formatMessage(sectionNames.pageTypes),
           url: pageTypeListUrl(),
-          testId: "configuration-menu-page-types"
-        }
-      ]
+          testId: "configuration-menu-page-types",
+        },
+      ],
     },
     {
       label: intl.formatMessage({
-        defaultMessage: "Miscellaneous"
+        id: "YZl6cv",
+        defaultMessage: "Miscellaneous",
       }),
       menuItems: [
         {
           description: intl.formatMessage({
+            id: "hpMcW8",
             defaultMessage: "Define how users can navigate through your store",
-            id: "configurationMenuNavigation"
           }),
           icon: <Navigation />,
           permissions: [PermissionEnum.MANAGE_MENUS],
           title: intl.formatMessage(sectionNames.navigation),
           url: menuListUrl(),
-          testId: "configuration-menu-navigation"
+          testId: "configuration-menu-navigation",
         },
         {
           description: intl.formatMessage({
+            id: "5BajZK",
             defaultMessage: "View and update your site settings",
-            id: "configurationMenuSiteSettings"
           }),
           icon: <SiteSettings />,
           permissions: [PermissionEnum.MANAGE_SETTINGS],
           title: intl.formatMessage(sectionNames.siteSettings),
           url: siteSettingsUrl(),
-          testId: "configuration-menu-site-settings"
+          testId: "configuration-menu-site-settings",
         },
         {
           description: intl.formatMessage({
+            id: "m19JfL",
             defaultMessage: "View and update your plugins and their settings.",
-            id: "configurationPluginsPages"
           }),
           icon: (
             <Plugins
@@ -226,10 +233,10 @@ export function createConfigurationMenu(intl: IntlShape): MenuSection[] {
           permissions: [PermissionEnum.MANAGE_PLUGINS],
           title: intl.formatMessage(sectionNames.plugins),
           url: pluginListUrl(),
-          testId: "configuration-plugins-pages"
-        }
-      ]
-    }
+          testId: "configuration-plugins-pages",
+        },
+      ],
+    },
   ];
 }
 
@@ -240,7 +247,7 @@ export const ConfigurationSection: React.FC = () => {
 
   const versions = {
     dashboardVersion,
-    coreVersion: shop?.version ?? ""
+    coreVersion: shop?.version ?? "",
   };
 
   const user = useUser();

@@ -13,10 +13,10 @@ import { AddressTypeInput } from "../../types";
 const useStyles = makeStyles(
   {
     overflow: {
-      overflow: "visible"
-    }
+      overflow: "visible",
+    },
   },
-  { name: "CustomerCreateAddress" }
+  { name: "CustomerCreateAddress" },
 );
 
 export interface CustomerCreateAddressProps {
@@ -37,7 +37,7 @@ const CustomerCreateAddress: React.FC<CustomerCreateAddressProps> = props => {
     disabled,
     errors,
     onChange,
-    onCountryChange
+    onCountryChange,
   } = props;
   const classes = useStyles(props);
 
@@ -47,13 +47,17 @@ const CustomerCreateAddress: React.FC<CustomerCreateAddressProps> = props => {
     <Card className={classes.overflow}>
       <CardTitle
         title={intl.formatMessage({
+          id: "jGGnSZ",
           defaultMessage: "Primary Address",
-          description: "page header"
+          description: "page header",
         })}
       />
       <CardContent className={classes.overflow}>
         <Typography>
-          <FormattedMessage defaultMessage="The primary address of this customer." />
+          <FormattedMessage
+            id="wNQzS/"
+            defaultMessage="The primary address of this customer."
+          />
         </Typography>
         <FormSpacer />
         <AddressEdit

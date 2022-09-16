@@ -2,10 +2,7 @@ import { gql } from "@apollo/client";
 
 export const initialProductFilterAttributesQuery = gql`
   query InitialProductFilterAttributes {
-    attributes(
-      first: 100
-      filter: { filterableInDashboard: true, type: PRODUCT_TYPE }
-    ) {
+    attributes(first: 100, filter: { type: PRODUCT_TYPE }) {
       edges {
         node {
           id
@@ -83,12 +80,7 @@ export const productListQuery = gql`
           ...ProductWithChannelListings
           updatedAt
           attributes @include(if: $hasSelectedAttributes) {
-            attribute {
-              id
-            }
-            values {
-              ...AttributeValue
-            }
+            ...ProductListAttribute
           }
         }
       }
@@ -216,6 +208,9 @@ export const productVariantCreateQuery = gql`
       thumbnail {
         url
       }
+      defaultVariant {
+        id
+      }
       variants {
         id
         name
@@ -253,31 +248,6 @@ export const productMediaQuery = gql`
   }
 `;
 
-export const availableInGridAttributes = gql`
-  query AvailableInGridAttributes($first: Int!, $after: String) {
-    availableInGrid: attributes(
-      first: $first
-      after: $after
-      filter: {
-        availableInGrid: true
-        isVariantOnly: false
-        type: PRODUCT_TYPE
-      }
-    ) {
-      edges {
-        node {
-          id
-          name
-        }
-      }
-      pageInfo {
-        ...PageInfo
-      }
-      totalCount
-    }
-  }
-`;
-
 export const gridAttributes = gql`
   query GridAttributes($ids: [ID!]!) {
     grid: attributes(first: 25, filter: { ids: $ids }) {
@@ -285,27 +255,6 @@ export const gridAttributes = gql`
         node {
           id
           name
-        }
-      }
-    }
-  }
-`;
-
-export const createMultipleVariantsData = gql`
-  query CreateMultipleVariantsData(
-    $id: ID!
-    $firstValues: Int
-    $afterValues: String
-    $lastValues: Int
-    $beforeValues: String
-  ) {
-    product(id: $id) {
-      ...ProductVariantAttributes
-    }
-    warehouses(first: 20) {
-      edges {
-        node {
-          ...Warehouse
         }
       }
     }

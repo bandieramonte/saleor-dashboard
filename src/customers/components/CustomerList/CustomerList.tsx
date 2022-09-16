@@ -2,14 +2,15 @@ import { TableBody, TableCell, TableFooter, TableRow } from "@material-ui/core";
 import { useUserPermissions } from "@saleor/auth/hooks/useUserPermissions";
 import Checkbox from "@saleor/components/Checkbox";
 import RequirePermissions, {
-  hasPermissions
+  hasPermissions,
 } from "@saleor/components/RequirePermissions";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
-import { CustomerListUrlSortField } from "@saleor/customers/urls";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
+import { CustomerListUrlSortField, customerUrl } from "@saleor/customers/urls";
 import { ListCustomersQuery, PermissionEnum } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
 import { getUserName, renderCollection } from "@saleor/misc";
@@ -24,21 +25,21 @@ const useStyles = makeStyles(
       colEmail: {},
       colName: {},
       colOrders: {
-        width: 200
-      }
+        width: 200,
+      },
     },
     colEmail: {},
     colName: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colOrders: {
-      textAlign: "center"
+      textAlign: "center",
     },
     tableRow: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "CustomerList" }
+  { name: "CustomerList" },
 );
 
 export interface CustomerListProps
@@ -53,24 +54,20 @@ const CustomerList: React.FC<CustomerListProps> = props => {
     settings,
     disabled,
     customers,
-    pageInfo,
-    onNextPage,
-    onPreviousPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
     toolbar,
     toggle,
     toggleAll,
     selected,
     sort,
-    isChecked
+    isChecked,
   } = props;
 
   const userPermissions = useUserPermissions();
 
   const numberOfColumns = hasPermissions(userPermissions, [
-    PermissionEnum.MANAGE_ORDERS
+    PermissionEnum.MANAGE_ORDERS,
   ])
     ? 4
     : 3;
@@ -97,7 +94,7 @@ const CustomerList: React.FC<CustomerListProps> = props => {
           onClick={() => onSort(CustomerListUrlSortField.name)}
           className={classes.colName}
         >
-          <FormattedMessage defaultMessage="Customer Name" />
+          <FormattedMessage id="Gr1SAu" defaultMessage="Customer Name" />
         </TableCellHeader>
         <TableCellHeader
           direction={
@@ -108,7 +105,7 @@ const CustomerList: React.FC<CustomerListProps> = props => {
           onClick={() => onSort(CustomerListUrlSortField.email)}
           className={classes.colEmail}
         >
-          <FormattedMessage defaultMessage="Customer Email" />
+          <FormattedMessage id="97l2MO" defaultMessage="Customer Email" />
         </TableCellHeader>
         <RequirePermissions
           requiredPermissions={[PermissionEnum.MANAGE_ORDERS]}
@@ -123,22 +120,16 @@ const CustomerList: React.FC<CustomerListProps> = props => {
             onClick={() => onSort(CustomerListUrlSortField.orders)}
             className={classes.colOrders}
           >
-            <FormattedMessage defaultMessage="No. of Orders" />
+            <FormattedMessage id="E8VDeH" defaultMessage="No. of Orders" />
           </TableCellHeader>
         </RequirePermissions>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -149,12 +140,12 @@ const CustomerList: React.FC<CustomerListProps> = props => {
             const isSelected = customer ? isChecked(customer.id) : false;
 
             return (
-              <TableRow
+              <TableRowLink
                 className={!!customer ? classes.tableRow : undefined}
                 hover={!!customer}
                 key={customer ? customer.id : "skeleton"}
                 selected={isSelected}
-                onClick={customer ? onRowClick(customer.id) : undefined}
+                href={customer && customerUrl(customer.id)}
               >
                 <TableCell padding="checkbox">
                   <Checkbox
@@ -177,16 +168,19 @@ const CustomerList: React.FC<CustomerListProps> = props => {
                     {customer?.orders?.totalCount ?? <Skeleton />}
                   </TableCell>
                 </RequirePermissions>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No customers found" />
+                <FormattedMessage
+                  id="FpIcp9"
+                  defaultMessage="No customers found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

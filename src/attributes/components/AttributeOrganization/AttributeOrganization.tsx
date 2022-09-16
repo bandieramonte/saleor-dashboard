@@ -17,29 +17,31 @@ export interface AttributeOrganizationProps {
 
 const messages = defineMessages({
   contentAttribute: {
+    id: "zbJHl7",
     defaultMessage: "Content Attribute",
-    description: "attribute type"
+    description: "attribute type",
   },
   productAttribute: {
+    id: "qkRuT0",
     defaultMessage: "Product Attribute",
-    description: "attribute type"
-  }
+    description: "attribute type",
+  },
 });
 
 const useStyles = makeStyles(
   theme => ({
     card: {
-      overflow: "visible"
+      overflow: "visible",
     },
     cardSubtitle: {
       fontSize: theme.typography.body1.fontSize,
-      marginBottom: theme.spacing(0.5)
+      marginBottom: theme.spacing(0.5),
     },
     label: {
-      marginBottom: theme.spacing(0.5)
-    }
+      marginBottom: theme.spacing(0.5),
+    },
   }),
-  { name: "AttributeOrganization" }
+  { name: "AttributeOrganization" },
 );
 
 const AttributeOrganization: React.FC<AttributeOrganizationProps> = props => {
@@ -52,8 +54,9 @@ const AttributeOrganization: React.FC<AttributeOrganizationProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "nwvQPg",
           defaultMessage: "Organization",
-          description: "section header"
+          description: "section header",
         })}
       />
       <CardContent>
@@ -62,19 +65,25 @@ const AttributeOrganization: React.FC<AttributeOrganizationProps> = props => {
             choices={[
               {
                 label: intl.formatMessage(messages.productAttribute),
-                value: AttributeTypeEnum.PRODUCT_TYPE
+                value: AttributeTypeEnum.PRODUCT_TYPE,
               },
               {
                 label: intl.formatMessage(messages.contentAttribute),
-                value: AttributeTypeEnum.PAGE_TYPE
-              }
+                value: AttributeTypeEnum.PAGE_TYPE,
+              },
             ]}
             disabled={disabled}
             label={
               <>
-                <FormattedMessage defaultMessage="Attribute Class" />
+                <FormattedMessage
+                  id="v1pNHW"
+                  defaultMessage="Attribute Class"
+                />
                 <Typography variant="caption">
-                  <FormattedMessage defaultMessage="Define where this attribute should be used in Saleor system" />
+                  <FormattedMessage
+                    id="ErNH3D"
+                    defaultMessage="Define where this attribute should be used in Saleor system"
+                  />
                 </Typography>
               </>
             }
@@ -85,7 +94,7 @@ const AttributeOrganization: React.FC<AttributeOrganizationProps> = props => {
         ) : (
           <>
             <Typography className={classes.label} variant="caption">
-              <FormattedMessage defaultMessage="Attribute Class" />
+              <FormattedMessage id="v1pNHW" defaultMessage="Attribute Class" />
             </Typography>
             <Typography>
               {data.type === AttributeTypeEnum.PRODUCT_TYPE

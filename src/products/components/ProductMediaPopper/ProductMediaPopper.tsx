@@ -4,7 +4,7 @@ import {
   MenuItem,
   MenuList as Menu,
   Paper,
-  Popper
+  Popper,
 } from "@material-ui/core";
 import React from "react";
 import { defineMessages, useIntl } from "react-intl";
@@ -19,13 +19,15 @@ interface ProductMediaPopperProps {
 
 const messages = defineMessages({
   uploadImages: {
+    id: "9CEu8k",
     defaultMessage: "Upload Images",
-    description: "modal button images upload"
+    description: "modal button images upload",
   },
   uploadUrl: {
+    id: "Q2UXlW",
     defaultMessage: "Upload URL",
-    description: "modal button url upload"
-  }
+    description: "modal button url upload",
+  },
 });
 
 export const ProductMediaPopper = ({
@@ -33,7 +35,7 @@ export const ProductMediaPopper = ({
   imagesUploadRef,
   setPopperStatus,
   openMediaUrlModal,
-  popperStatus
+  popperStatus,
 }: ProductMediaPopperProps) => {
   const intl = useIntl();
 

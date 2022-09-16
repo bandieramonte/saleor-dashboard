@@ -1,9 +1,9 @@
 import HorizontalSpacer from "@saleor/apps/components/HorizontalSpacer";
+import { Button } from "@saleor/components/Button";
 import CardMenu, { CardMenuItem } from "@saleor/components/CardMenu";
 import PageHeader from "@saleor/components/PageHeader";
 import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -19,7 +19,7 @@ const GiftCardsListHeader: React.FC = () => {
   const {
     openCreateDialog,
     openBulkCreateDialog,
-    openExportDialog
+    openExportDialog,
   } = useGiftCardListDialogs();
 
   const openSettings = () => navigate(giftCardSettingsUrl);
@@ -28,18 +28,18 @@ const GiftCardsListHeader: React.FC = () => {
     {
       label: intl.formatMessage(messages.settings),
       testId: "settingsMenuItem",
-      onSelect: openSettings
+      onSelect: openSettings,
     },
     {
       label: intl.formatMessage(messages.bulkIssue),
       testId: "bulkIssueMenuItem",
-      onSelect: openBulkCreateDialog
+      onSelect: openBulkCreateDialog,
     },
     {
       label: intl.formatMessage(messages.exportCodes),
       testId: "exportCodesMenuItem",
-      onSelect: openExportDialog
-    }
+      onSelect: openExportDialog,
+    },
   ];
 
   return (

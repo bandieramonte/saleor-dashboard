@@ -20,7 +20,7 @@ const MenuProperties: React.FC<MenuPropertiesProps> = ({
   data,
   disabled,
   errors,
-  onChange
+  onChange,
 }) => {
   const intl = useIntl();
 
@@ -38,8 +38,8 @@ const MenuProperties: React.FC<MenuPropertiesProps> = ({
           name={"name" as keyof MenuDetailsFormData}
           fullWidth
           label={intl.formatMessage({
+            id: "jhh/D6",
             defaultMessage: "Menu Title",
-            id: "menuPropertiesMenuTitle"
           })}
           helperText={getMenuErrorMessage(formErrors.name, intl)}
           value={data.name}

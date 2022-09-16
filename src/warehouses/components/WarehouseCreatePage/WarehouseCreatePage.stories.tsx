@@ -6,20 +6,19 @@ import React from "react";
 
 import WarehouseCreatePage, {
   WarehouseCreatePageFormData,
-  WarehouseCreatePageProps
+  WarehouseCreatePageProps,
 } from "./WarehouseCreatePage";
 
 const props: WarehouseCreatePageProps = {
   countries: countries.map(c => ({
     __typename: "CountryDisplay",
     code: c.code,
-    country: c.name
+    country: c.name,
   })),
   disabled: false,
   errors: [],
-  onBack: () => undefined,
   onSubmit: () => undefined,
-  saveButtonBarState: "default"
+  saveButtonBarState: "default",
 };
 storiesOf("Views / Warehouses / Create warehouse", module)
   .addDecorator(Decorator)
@@ -38,12 +37,12 @@ storiesOf("Views / Warehouses / Create warehouse", module)
         "phone",
         "postalCode",
         "streetAddress1",
-        "streetAddress2"
+        "streetAddress2",
       ] as Array<keyof WarehouseCreatePageFormData>).map(field => ({
         __typename: "WarehouseError",
         code: WarehouseErrorCode.INVALID,
         field,
-        message: "Warehouse invalid"
+        message: "Warehouse invalid",
       }))}
     />
   ));

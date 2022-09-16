@@ -9,13 +9,13 @@ import {
   saleAddUrl,
   SaleCreateUrlQueryParams,
   saleListUrl,
-  saleUrl
+  saleUrl,
 } from "@saleor/discounts/urls";
 import {
   useSaleChannelListingUpdateMutation,
   useSaleCreateMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useChannels from "@saleor/hooks/useChannels";
 import useNavigator from "@saleor/hooks/useNavigator";
@@ -47,7 +47,7 @@ export const SaleCreateView: React.FC<SaleCreateProps> = ({ params }) => {
 
   const { availableChannels } = useAppChannel(false);
   const allChannels: ChannelSaleFormData[] = createSortedSaleData(
-    availableChannels
+    availableChannels,
   );
 
   const {
@@ -60,17 +60,17 @@ export const SaleCreateView: React.FC<SaleCreateProps> = ({ params }) => {
     isChannelSelected,
     isChannelsModalOpen,
     setCurrentChannels,
-    toggleAllChannels
+    toggleAllChannels,
   } = useChannels(
     allChannels,
     params?.action,
     { closeModal, openModal },
-    { formId: SALE_CREATE_FORM_ID }
+    { formId: SALE_CREATE_FORM_ID },
   );
 
   const [
     updateChannels,
-    updateChannelsOpts
+    updateChannelsOpts,
   ] = useSaleChannelListingUpdateMutation({});
 
   const [saleCreate, saleCreateOpts] = useSaleCreateMutation({
@@ -79,22 +79,23 @@ export const SaleCreateView: React.FC<SaleCreateProps> = ({ params }) => {
         pushMessage({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Successfully created sale"
-          })
+            id: "n7Fg8i",
+            defaultMessage: "Successfully created sale",
+          }),
         });
         navigate(saleUrl(data.saleCreate.sale.id), { replace: true });
       }
-    }
+    },
   });
 
   const handleCreate = createHandler(
     variables => saleCreate({ variables }),
-    updateChannels
+    updateChannels,
   );
   const handleSubmit = createMetadataCreateHandler(
     handleCreate,
     updateMetadata,
-    updatePrivateMetadata
+    updatePrivateMetadata,
   );
 
   return (
@@ -109,7 +110,8 @@ export const SaleCreateView: React.FC<SaleCreateProps> = ({ params }) => {
           onClose={handleChannelsModalClose}
           open={isChannelsModalOpen}
           title={intl.formatMessage({
-            defaultMessage: "Manage Sales Channel Availability"
+            id: "ESDTC/",
+            defaultMessage: "Manage Sales Channel Availability",
           })}
           confirmButtonState="default"
           selected={channelListElements.length}
@@ -123,7 +125,7 @@ export const SaleCreateView: React.FC<SaleCreateProps> = ({ params }) => {
         disabled={saleCreateOpts.loading || updateChannelsOpts.loading}
         errors={[
           ...(saleCreateOpts.data?.saleCreate.errors || []),
-          ...(updateChannelsOpts.data?.saleChannelListingUpdate.errors || [])
+          ...(updateChannelsOpts.data?.saleChannelListingUpdate.errors || []),
         ]}
         onBack={() => navigate(saleListUrl())}
         onSubmit={handleSubmit}

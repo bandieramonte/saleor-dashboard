@@ -9,25 +9,25 @@ import { fieldNames } from "./components/TranslationsAttributesPage";
 import { transtionsAttributesPageFieldsMessages as messages } from "./components/TranslationsAttributesPage/messages";
 import {
   PageTranslationInputFieldName,
-  TranslationInputFieldName
+  TranslationInputFieldName,
 } from "./types";
 
 export const getParsedTranslationInputData = ({
   fieldName,
-  data
+  data,
 }: {
   fieldName: TranslationInputFieldName | PageTranslationInputFieldName;
   data: string | OutputData;
 }): Record<string, string | null> => {
   const fieldsToParse = [
+    TranslationInputFieldName.shortDescription,
     TranslationInputFieldName.description,
-    TranslationInputFieldName.longDescription,
-    PageTranslationInputFieldName.content
+    PageTranslationInputFieldName.content,
   ];
 
   if (fieldsToParse.includes(fieldName)) {
     return {
-      [fieldName]: getParsedDataForJsonStringField(data as OutputData)
+      [fieldName]: getParsedDataForJsonStringField(data as OutputData),
     };
   }
 
@@ -36,12 +36,12 @@ export const getParsedTranslationInputData = ({
 
 export const getTranslationFields = (
   fields: AttributeTranslationDetailsFragment["attribute"]["choices"],
-  intl: IntlShape
+  intl: IntlShape,
 ) =>
   mapEdgesToItems(fields).map(
     ({ id, name, translation }, attributeValueIndex) => {
       const displayName = intl.formatMessage(messages.valueNumber, {
-        number: attributeValueIndex + 1
+        number: attributeValueIndex + 1,
       });
 
       return {
@@ -49,7 +49,7 @@ export const getTranslationFields = (
         name: `${fieldNames.value}:${id}`,
         translation: translation?.name || null,
         type: "short" as TranslationField["type"],
-        value: name
+        value: name,
       };
-    }
+    },
   ) || [];

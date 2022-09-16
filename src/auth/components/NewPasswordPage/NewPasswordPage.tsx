@@ -1,8 +1,8 @@
 import { TextField, Typography } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import Form from "@saleor/components/Form";
 import FormSpacer from "@saleor/components/FormSpacer";
 import { SubmitPromise } from "@saleor/hooks/useForm";
-import { Button } from "@saleor/macaw-ui";
 import { SetPasswordData } from "@saleor/sdk";
 import getAccountErrorMessage from "@saleor/utils/errors/account";
 import React from "react";
@@ -22,7 +22,7 @@ export interface NewPasswordPageProps {
 
 const initialForm: NewPasswordPageFormData = {
   confirmPassword: "",
-  password: ""
+  password: "",
 };
 
 const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
@@ -32,7 +32,7 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
   const intl = useIntl();
   const error = getAccountErrorMessage(
     errors.find(err => err.field === "password"),
-    intl
+    intl,
   );
 
   return (
@@ -45,13 +45,17 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
           <>
             <Typography variant="h3" className={classes.header}>
               <FormattedMessage
+                id="WhKGPA"
                 defaultMessage="Set up new password"
                 description="page title"
               />
             </Typography>
             {!!error && <div className={classes.panel}>{error}</div>}
             <Typography variant="caption" color="textSecondary">
-              <FormattedMessage defaultMessage="Please set up a new password for your account. Repeat your new password to make sure you will be able to remember it." />
+              <FormattedMessage
+                id="m0Dz+2"
+                defaultMessage="Please set up a new password for your account. Repeat your new password to make sure you will be able to remember it."
+              />
             </Typography>
             <FormSpacer />
             <TextField
@@ -60,14 +64,15 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
               autoComplete="none"
               disabled={disabled}
               label={intl.formatMessage({
-                defaultMessage: "New Password"
+                id: "Ev6SEF",
+                defaultMessage: "New Password",
               })}
               name="password"
               onChange={handleChange}
               type="password"
               value={data.password}
               inputProps={{
-                "data-test-id": "password"
+                "data-test-id": "password",
               }}
             />
             <FormSpacer />
@@ -77,7 +82,8 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
               autoComplete="none"
               disabled={disabled}
               label={intl.formatMessage({
-                defaultMessage: "Confirm Password"
+                id: "vfG+nh",
+                defaultMessage: "Confirm Password",
               })}
               name="confirmPassword"
               onChange={handleChange}
@@ -86,11 +92,12 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
               helperText={
                 passwordError &&
                 intl.formatMessage({
-                  defaultMessage: "Passwords do not match"
+                  id: "7Chrsf",
+                  defaultMessage: "Passwords do not match",
                 })
               }
               inputProps={{
-                "data-test-id": "confirm-password"
+                "data-test-id": "confirm-password",
               }}
             />
             <FormSpacer />
@@ -103,6 +110,7 @@ const NewPasswordPage: React.FC<NewPasswordPageProps> = props => {
               type="submit"
             >
               <FormattedMessage
+                id="S22jIs"
                 defaultMessage="Set new password"
                 description="button"
               />

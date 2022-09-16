@@ -5,29 +5,37 @@ import { getCommonFormFieldErrorMessage } from "./common";
 
 const messages = defineMessages({
   invalidManifestFormat: {
-    defaultMessage: "Invalid manifest format"
+    id: "pC6/1z",
+    defaultMessage: "Invalid manifest format",
   },
   invalidPermission: {
-    defaultMessage: "Permission is invalid"
+    id: "D2qihU",
+    defaultMessage: "Permission is invalid",
   },
   invalidStatus: {
-    defaultMessage: "Status is invalid"
+    id: "v3WWK+",
+    defaultMessage: "Status is invalid",
   },
   invalidUrlFormat: {
-    defaultMessage: "Url has invalid format"
+    id: "g/BrOt",
+    defaultMessage: "Url has invalid format",
   },
   outOfScopeApp: {
-    defaultMessage: "App is out of your permissions scope"
+    id: "C4hCsD",
+    defaultMessage: "App is out of your permissions scope",
   },
   outOfScopeGroup: {
-    defaultMessage: "Group is out of your permission scope"
+    id: "1n1tOR",
+    defaultMessage: "Group is out of your permission scope",
   },
   outOfScopePermission: {
-    defaultMessage: "Permission is out of your scope"
+    id: "4prRLv",
+    defaultMessage: "Permission is out of your scope",
   },
   unique: {
-    defaultMessage: "This needs to be unique"
-  }
+    id: "TDhHMi",
+    defaultMessage: "This needs to be unique",
+  },
 });
 
 function getAppErrorMessage(err: AppErrorFragment, intl: IntlShape): string {

@@ -26,18 +26,18 @@ export interface ProductTaxesProps {
 const useStyles = makeStyles(
   theme => ({
     content: {
-      paddingTop: theme.spacing(2)
+      paddingTop: theme.spacing(2),
     },
     hr: {
-      margin: theme.spacing(2, 0)
+      margin: theme.spacing(2, 0),
     },
     select: {
-      margin: theme.spacing(2, 0)
-    }
+      margin: theme.spacing(2, 0),
+    },
   }),
   {
-    name: "ProductTaxes"
-  }
+    name: "ProductTaxes",
+  },
 );
 
 const ProductTaxes: React.FC<ProductTaxesProps> = ({
@@ -46,7 +46,7 @@ const ProductTaxes: React.FC<ProductTaxesProps> = ({
   selectedTaxTypeDisplayName,
   taxTypes,
   onChange,
-  onTaxTypeChange
+  onTaxTypeChange,
 }) => {
   const intl = useIntl();
   const classes = useStyles({});
@@ -60,8 +60,9 @@ const ProductTaxes: React.FC<ProductTaxesProps> = ({
           disabled={disabled}
           data-test-id="override-tax-type"
           label={intl.formatMessage({
+            id: "iYH3Y7",
             defaultMessage: "Override the product type's tax rate",
-            description: "checkbox"
+            description: "checkbox",
           })}
           name="changeTaxCode"
           onChange={onChange}
@@ -72,8 +73,9 @@ const ProductTaxes: React.FC<ProductTaxesProps> = ({
           disabled={disabled}
           data-test-id="charge-taxes"
           label={intl.formatMessage({
+            id: "TfY/Pi",
             defaultMessage: "Charge taxes on this product",
-            description: "checkbox"
+            description: "checkbox",
           })}
           name="chargeTaxes"
           onChange={onChange}
@@ -85,8 +87,9 @@ const ProductTaxes: React.FC<ProductTaxesProps> = ({
             displayValue={selectedTaxTypeDisplayName}
             data-test-id="select-tax-type"
             label={intl.formatMessage({
+              id: "CdIHMu",
               defaultMessage: "Tax Rate",
-              description: "select tax ratte"
+              description: "select tax ratte",
             })}
             name="taxCode"
             onChange={onTaxTypeChange}
@@ -94,11 +97,11 @@ const ProductTaxes: React.FC<ProductTaxesProps> = ({
             choices={
               taxTypes?.map(taxType => ({
                 label: taxType.description,
-                value: taxType.taxCode
+                value: taxType.taxCode,
               })) || []
             }
             InputProps={{
-              autoComplete: "off"
+              autoComplete: "off",
             }}
           />
         )}

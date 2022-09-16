@@ -1,6 +1,7 @@
 import { Typography } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import { buttonMessages } from "@saleor/intl";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -10,16 +11,16 @@ const useStyles = makeStyles(
       alignItems: "center",
       display: "flex",
       justifyContent: "space-between",
-      padding: theme.spacing(1, 3)
+      padding: theme.spacing(1, 3),
     },
     clear: {
-      marginRight: theme.spacing(1)
+      marginRight: theme.spacing(1),
     },
     label: {
-      fontWeight: 600
-    }
+      fontWeight: 600,
+    },
   }),
-  { name: "FilterContentHeader" }
+  { name: "FilterContentHeader" },
 );
 
 interface FilterContentHeaderProps {
@@ -27,14 +28,14 @@ interface FilterContentHeaderProps {
 }
 
 const FilterContentHeader: React.FC<FilterContentHeaderProps> = ({
-  onClear
+  onClear,
 }) => {
   const classes = useStyles({});
 
   return (
     <div className={classes.container}>
       <Typography className={classes.label}>
-        <FormattedMessage defaultMessage="Filters" />
+        <FormattedMessage id="zSOvI0" defaultMessage="Filters" />
       </Typography>
       <div>
         <Button

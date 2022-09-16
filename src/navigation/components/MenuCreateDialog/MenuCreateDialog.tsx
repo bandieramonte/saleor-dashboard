@@ -3,7 +3,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import BackButton from "@saleor/components/BackButton";
 import ConfirmButton from "@saleor/components/ConfirmButton";
@@ -30,7 +30,7 @@ export interface MenuCreateDialogProps {
 }
 
 const initialForm: MenuCreateDialogFormData = {
-  name: ""
+  name: "",
 };
 
 const MenuCreateDialog: React.FC<MenuCreateDialogProps> = ({
@@ -39,7 +39,7 @@ const MenuCreateDialog: React.FC<MenuCreateDialogProps> = ({
   errors,
   onClose,
   onConfirm,
-  open
+  open,
 }) => {
   const intl = useIntl();
 
@@ -49,9 +49,9 @@ const MenuCreateDialog: React.FC<MenuCreateDialogProps> = ({
     <Dialog onClose={onClose} maxWidth="sm" fullWidth open={open}>
       <DialogTitle>
         <FormattedMessage
+          id="0OtaXa"
           defaultMessage="Create Menu"
           description="dialog header"
-          id="menuCreateDialogHeader"
         />
       </DialogTitle>
       <Form initial={initialForm} onSubmit={onConfirm}>
@@ -64,8 +64,8 @@ const MenuCreateDialog: React.FC<MenuCreateDialogProps> = ({
                 fullWidth
                 helperText={getMenuErrorMessage(formErrors.name, intl)}
                 label={intl.formatMessage({
+                  id: "jhh/D6",
                   defaultMessage: "Menu Title",
-                  id: "menuCreateDialogMenuTitleLabel"
                 })}
                 name={"name" as keyof MenuCreateDialogFormData}
                 value={data.name}

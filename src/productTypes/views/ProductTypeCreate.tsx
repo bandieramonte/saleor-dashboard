@@ -4,7 +4,7 @@ import {
   useProductTypeCreateDataQuery,
   useProductTypeCreateMutation,
   useUpdateMetadataMutation,
-  useUpdatePrivateMetadataMutation
+  useUpdatePrivateMetadataMutation,
 } from "@saleor/graphql";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
@@ -14,13 +14,12 @@ import { useIntl } from "react-intl";
 
 import { getMutationErrors } from "../../misc";
 import ProductTypeCreatePage, {
-  ProductTypeForm
+  ProductTypeForm,
 } from "../components/ProductTypeCreatePage";
 import {
   productTypeAddUrl,
   ProductTypeAddUrlQueryParams,
-  productTypeListUrl,
-  productTypeUrl
+  productTypeUrl,
 } from "../urls";
 
 interface ProductTypeCreateProps {
@@ -28,7 +27,7 @@ interface ProductTypeCreateProps {
 }
 
 export const ProductTypeCreate: React.FC<ProductTypeCreateProps> = ({
-  params
+  params,
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
@@ -40,29 +39,30 @@ export const ProductTypeCreate: React.FC<ProductTypeCreateProps> = ({
     navigate(
       productTypeAddUrl({
         ...params,
-        kind
-      })
+        kind,
+      }),
     );
 
   const { data, loading } = useProductTypeCreateDataQuery({
-    displayLoader: true
+    displayLoader: true,
   });
 
   const [
     createProductType,
-    createProductTypeOpts
+    createProductTypeOpts,
   ] = useProductTypeCreateMutation({
     onCompleted: data => {
       if (data.productTypeCreate.errors.length === 0) {
         notify({
           status: "success",
           text: intl.formatMessage({
-            defaultMessage: "Successfully created product type"
-          })
+            id: "paa4m0",
+            defaultMessage: "Successfully created product type",
+          }),
         });
         navigate(productTypeUrl(data.productTypeCreate.productType.id));
       }
-    }
+    },
   });
 
   const handleCreate = async (formData: ProductTypeForm) => {
@@ -74,30 +74,30 @@ export const ProductTypeCreate: React.FC<ProductTypeCreateProps> = ({
           name: formData.name,
           kind: formData.kind,
           taxCode: formData.taxType,
-          weight: formData.weight
-        }
-      }
+          weight: formData.weight,
+        },
+      },
     });
 
     return {
       id: result.data?.productTypeCreate.productType?.id || null,
-      errors: getMutationErrors(result)
+      errors: getMutationErrors(result),
     };
   };
 
   const handleSubmit = createMetadataCreateHandler(
     handleCreate,
     updateMetadata,
-    updatePrivateMetadata
+    updatePrivateMetadata,
   );
 
   return (
     <>
       <WindowTitle
         title={intl.formatMessage({
+          id: "SSWFo8",
           defaultMessage: "Create Product Type",
           description: "window title",
-          id: "productTypeCreateHeader"
         })}
       />
       <ProductTypeCreatePage
@@ -105,15 +105,14 @@ export const ProductTypeCreate: React.FC<ProductTypeCreateProps> = ({
         disabled={loading}
         errors={createProductTypeOpts.data?.productTypeCreate.errors || []}
         pageTitle={intl.formatMessage({
+          id: "bq1eEx",
           defaultMessage: "Create Product Type",
           description: "header",
-          id: "productTypeCreatePageHeader"
         })}
         saveButtonBarState={createProductTypeOpts.status}
         taxTypes={data?.taxTypes || []}
         kind={params.kind}
         onChangeKind={handleChangeKind}
-        onBack={() => navigate(productTypeListUrl())}
         onSubmit={handleSubmit}
       />
     </>

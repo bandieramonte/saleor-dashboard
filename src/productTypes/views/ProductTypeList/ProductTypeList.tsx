@@ -1,10 +1,10 @@
 import DeleteFilterTabDialog from "@saleor/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog, {
-  SaveFilterTabDialogFormData
+  SaveFilterTabDialogFormData,
 } from "@saleor/components/SaveFilterTabDialog";
 import {
   useProductTypeBulkDeleteMutation,
-  useProductTypeListQuery
+  useProductTypeListQuery,
 } from "@saleor/graphql";
 import useBulkActions from "@saleor/hooks/useBulkActions";
 import useListSettings from "@saleor/hooks/useListSettings";
@@ -12,7 +12,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext,
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -27,15 +28,12 @@ import React from "react";
 import { useIntl } from "react-intl";
 
 import TypeDeleteWarningDialog from "../../../components/TypeDeleteWarningDialog/TypeDeleteWarningDialog";
-import { configurationMenuUrl } from "../../../configuration";
 import { maybe } from "../../../misc";
 import ProductTypeListPage from "../../components/ProductTypeListPage";
 import {
-  productTypeAddUrl,
   productTypeListUrl,
   ProductTypeListUrlDialog,
   ProductTypeListUrlQueryParams,
-  productTypeUrl
 } from "../../urls";
 import {
   deleteFilterTab,
@@ -45,7 +43,7 @@ import {
   getFiltersCurrentTab,
   getFilterTabs,
   getFilterVariables,
-  saveFilterTab
+  saveFilterTab,
 } from "./filters";
 import { getSortQueryVariables } from "./sort";
 
@@ -56,13 +54,12 @@ interface ProductTypeListProps {
 export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const {
     isSelected,
     listElements: selectedProductTypes,
     reset,
     toggle,
-    toggleAll
+    toggleAll,
   } = useBulkActions(params.ids);
 
   const { settings } = useListSettings(ListViews.PRODUCT_LIST);
@@ -75,13 +72,13 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
     () => ({
       ...paginationState,
       filter: getFilterVariables(params),
-      sort: getSortQueryVariables(params)
+      sort: getSortQueryVariables(params),
     }),
-    [params, settings.rowNumber]
+    [params, settings.rowNumber],
   );
   const { data, loading, refetch } = useProductTypeListQuery({
     displayLoader: true,
-    variables: queryVariables
+    variables: queryVariables,
   });
 
   const tabs = getFilterTabs();
@@ -91,13 +88,13 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
   const [
     changeFilters,
     resetFilters,
-    handleSearchChange
+    handleSearchChange,
   ] = createFilterHandlers({
     cleanupFn: reset,
     createUrl: productTypeListUrl,
     getFilterQueryParam,
     navigate,
-    params
+    params,
   });
 
   const [openModal, closeModal] = createDialogActionHandlers<
@@ -110,8 +107,8 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
     navigate(
       productTypeListUrl({
         activeTab: tab.toString(),
-        ...getFilterTabs()[tab - 1].data
-      })
+        ...getFilterTabs()[tab - 1].data,
+      }),
     );
   };
 
@@ -126,30 +123,30 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
     handleTabChange(tabs.length + 1);
   };
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.productTypes.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.productTypes.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params,
+  });
 
   const handleSort = createSortHandler(navigate, productTypeListUrl, params);
 
   const productTypeDeleteData = useProductTypeDelete({
     selectedTypes: selectedProductTypes,
-    params
+    params,
   });
 
   const productTypesData = mapEdgesToItems(data?.productTypes);
 
   const [
     productTypeBulkDelete,
-    productTypeBulkDeleteOpts
+    productTypeBulkDeleteOpts,
   ] = useProductTypeBulkDeleteMutation({
     onCompleted: data => {
       if (data.productTypeBulkDelete.errors.length === 0) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
         reset();
         refetch();
@@ -157,22 +154,22 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
           productTypeListUrl({
             ...params,
             action: undefined,
-            ids: undefined
-          })
+            ids: undefined,
+          }),
         );
       }
-    }
+    },
   });
 
   const onProductTypeBulkDelete = () =>
     productTypeBulkDelete({
       variables: {
-        ids: params.ids
-      }
+        ids: params.ids,
+      },
     });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <ProductTypeListPage
         currentTab={currentTab}
         filterOpts={getFilterOpts(params)}
@@ -186,12 +183,6 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
         tabs={tabs.map(tab => tab.name)}
         disabled={loading}
         productTypes={productTypesData}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(productTypeAddUrl())}
-        onBack={() => navigate(configurationMenuUrl)}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
-        onRowClick={id => () => navigate(productTypeUrl(id))}
         onSort={handleSort}
         isChecked={isSelected}
         selected={selectedProductTypes.length}
@@ -204,7 +195,7 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
             color="primary"
             onClick={() =>
               openModal("remove", {
-                ids: selectedProductTypes
+                ids: selectedProductTypes,
               })
             }
           >
@@ -235,7 +226,7 @@ export const ProductTypeList: React.FC<ProductTypeListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 ProductTypeList.displayName = "ProductTypeList";

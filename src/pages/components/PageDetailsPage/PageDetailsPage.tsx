@@ -1,9 +1,10 @@
 import {
   getAttributeValuesFromReferences,
-  mergeAttributeValues
+  mergeAttributeValues,
 } from "@saleor/attributes/utils/data";
 import AssignAttributeValueDialog from "@saleor/components/AssignAttributeValueDialog";
 import Attributes, { AttributeInput } from "@saleor/components/Attributes";
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import Grid from "@saleor/components/Grid";
@@ -18,12 +19,14 @@ import {
   SearchAttributeValuesQuery,
   SearchPagesQuery,
   SearchPageTypesQuery,
-  SearchProductsQuery
+  SearchProductsQuery,
 } from "@saleor/graphql";
 import useDateLocalize from "@saleor/hooks/useDateLocalize";
 import { SubmitPromise } from "@saleor/hooks/useForm";
+import useNavigator from "@saleor/hooks/useNavigator";
 import { sectionNames } from "@saleor/intl";
-import { Backlink, ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { ConfirmButtonTransitionState } from "@saleor/macaw-ui";
+import { pageListUrl } from "@saleor/pages/urls";
 import { FetchMoreProps, RelayToFlat } from "@saleor/types";
 import { mapNodeToChoice } from "@saleor/utils/maps";
 import React from "react";
@@ -46,7 +49,6 @@ export interface PageDetailsPageProps {
   attributeValues: RelayToFlat<
     SearchAttributeValuesQuery["attribute"]["choices"]
   >;
-  onBack: () => void;
   onRemove: () => void;
   onSubmit: (data: PageData) => SubmitPromise;
   fetchPageTypes?: (data: string) => void;
@@ -74,7 +76,6 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
   saveButtonBarState,
   selectedPageType,
   attributeValues,
-  onBack,
   onRemove,
   onSubmit,
   fetchPageTypes,
@@ -89,10 +90,11 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
   fetchMoreAttributeValues,
   onCloseDialog,
   onSelectPageType,
-  onAttributeSelectBlur
+  onAttributeSelectBlur,
 }) => {
   const intl = useIntl();
   const localizeDate = useDateLocalize();
+  const navigate = useNavigator();
 
   const pageExists = page !== null;
 
@@ -105,15 +107,15 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
   const handleAssignReferenceAttribute = (
     attributeValues: string[],
     data: PageData,
-    handlers: PageUpdateHandlers
+    handlers: PageUpdateHandlers,
   ) => {
     handlers.selectAttributeReference(
       assignReferencesAttributeId,
       mergeAttributeValues(
         assignReferencesAttributeId,
         attributeValues,
-        data.attributes
-      )
+        data.attributes,
+      ),
     );
     onCloseDialog();
   };
@@ -137,17 +139,25 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
       onSubmit={onSubmit}
       disabled={loading}
     >
-      {({ change, data, handlers, submit, isSaveDisabled }) => (
+      {({
+        change,
+        data,
+        handlers,
+        submit,
+        isSaveDisabled,
+        attributeRichTextGetters,
+      }) => (
         <Container>
-          <Backlink onClick={onBack}>
+          <Backlink href={pageListUrl()}>
             {intl.formatMessage(sectionNames.pages)}
           </Backlink>
           <PageHeader
             title={
               !pageExists
                 ? intl.formatMessage({
+                    id: "gr53VQ",
                     defaultMessage: "Create Page",
-                    description: "page header"
+                    description: "page header",
                   })
                 : page?.title
             }
@@ -159,7 +169,6 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
                 disabled={loading}
                 errors={errors}
                 onChange={change}
-                onContentChange={handlers.changeContent}
               />
               <CardSpacer />
               <SeoForm
@@ -174,8 +183,9 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
                 title={data.seoTitle}
                 titlePlaceholder={data.title}
                 helperText={intl.formatMessage({
+                  id: "jZbT0O",
                   defaultMessage:
-                    "Add search engine title and description to make this page easier to find"
+                    "Add search engine title and description to make this page easier to find",
                 })}
               />
               <CardSpacer />
@@ -195,35 +205,38 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
                   fetchAttributeValues={fetchAttributeValues}
                   fetchMoreAttributeValues={fetchMoreAttributeValues}
                   onAttributeSelectBlur={onAttributeSelectBlur}
+                  richTextGetters={attributeRichTextGetters}
                 />
               )}
               <CardSpacer />
               <Metadata data={data} onChange={handlers.changeMetadata} />
             </div>
             <div>
-              <CardSpacer />
               <VisibilityCard
                 data={data}
                 errors={errors}
                 disabled={loading}
                 messages={{
                   hiddenLabel: intl.formatMessage({
+                    id: "/TK7QD",
                     defaultMessage: "Hidden",
-                    description: "page label"
+                    description: "page label",
                   }),
                   hiddenSecondLabel: intl.formatMessage(
                     {
+                      id: "GZgjK7",
                       defaultMessage: "will be visible from {date}",
-                      description: "page"
+                      description: "page",
                     },
                     {
-                      date: localizeDate(data.publicationDate, "L")
-                    }
+                      date: localizeDate(data.publicationDate),
+                    },
                   ),
                   visibleLabel: intl.formatMessage({
+                    id: "X26jCC",
                     defaultMessage: "Visible",
-                    description: "page label"
-                  })
+                    description: "page label",
+                  }),
                 }}
                 onChange={change}
               />
@@ -245,7 +258,7 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
           <Savebar
             disabled={isSaveDisabled}
             state={saveButtonBarState}
-            onCancel={onBack}
+            onCancel={() => navigate(pageListUrl())}
             onDelete={page === null ? undefined : onRemove}
             onSubmit={submit}
           />
@@ -255,7 +268,7 @@ const PageDetailsPage: React.FC<PageDetailsPageProps> = ({
                 assignReferencesAttributeId,
                 data.attributes,
                 referencePages,
-                referenceProducts
+                referenceProducts,
               )}
               hasMore={handlers.fetchMoreReferences?.hasMore}
               open={canOpenAssignReferencesAttributeDialog}

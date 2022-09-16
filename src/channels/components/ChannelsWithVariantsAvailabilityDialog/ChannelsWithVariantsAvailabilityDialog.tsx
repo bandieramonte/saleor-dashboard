@@ -7,7 +7,7 @@ import useChannelsWithProductVariants from "@saleor/products/views/ProductUpdate
 import {
   areAllVariantsAtAllChannelsSelected,
   areAnyChannelVariantsSelected,
-  channelVariantListingDiffToDict
+  channelVariantListingDiffToDict,
 } from "@saleor/products/views/ProductUpdate/utils";
 import { DialogProps } from "@saleor/types";
 import React from "react";
@@ -19,9 +19,10 @@ import ChannelsWithVariantsAvailabilityDialogContent from "./ChannelsWithVariant
 
 const messages = defineMessages({
   title: {
+    id: "p/EWEZ",
     defaultMessage: "Manage Channels",
-    description: "channels variants availability dialog title"
-  }
+    description: "channels variants availability dialog title",
+  },
 });
 
 export interface ChannelsAvailabilityDialogProps extends DialogProps {
@@ -37,34 +38,33 @@ export const ChannelsWithVariantsAvailabilityDialog: React.FC<ChannelsAvailabili
   variants,
   open,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   const intl = useIntl();
   const {
     channelsWithVariantsData,
-    hasChanged,
     toggleAllChannels,
     addVariantToChannel,
     removeVariantFromChannel,
     toggleAllChannelVariants,
     channelVariantListing,
-    reset
+    reset,
   } = useChannelsWithProductVariants(
     channels,
-    variants?.map(variant => variant.id)
+    variants?.map(variant => variant.id),
   );
 
   useModalDialogOpen(open, {
-    onClose: reset
+    onClose: reset,
   });
 
   const { query, onQueryChange, filteredChannels } = useChannelsSearch(
-    channels
+    channels,
   );
 
   const hasAllChannelsSelected = areAllVariantsAtAllChannelsSelected(
     variants.map(variant => variant.id),
-    channelVariantListingDiffToDict(channelsWithVariantsData)
+    channelVariantListingDiffToDict(channelsWithVariantsData),
   );
 
   const isChannelSelected = (channelId: string) =>
@@ -77,7 +77,6 @@ export const ChannelsWithVariantsAvailabilityDialog: React.FC<ChannelsAvailabili
       onClose={onClose}
       onConfirm={() => onConfirm(channelVariantListing)}
       title={intl.formatMessage(messages.title)}
-      disabled={!hasChanged}
     >
       <ChannelsAvailabilityContentWrapper
         hasAllSelected={hasAllChannelsSelected}

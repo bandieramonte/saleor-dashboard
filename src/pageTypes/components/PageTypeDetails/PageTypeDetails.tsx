@@ -34,7 +34,8 @@ const PageTypeDetails: React.FC<PageTypeDetailsProps> = props => {
           error={!!formErrors.name}
           helperText={getPageErrorMessage(formErrors.name, intl)}
           label={intl.formatMessage({
-            defaultMessage: "Content Type Name"
+            id: "jWna9Q",
+            defaultMessage: "Content Type Name",
           })}
           name="name"
           onChange={onChange}
@@ -45,7 +46,7 @@ const PageTypeDetails: React.FC<PageTypeDetailsProps> = props => {
   );
 };
 PageTypeDetails.defaultProps = {
-  errors: []
+  errors: [],
 };
 PageTypeDetails.displayName = "PageTypeDetails";
 export default PageTypeDetails;

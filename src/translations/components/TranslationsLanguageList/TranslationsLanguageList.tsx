@@ -3,12 +3,14 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from "@material-ui/core";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { LanguageFragment } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
+import { languageEntitiesUrl } from "@saleor/translations/urls";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -16,23 +18,22 @@ import { maybe, renderCollection } from "../../../misc";
 
 export interface TranslationsLanguageListProps {
   languages: LanguageFragment[];
-  onRowClick: (code: string) => void;
 }
 
 const useStyles = makeStyles(
   {
     capitalize: {
-      textTransform: "capitalize"
+      textTransform: "capitalize",
     },
     link: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   },
-  { name: "TranslationsLanguageList" }
+  { name: "TranslationsLanguageList" },
 );
 
 const TranslationsLanguageList: React.FC<TranslationsLanguageListProps> = props => {
-  const { languages, onRowClick } = props;
+  const { languages } = props;
 
   const classes = useStyles(props);
 
@@ -42,7 +43,7 @@ const TranslationsLanguageList: React.FC<TranslationsLanguageListProps> = props 
         <TableHead>
           <TableRow>
             <TableCell>
-              <FormattedMessage defaultMessage="Language" />
+              <FormattedMessage id="y1Z3or" defaultMessage="Language" />
             </TableCell>
           </TableRow>
         </TableHead>
@@ -50,28 +51,31 @@ const TranslationsLanguageList: React.FC<TranslationsLanguageListProps> = props 
           {renderCollection(
             languages,
             language => (
-              <TableRow
+              <TableRowLink
                 data-test-id={language ? language.code : "skeleton"}
                 className={!!language ? classes.link : undefined}
                 hover={!!language}
                 key={language ? language.code : "skeleton"}
-                onClick={() => onRowClick(language.code)}
+                href={language && languageEntitiesUrl(language.code, {})}
               >
                 <TableCell className={classes.capitalize}>
                   {maybe<React.ReactNode>(
                     () => language.language,
-                    <Skeleton />
+                    <Skeleton />,
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             ),
             () => (
               <TableRow>
                 <TableCell colSpan={1}>
-                  <FormattedMessage defaultMessage="No languages found" />
+                  <FormattedMessage
+                    id="ptPPVk"
+                    defaultMessage="No languages found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

@@ -4,9 +4,8 @@ import { WindowTitle } from "@saleor/components/WindowTitle";
 import {
   useWebhookDetailsQuery,
   useWebhookUpdateMutation,
-  WebhookEventTypeAsyncEnum
+  WebhookEventTypeAsyncEnum,
 } from "@saleor/graphql";
-import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { commonMessages } from "@saleor/intl";
 import React from "react";
@@ -21,12 +20,11 @@ export interface WebhooksDetailsProps {
 }
 
 export const WebhooksDetails: React.FC<WebhooksDetailsProps> = ({ id }) => {
-  const navigate = useNavigator();
   const notify = useNotifier();
   const intl = useIntl();
 
   const { data: webhookDetails, loading } = useWebhookDetailsQuery({
-    variables: { id }
+    variables: { id },
   });
   const [webhookUpdate, webhookUpdateOpts] = useWebhookUpdateMutation({
     onCompleted: data => {
@@ -36,20 +34,17 @@ export const WebhooksDetails: React.FC<WebhooksDetailsProps> = ({ id }) => {
       if (errors.length === 0 && webhook) {
         notify({
           status: "success",
-          text: intl.formatMessage(commonMessages.savedChanges)
+          text: intl.formatMessage(commonMessages.savedChanges),
         });
       }
-    }
+    },
   });
-
-  const handleOnBack = () =>
-    navigate(customAppUrl(webhookDetails.webhook.app.id));
 
   const webhook = webhookDetails?.webhook;
   const formErrors = webhookUpdateOpts.data?.webhookUpdate.errors || [];
 
   if (webhook === null) {
-    return <NotFoundPage onBack={handleOnBack} />;
+    return <NotFoundPage backHref={customAppUrl(webhook.app.id)} />;
   }
 
   const handleSubmit = (data: WebhookFormData) =>
@@ -60,17 +55,17 @@ export const WebhooksDetails: React.FC<WebhooksDetailsProps> = ({ id }) => {
           input: {
             syncEvents: data.syncEvents,
             asyncEvents: data.asyncEvents.includes(
-              WebhookEventTypeAsyncEnum.ANY_EVENTS
+              WebhookEventTypeAsyncEnum.ANY_EVENTS,
             )
               ? [WebhookEventTypeAsyncEnum.ANY_EVENTS]
               : data.asyncEvents,
             isActive: data.isActive,
             name: data.name,
             secretKey: data.secretKey,
-            targetUrl: data.targetUrl
-          }
-        }
-      })
+            targetUrl: data.targetUrl,
+          },
+        },
+      }),
     );
 
   return (
@@ -79,12 +74,12 @@ export const WebhooksDetails: React.FC<WebhooksDetailsProps> = ({ id }) => {
         title={getStringOrPlaceholder(webhookDetails?.webhook?.name)}
       />
       <WebhookDetailsPage
+        appId={webhook?.app?.id}
         appName={webhook?.app?.name}
         disabled={loading}
         errors={formErrors}
         saveButtonBarState={webhookUpdateOpts.status}
         webhook={webhook}
-        onBack={handleOnBack}
         onSubmit={handleSubmit}
       />
     </>

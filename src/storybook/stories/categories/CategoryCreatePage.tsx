@@ -3,16 +3,16 @@ import { storiesOf } from "@storybook/react";
 import React from "react";
 
 import CategoryCreatePage, {
-  CategoryCreatePageProps
+  CategoryCreatePageProps,
 } from "../../../categories/components/CategoryCreatePage";
 import Decorator from "../../Decorator";
 
 const createProps: CategoryCreatePageProps = {
+  backUrl: "",
   disabled: false,
   errors: [],
-  onBack: () => undefined,
   onSubmit: () => undefined,
-  saveButtonBarState: "default"
+  saveButtonBarState: "default",
 };
 
 storiesOf("Views / Categories / Create category", module)
@@ -28,16 +28,16 @@ storiesOf("Views / Categories / Create category", module)
         {
           code: ProductErrorCode.REQUIRED,
           field: "name",
-          message: "Product field name required"
+          message: "Product field name required",
         },
         {
           code: ProductErrorCode.REQUIRED,
           field: "description",
-          message: "Product field description required"
-        }
+          message: "Product field description required",
+        },
       ].map(err => ({
         __typename: "ProductError",
-        ...err
+        ...err,
       }))}
     />
   ));

@@ -1,4 +1,5 @@
 import { Card, CardContent, TextField } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Hr from "@saleor/components/Hr";
 import ImageUpload from "@saleor/components/ImageUpload";
@@ -6,7 +7,7 @@ import MediaTile from "@saleor/components/MediaTile";
 import Skeleton from "@saleor/components/Skeleton";
 import { CollectionDetailsFragment } from "@saleor/graphql";
 import { commonMessages } from "@saleor/intl";
-import { Button, makeStyles } from "@saleor/macaw-ui";
+import { makeStyles } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -15,20 +16,20 @@ const useStyles = makeStyles(
     PhotosIcon: {
       height: "64px",
       margin: "0 auto",
-      width: "64px"
+      width: "64px",
     },
     PhotosIconContainer: {
       margin: theme.spacing(5, 0),
-      textAlign: "center"
+      textAlign: "center",
     },
     fileField: {
-      display: "none"
+      display: "none",
     },
     image: {
       height: "100%",
       objectFit: "contain",
       userSelect: "none",
-      width: "100%"
+      width: "100%",
     },
     imageContainer: {
       background: "#ffffff",
@@ -39,12 +40,12 @@ const useStyles = makeStyles(
       overflow: "hidden",
       padding: theme.spacing(2),
       position: "relative",
-      width: 148
-    }
+      width: 148,
+    },
   }),
   {
-    name: "CollectionImage"
-  }
+    name: "CollectionImage",
+  },
 );
 
 export interface CollectionImageProps {
@@ -70,8 +71,9 @@ export const CollectionImage: React.FC<CollectionImageProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "DP6b8U",
           defaultMessage: "Background Image (optional)",
-          description: "section header"
+          description: "section header",
         })}
         toolbar={
           <>
@@ -112,8 +114,9 @@ export const CollectionImage: React.FC<CollectionImageProps> = props => {
               name="backgroundImageAlt"
               label={intl.formatMessage(commonMessages.description)}
               helperText={intl.formatMessage({
+                id: "0iMYc+",
                 defaultMessage: "(Optional)",
-                description: "field is optional"
+                description: "field is optional",
               })}
               value={data.backgroundImageAlt}
               onChange={onChange}

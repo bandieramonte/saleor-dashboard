@@ -1,11 +1,16 @@
+import { Backlink } from "@saleor/components/Backlink";
 import Container from "@saleor/components/Container";
 import LanguageSwitch from "@saleor/components/LanguageSwitch";
 import PageHeader from "@saleor/components/PageHeader";
 import { LanguageCodeEnum, VoucherTranslationFragment } from "@saleor/graphql";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import { TranslationsEntitiesPageProps } from "@saleor/translations/types";
+import {
+  languageEntitiesUrl,
+  languageEntityUrl,
+  TranslatableEntities,
+} from "@saleor/translations/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -17,46 +22,56 @@ export interface TranslationsVouchersPageProps
 }
 
 export const fieldNames = {
-  name: "name"
+  name: "name",
 };
 
 const TranslationsVouchersPage: React.FC<TranslationsVouchersPageProps> = ({
+  translationId,
   activeField,
   disabled,
   languages,
   languageCode,
   data,
   saveButtonState,
-  onBack,
   onDiscard,
   onEdit,
-  onLanguageChange,
-  onSubmit
+  onSubmit,
 }) => {
   const intl = useIntl();
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink
+        href={languageEntitiesUrl(languageCode, {
+          tab: TranslatableEntities.vouchers,
+        })}
+      >
         {intl.formatMessage(sectionNames.translations)}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "1tXSSK",
             defaultMessage:
               'Translation Voucher "{voucherName}" - {languageCode}',
-            description: "header"
+            description: "header",
           },
           {
             languageCode,
-            voucherName: getStringOrPlaceholder(data?.voucher?.name)
-          }
+            voucherName: getStringOrPlaceholder(data?.voucher?.name),
+          },
         )}
       >
         <LanguageSwitch
           currentLanguage={LanguageCodeEnum[languageCode]}
           languages={languages}
-          onLanguageChange={onLanguageChange}
+          getLanguageUrl={lang =>
+            languageEntityUrl(
+              lang,
+              TranslatableEntities.vouchers,
+              translationId,
+            )
+          }
         />
       </PageHeader>
       <TranslationFields
@@ -67,13 +82,14 @@ const TranslationsVouchersPage: React.FC<TranslationsVouchersPageProps> = ({
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Voucher Name"
+              id: "sfErC+",
+              defaultMessage: "Voucher Name",
             }),
             name: fieldNames.name,
             translation: data?.translation?.name || null,
             type: "short" as "short",
-            value: data?.voucher?.name
-          }
+            value: data?.voucher?.name,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}

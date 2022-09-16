@@ -1,15 +1,20 @@
+import { Backlink } from "@saleor/components/Backlink";
 import CardSpacer from "@saleor/components/CardSpacer";
 import Container from "@saleor/components/Container";
 import LanguageSwitch from "@saleor/components/LanguageSwitch";
 import PageHeader from "@saleor/components/PageHeader";
 import { LanguageCodeEnum, ProductTranslationFragment } from "@saleor/graphql";
 import { commonMessages, sectionNames } from "@saleor/intl";
-import { Backlink } from "@saleor/macaw-ui";
 import { getStringOrPlaceholder } from "@saleor/misc";
 import {
   TranslationInputFieldName,
-  TranslationsEntitiesPageProps
+  TranslationsEntitiesPageProps,
 } from "@saleor/translations/types";
+import {
+  languageEntitiesUrl,
+  languageEntityUrl,
+  TranslatableEntities,
+} from "@saleor/translations/urls";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -24,6 +29,7 @@ export interface TranslationsProductsPageProps
 }
 
 const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
+  translationId,
   productId,
   activeField,
   disabled,
@@ -31,31 +37,34 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
   languages,
   data,
   saveButtonState,
-  onBack,
   onDiscard,
   onEdit,
-  onLanguageChange,
   onSubmit,
-  onAttributeValueSubmit
+  onAttributeValueSubmit,
 }) => {
   const intl = useIntl();
 
   return (
     <Container>
-      <Backlink onClick={onBack}>
+      <Backlink
+        href={languageEntitiesUrl(languageCode, {
+          tab: TranslatableEntities.products,
+        })}
+      >
         {intl.formatMessage(sectionNames.translations)}
       </Backlink>
       <PageHeader
         title={intl.formatMessage(
           {
+            id: "22x9tu",
             defaultMessage:
               'Translation Product "{productName}" - {languageCode}',
-            description: "header"
+            description: "header",
           },
           {
             languageCode,
-            productName: getStringOrPlaceholder(data?.product?.name)
-          }
+            productName: getStringOrPlaceholder(data?.product?.name),
+          },
         )}
       >
         <ProductContextSwitcher
@@ -66,7 +75,13 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
         <LanguageSwitch
           currentLanguage={LanguageCodeEnum[languageCode]}
           languages={languages}
-          onLanguageChange={onLanguageChange}
+          getLanguageUrl={lang =>
+            languageEntityUrl(
+              lang,
+              TranslatableEntities.products,
+              translationId,
+            )
+          }
         />
       </PageHeader>
       <TranslationFields
@@ -77,31 +92,34 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Product Name"
+              id: "ZIc5lM",
+              defaultMessage: "Product Name",
             }),
             name: TranslationInputFieldName.name,
             translation: data?.translation?.name || null,
             type: "short" as "short",
-            value: data?.product?.name
+            value: data?.product?.name,
           },
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Description"
+              id: "Q8Qw5B",
+              defaultMessage: "Description",
             }),
             name: TranslationInputFieldName.description,
             translation: data?.translation?.description || null,
             type: "rich" as "rich",
-            value: data?.product?.description
+            value: data?.product?.description,
           },
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Long Description"
+              id: "L811wN",
+              defaultMessage: "Short description",
             }),
-            name: TranslationInputFieldName.longDescription,
-            translation: data?.translation?.longDescription || null,
-            type: "rich" as "rich",
-            value: data?.product?.longDescription
-          }
+            name: TranslationInputFieldName.shortDescription,
+            translation: data?.translation?.shortDescription || null,
+            type: "short" as "short",
+            value: data?.product?.shortDescription,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}
@@ -115,27 +133,30 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
         disabled={disabled}
         initialState={true}
         title={intl.formatMessage({
-          defaultMessage: "Search Engine Preview"
+          id: "TGX4T1",
+          defaultMessage: "Search Engine Preview",
         })}
         fields={[
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Search Engine Title"
+              id: "HlEpii",
+              defaultMessage: "Search Engine Title",
             }),
             name: TranslationInputFieldName.seoTitle,
             translation: data?.translation?.seoTitle || null,
             type: "short" as "short",
-            value: data?.product?.seoTitle
+            value: data?.product?.seoTitle,
           },
           {
             displayName: intl.formatMessage({
-              defaultMessage: "Search Engine Description"
+              id: "US3IPU",
+              defaultMessage: "Search Engine Description",
             }),
             name: TranslationInputFieldName.seoDescription,
             translation: data?.translation?.seoDescription || null,
             type: "long" as "long",
-            value: data?.product?.seoDescription
-          }
+            value: data?.product?.seoDescription,
+          },
         ]}
         saveButtonState={saveButtonState}
         richTextResetKey={languageCode}
@@ -156,17 +177,18 @@ const TranslationsProductsPage: React.FC<TranslationsProductsPageProps> = ({
                 id: attrVal.attributeValue.id,
                 displayName: intl.formatMessage(
                   {
+                    id: "PajjqE",
                     defaultMessage: "Attribute {number}",
-                    description: "attribute list"
+                    description: "attribute list",
                   },
                   {
-                    number: i + 1
-                  }
+                    number: i + 1,
+                  },
                 ),
                 name: attrVal?.name,
                 translation: attrVal?.translation?.richText || null,
                 type: "rich" as "rich",
-                value: attrVal?.richText
+                value: attrVal?.richText,
               })) || []
             }
             saveButtonState={saveButtonState}

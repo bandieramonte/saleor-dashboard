@@ -5,12 +5,12 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import {
   ChannelData,
   ChannelPriceAndPreorderArgs,
-  ChannelPriceArgs
+  ChannelPriceArgs,
 } from "@saleor/channels/utils";
 import CardTitle from "@saleor/components/CardTitle";
 import PriceField from "@saleor/components/PriceField";
@@ -21,7 +21,7 @@ import { makeStyles } from "@saleor/macaw-ui";
 import { renderCollection } from "@saleor/misc";
 import {
   getFormChannelError,
-  getFormChannelErrors
+  getFormChannelErrors,
 } from "@saleor/utils/errors";
 import getProductErrorMessage from "@saleor/utils/errors/product";
 import React from "react";
@@ -32,28 +32,28 @@ const useStyles = makeStyles(
     colPrice: {
       textAlign: "right",
       verticalAlign: "top",
-      width: 200
+      width: 200,
     },
     colType: {
       fontSize: 14,
       textAlign: "right",
-      width: 200
+      width: 200,
     },
     input: {
-      textAlign: "left"
+      textAlign: "left",
     },
     pricingContent: {
       "&:last-child": {
-        paddingBottom: 0
+        paddingBottom: 0,
       },
       paddingLeft: 0,
-      paddingRight: 0
+      paddingRight: 0,
     },
     table: {
-      tableLayout: "fixed"
-    }
+      tableLayout: "fixed",
+    },
   }),
-  { name: "ProductVariantPrice" }
+  { name: "ProductVariantPrice" },
 );
 
 interface ProductVariantPriceProps {
@@ -63,7 +63,7 @@ interface ProductVariantPriceProps {
   disabled?: boolean;
   onChange?: (
     id: string,
-    data: ChannelPriceArgs | ChannelPriceAndPreorderArgs
+    data: ChannelPriceArgs | ChannelPriceAndPreorderArgs,
   ) => void;
   disabledMessage?: MessageDescriptor;
 }
@@ -77,7 +77,7 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
     ProductVariantChannelListings = [],
     loading,
     onChange,
-    disabledMessage
+    disabledMessage,
   } = props;
   const classes = useStyles(props);
   const intl = useIntl();
@@ -88,18 +88,20 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
       <Card>
         <CardTitle
           title={intl.formatMessage({
+            id: "Xm9qOu",
             defaultMessage: "Pricing",
-            description: "product pricing, section header"
+            description: "product pricing, section header",
           })}
         />
         <CardContent>
           <Typography variant="caption">
             {intl.formatMessage(
               disabledMessage || {
-                defaultMessage: "There is no channel to define prices for",
+                id: "e48Igh",
+                defaultMessage:
+                  "Assign this variant to a channel in the product channel manager to define prices",
                 description: "variant pricing section subtitle",
-                id: "product variant pricing card disabled subtitle"
-              }
+              },
             )}
           </Typography>
         </CardContent>
@@ -111,16 +113,18 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "Xm9qOu",
           defaultMessage: "Pricing",
-          description: "product pricing, section header"
+          description: "product pricing, section header",
         })}
       />
       <CardContent>
         <Typography variant="body2">
           {intl.formatMessage({
+            id: "VvA7ai",
             defaultMessage:
               "Channels that don’t have assigned prices will use their parent channel to define the price. Price will be converted to channel’s currency",
-            description: "info text"
+            description: "info text",
           })}
         </Typography>
       </CardContent>
@@ -129,18 +133,21 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
           <TableRow>
             <TableCell>
               <FormattedMessage
+                id="c8UT0c"
                 defaultMessage="Channel Name"
                 description="tabel column header"
               />
             </TableCell>
             <TableCell className={classes.colType}>
               <FormattedMessage
+                id="JFtFgc"
                 defaultMessage="Selling Price"
                 description="tabel column header"
               />
             </TableCell>
             <TableCell className={classes.colType}>
               <FormattedMessage
+                id="2zCmiR"
                 defaultMessage="Cost price"
                 description="tabel column header"
               />
@@ -153,11 +160,11 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
             (listing, index) => {
               const priceError = getFormChannelError(
                 formErrors.price,
-                listing.id
+                listing.id,
               );
               const costPriceError = getFormChannelError(
                 formErrors.costPrice,
-                listing.id
+                listing.id,
               );
 
               return (
@@ -169,7 +176,8 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
                         className={classes.input}
                         error={!!priceError}
                         label={intl.formatMessage({
-                          defaultMessage: "Price"
+                          id: "b1zuN9",
+                          defaultMessage: "Price",
                         })}
                         name={`${listing.id}-channel-price`}
                         value={listing.price || ""}
@@ -178,7 +186,7 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
                           onChange(listing.id, {
                             costPrice: listing.costPrice,
                             price: e.target.value,
-                            preorderThreshold: listing.preorderThreshold
+                            preorderThreshold: listing.preorderThreshold,
                           })
                         }
                         disabled={loading}
@@ -197,8 +205,9 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
                         className={classes.input}
                         error={!!costPriceError}
                         label={intl.formatMessage({
+                          id: "KQSONM",
                           defaultMessage: "Cost",
-                          description: "tabel column header"
+                          description: "tabel column header",
                         })}
                         name={`${listing.id}-channel-costPrice`}
                         value={listing.costPrice || ""}
@@ -207,7 +216,7 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
                           onChange(listing.id, {
                             costPrice: e.target.value,
                             price: listing.price,
-                            preorderThreshold: listing.preorderThreshold
+                            preorderThreshold: listing.preorderThreshold,
                           })
                         }
                         disabled={loading}
@@ -227,10 +236,13 @@ const ProductVariantPrice: React.FC<ProductVariantPriceProps> = props => {
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No channels found" />
+                  <FormattedMessage
+                    id="/glQgs"
+                    defaultMessage="No channels found"
+                  />
                 </TableCell>
               </TableRow>
-            )
+            ),
           )}
         </TableBody>
       </ResponsiveTable>

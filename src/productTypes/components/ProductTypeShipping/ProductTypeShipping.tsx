@@ -18,7 +18,7 @@ const ProductTypeShipping: React.FC<ProductTypeShippingProps> = ({
   data,
   weightUnit,
   disabled,
-  onChange
+  onChange,
 }) => {
   const intl = useIntl();
 
@@ -26,8 +26,9 @@ const ProductTypeShipping: React.FC<ProductTypeShippingProps> = ({
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "/2OOMe",
           defaultMessage: "Shipping",
-          description: "product type shipping settings, section header"
+          description: "product type shipping settings, section header",
         })}
       />
       <CardContent>
@@ -35,8 +36,9 @@ const ProductTypeShipping: React.FC<ProductTypeShippingProps> = ({
           checked={data.isShippingRequired}
           disabled={disabled}
           label={intl.formatMessage({
+            id: "IBw72y",
             defaultMessage: "Is this product shippable?",
-            description: "switch button"
+            description: "switch button",
           })}
           name="isShippingRequired"
           onChange={onChange}
@@ -46,12 +48,14 @@ const ProductTypeShipping: React.FC<ProductTypeShippingProps> = ({
             disabled={disabled}
             InputProps={{ endAdornment: weightUnit }}
             label={intl.formatMessage({
-              defaultMessage: "Weight"
+              id: "zCb8fX",
+              defaultMessage: "Weight",
             })}
             name="weight"
             helperText={intl.formatMessage({
+              id: "VOiUXQ",
               defaultMessage:
-                "Used to calculate rates for shipping for products of this product type, when specific weight is not given"
+                "Used to calculate rates for shipping for products of this product type, when specific weight is not given",
             })}
             type="number"
             value={data.weight}

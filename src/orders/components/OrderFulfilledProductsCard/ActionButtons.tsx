@@ -1,7 +1,7 @@
 import { CardActions, Typography } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import { FulfillmentStatus } from "@saleor/graphql";
 import { buttonMessages, commonMessages } from "@saleor/intl";
-import { Button } from "@saleor/macaw-ui";
 import React from "react";
 import { FormattedMessage } from "react-intl";
 
@@ -21,7 +21,7 @@ interface AcionButtonsProps {
 const statusesToShow = [
   FulfillmentStatus.FULFILLED,
   FulfillmentStatus.RETURNED,
-  FulfillmentStatus.WAITING_FOR_APPROVAL
+  FulfillmentStatus.WAITING_FOR_APPROVAL,
 ];
 
 const ActionButtons: React.FC<AcionButtonsProps> = ({
@@ -31,7 +31,7 @@ const ActionButtons: React.FC<AcionButtonsProps> = ({
   fulfillmentAllowUnpaid,
   onTrackingCodeAdd,
   onRefund,
-  onApprove
+  onApprove,
 }) => {
   const classes = useStyles();
 

@@ -1,9 +1,9 @@
 import { Card, CardContent, Typography } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import Hr from "@saleor/components/Hr";
 import RequirePermissions from "@saleor/components/RequirePermissions";
 import { PermissionEnum } from "@saleor/graphql";
-import { Button } from "@saleor/macaw-ui";
 import React from "react";
 import { useIntl } from "react-intl";
 
@@ -23,21 +23,21 @@ export const ChannelsAvailabilityWrapper: React.FC<ChannelsAvailabilityWrapperPr
     allChannelsCount,
     children,
     managePermissions,
-    openModal
+    openModal,
   } = props;
   const intl = useIntl();
   const classes = useStyles({});
   const channelsAvailabilityText = intl.formatMessage(
     {
+      id: "vY2lpx",
       defaultMessage:
         "Available at {selectedChannelsCount} out of {allChannelsCount, plural, one {# channel} other {# channels}}",
-
-      description: "channels availability text"
+      description: "channels availability text",
     },
     {
       allChannelsCount,
-      selectedChannelsCount
-    }
+      selectedChannelsCount,
+    },
   );
 
   return (
@@ -45,8 +45,9 @@ export const ChannelsAvailabilityWrapper: React.FC<ChannelsAvailabilityWrapperPr
       <Card>
         <CardTitle
           title={intl.formatMessage({
+            id: "5A6/2C",
             defaultMessage: "Availability",
-            description: "section header"
+            description: "section header",
           })}
           toolbar={
             <RequirePermissions requiredPermissions={managePermissions}>
@@ -55,8 +56,9 @@ export const ChannelsAvailabilityWrapper: React.FC<ChannelsAvailabilityWrapperPr
                 data-test-id="channels-availability-manage-button"
               >
                 {intl.formatMessage({
+                  id: "2i81/P",
                   defaultMessage: "Manage",
-                  description: "section header button"
+                  description: "section header button",
                 })}
               </Button>
             </RequirePermissions>

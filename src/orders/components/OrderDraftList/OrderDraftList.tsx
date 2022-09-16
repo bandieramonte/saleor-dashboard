@@ -6,16 +6,17 @@ import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { OrderDraftListQuery } from "@saleor/graphql";
 import { makeStyles } from "@saleor/macaw-ui";
 import {
   maybe,
   renderCollection,
   transformOrderStatus,
-  transformPaymentStatus
+  transformPaymentStatus,
 } from "@saleor/misc";
-import { OrderDraftListUrlSortField } from "@saleor/orders/urls";
+import { OrderDraftListUrlSortField, orderUrl } from "@saleor/orders/urls";
 import { ListActions, ListProps, RelayToFlat, SortPage } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
@@ -25,29 +26,29 @@ const useStyles = makeStyles(
   theme => ({
     [theme.breakpoints.up("lg")]: {
       colCustomer: {
-        width: 300
+        width: 300,
       },
       colDate: {
-        width: 300
+        width: 300,
       },
       colNumber: {
-        width: 160
+        width: 160,
       },
-      colTotal: {}
+      colTotal: {},
     },
     colCustomer: {},
     colDate: {},
     colNumber: {
-      paddingLeft: 0
+      paddingLeft: 0,
     },
     colTotal: {
-      textAlign: "right"
+      textAlign: "right",
     },
     link: {
-      cursor: "pointer"
-    }
+      cursor: "pointer",
+    },
   }),
-  { name: "OrderDraftList" }
+  { name: "OrderDraftList" },
 );
 
 interface OrderDraftListProps
@@ -62,18 +63,14 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
     disabled,
     settings,
     orders,
-    pageInfo,
-    onPreviousPage,
-    onNextPage,
     onUpdateListSettings,
-    onRowClick,
     onSort,
     isChecked,
     selected,
     sort,
     toggle,
     toggleAll,
-    toolbar
+    toolbar,
   } = props;
 
   const classes = useStyles(props);
@@ -84,7 +81,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
     ? orders.map(order => ({
         ...order,
         paymentStatus: transformPaymentStatus(order.paymentStatus, intl),
-        status: transformOrderStatus(order.status, intl)
+        status: transformOrderStatus(order.status, intl),
       }))
     : undefined;
 
@@ -110,7 +107,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
           onClick={() => onSort(OrderDraftListUrlSortField.number)}
           className={classes.colNumber}
         >
-          <FormattedMessage defaultMessage="No. of Order" />
+          <FormattedMessage id="ps0WUQ" defaultMessage="No. of Order" />
         </TableCellHeader>
         <TableCellHeader
           direction={
@@ -122,6 +119,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
           className={classes.colDate}
         >
           <FormattedMessage
+            id="mCP0UD"
             defaultMessage="Date"
             description="order draft creation date"
           />
@@ -135,10 +133,11 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
           onClick={() => onSort(OrderDraftListUrlSortField.customer)}
           className={classes.colCustomer}
         >
-          <FormattedMessage defaultMessage="Customer" />
+          <FormattedMessage id="hkENym" defaultMessage="Customer" />
         </TableCellHeader>
         <TableCellHeader textAlign="right" className={classes.colTotal}>
           <FormattedMessage
+            id="1Uj0Wd"
             defaultMessage="Total"
             description="order draft total price"
           />
@@ -146,16 +145,10 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
             settings={settings}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
             onUpdateListSettings={onUpdateListSettings}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
           />
         </TableRow>
       </TableFooter>
@@ -166,11 +159,11 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
             const isSelected = order ? isChecked(order.id) : false;
 
             return (
-              <TableRow
+              <TableRowLink
                 data-test-id="draft-order-table-row"
                 hover={!!order}
                 className={!!order ? classes.link : undefined}
-                onClick={order ? onRowClick(order.id) : undefined}
+                href={order && orderUrl(order.id)}
                 key={order ? order.id : "skeleton"}
                 selected={isSelected}
               >
@@ -216,16 +209,19 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = props => {
                     <Skeleton />
                   )}
                 </TableCell>
-              </TableRow>
+              </TableRowLink>
             );
           },
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No draft orders found" />
+                <FormattedMessage
+                  id="KIh25E"
+                  defaultMessage="No draft orders found"
+                />
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </ResponsiveTable>

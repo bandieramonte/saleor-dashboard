@@ -1,10 +1,9 @@
 import { useCategoryTranslationsQuery } from "@saleor/graphql";
-import useNavigator from "@saleor/hooks/useNavigator";
-import usePaginator from "@saleor/hooks/usePaginator";
+import usePaginator, { PaginatorContext } from "@saleor/hooks/usePaginator";
 import TranslationsEntitiesList from "@saleor/translations/components/TranslationsEntitiesList";
 import {
   languageEntityUrl,
-  TranslatableEntities
+  TranslatableEntities,
 } from "@saleor/translations/urls";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import React from "react";
@@ -14,54 +13,48 @@ import { sumCompleted } from "./utils";
 
 const TranslationsCategoryList: React.FC<TranslationsEntityListProps> = ({
   params,
-  variables
+  variables,
 }) => {
-  const navigate = useNavigator();
-  const paginate = usePaginator();
-
   const { data, loading } = useCategoryTranslationsQuery({
     displayLoader: true,
-    variables
+    variables,
   });
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    data?.translations?.pageInfo,
-    variables,
-    params
-  );
+  const paginationValues = usePaginator({
+    pageInfo: data?.translations?.pageInfo,
+    paginationState: variables,
+    queryString: params,
+  });
 
   return (
-    <TranslationsEntitiesList
-      disabled={loading}
-      entities={mapEdgesToItems(data?.translations)?.map(
-        node =>
-          node.__typename === "CategoryTranslatableContent" && {
-            completion: {
-              current: sumCompleted([
-                node.translation?.description,
-                node.translation?.name,
-                node.translation?.seoDescription,
-                node.translation?.seoTitle
-              ]),
-              max: 4
+    <PaginatorContext.Provider value={paginationValues}>
+      <TranslationsEntitiesList
+        disabled={loading}
+        entities={mapEdgesToItems(data?.translations)?.map(
+          node =>
+            node.__typename === "CategoryTranslatableContent" && {
+              completion: {
+                current: sumCompleted([
+                  node.translation?.description,
+                  node.translation?.name,
+                  node.translation?.seoDescription,
+                  node.translation?.seoTitle,
+                ]),
+                max: 4,
+              },
+              id: node?.category?.id,
+              name: node?.category?.name,
             },
-            id: node?.category?.id,
-            name: node?.category?.name
-          }
-      )}
-      onRowClick={id =>
-        navigate(
+        )}
+        getRowHref={id =>
           languageEntityUrl(
             variables.language,
             TranslatableEntities.categories,
-            id
+            id,
           )
-        )
-      }
-      onNextPage={loadNextPage}
-      onPreviousPage={loadPreviousPage}
-      pageInfo={pageInfo}
-    />
+        }
+      />
+    </PaginatorContext.Provider>
   );
 };
 

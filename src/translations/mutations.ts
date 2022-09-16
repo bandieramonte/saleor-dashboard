@@ -13,14 +13,14 @@ export const updateProductTranslations = gql`
       product {
         id
         name
+        shortDescription
         description
-        longDescription
         seoDescription
         seoTitle
         translation(languageCode: $language) {
           id
+          shortDescription
           description
-          longDescription
           language {
             code
             language
@@ -258,6 +258,32 @@ export const updateShippingMethodTranslations = gql`
           }
           name
           description
+        }
+      }
+    }
+  }
+`;
+
+export const updateMethodItemTranslations = gql`
+  mutation UpdateMenuItemTranslations(
+    $id: ID!
+    $input: NameTranslationInput!
+    $language: LanguageCodeEnum!
+  ) {
+    menuItemTranslate(id: $id, input: $input, languageCode: $language) {
+      errors {
+        field
+        message
+      }
+      menuItem {
+        id
+        name
+        translation(languageCode: $language) {
+          id
+          language {
+            language
+          }
+          name
         }
       }
     }

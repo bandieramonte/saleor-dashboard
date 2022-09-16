@@ -23,14 +23,14 @@ interface PluginInfoProps {
 const useStyles = makeStyles(
   () => ({
     status: {
-      paddingTop: 20
+      paddingTop: 20,
     },
     title: {
       fontSize: 14,
-      paddingTop: 10
-    }
+      paddingTop: 10,
+    },
   }),
-  { name: "PluginInfo" }
+  { name: "PluginInfo" },
 );
 
 const PluginInfo: React.FC<PluginInfoProps> = ({
@@ -38,28 +38,30 @@ const PluginInfo: React.FC<PluginInfoProps> = ({
   description,
   errors,
   name,
-  onChange
+  onChange,
 }) => {
   const classes = useStyles({});
   const intl = useIntl();
 
   const misconfiguredError = errors.find(
-    err => err.code === PluginErrorCode.PLUGIN_MISCONFIGURED
+    err => err.code === PluginErrorCode.PLUGIN_MISCONFIGURED,
   );
 
   return (
     <Card>
       <CardTitle
         title={intl.formatMessage({
+          id: "w424P4",
           defaultMessage: "Plugin Information and Status",
-          description: "section header"
+          description: "section header",
         })}
       />
       <CardContent>
         <Typography className={classes.title} variant="h6">
           {intl.formatMessage({
+            id: "IUeGzv",
             defaultMessage: "Plugin Name",
-            description: "plugin name"
+            description: "plugin name",
           })}
         </Typography>
         <Typography>{name}</Typography>
@@ -75,14 +77,16 @@ const PluginInfo: React.FC<PluginInfoProps> = ({
         <Hr />
         <Typography className={classes.status}>
           {intl.formatMessage({
+            id: "bL/Wrc",
             defaultMessage: "Status",
-            description: "plugin status"
+            description: "plugin status",
           })}
         </Typography>
         <ControlledCheckbox
           name={"active" as keyof PluginDetailsPageFormData}
           label={intl.formatMessage({
-            defaultMessage: "Set plugin as active"
+            id: "FA+MRz",
+            defaultMessage: "Set plugin as active",
           })}
           checked={data.active}
           onChange={onChange}

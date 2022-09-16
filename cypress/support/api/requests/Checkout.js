@@ -2,7 +2,7 @@ import {
   getDefaultAddress,
   getPaymentDataLine,
   getValueWithDefault,
-  getVariantsLines
+  getVariantsLines,
 } from "./utils/Utils";
 
 export function createCheckout({
@@ -13,13 +13,13 @@ export function createCheckout({
   address,
   billingAddress,
   auth = "auth",
-  returnAvailableCollectionPoints = false
+  returnAvailableCollectionPoints = false,
 }) {
   const lines = getVariantsLines(variantsList, productQuantity);
   const shippingAddress = getDefaultAddress(address, "shippingAddress");
   const billingAddressLines = getDefaultAddress(
     billingAddress,
-    "billingAddress"
+    "billingAddress",
   );
 
   const availableCollectionPointsLines = getValueWithDefault(
@@ -29,11 +29,10 @@ export function createCheckout({
     name
     clickAndCollectOption
     isPrivate
-  }`
+  }`,
   );
 
   const emailLine = getValueWithDefault(email, `email: "${email}"`);
-
   const mutation = `mutation{
     checkoutCreate(input:{
       channel:"${channelSlug}"
@@ -127,7 +126,7 @@ export function addPayment({ checkoutId, gateway, token, amount }) {
       ${amountLine}
       returnUrl: "https://qa.storefront.staging.saleor.cloud/checkout/payment-confirm"
     }){
-      paymentErrors{
+      errors{
         field
         message
       }
@@ -234,7 +233,7 @@ export function checkoutShippingAddressUpdate(checkoutId, address) {
 export function addProductsToCheckout(
   checkoutId,
   variantsList,
-  productQuantity
+  productQuantity,
 ) {
   const lines = getVariantsLines(variantsList, productQuantity);
   const mutation = `mutation{

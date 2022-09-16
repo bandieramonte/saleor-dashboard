@@ -4,27 +4,25 @@ import CardTitle from "@saleor/components/CardTitle";
 import FormSpacer from "@saleor/components/FormSpacer";
 import Grid from "@saleor/components/Grid";
 import Hr from "@saleor/components/Hr";
-import RichTextEditor, {
-  RichTextEditorChange
-} from "@saleor/components/RichTextEditor";
+import RichTextEditor from "@saleor/components/RichTextEditor";
+import { RichTextEditorLoading } from "@saleor/components/RichTextEditor/RichTextEditorLoading";
 import { ProductErrorFragment } from "@saleor/graphql";
 import { commonMessages } from "@saleor/intl";
 import { getFormErrors, getProductErrorMessage } from "@saleor/utils/errors";
+import { useRichTextContext } from "@saleor/utils/richText/context";
 import React from "react";
 import { useIntl } from "react-intl";
 
 interface ProductDetailsFormProps {
   data: {
     description: OutputData;
-    longDescription: OutputData;
+    shortDescription: string;
     name: string;
     rating: number;
   };
   disabled?: boolean;
   errors: ProductErrorFragment[];
 
-  onDescriptionChange: RichTextEditorChange;
-  onLongDescriptionChange: RichTextEditorChange;
   onChange(event: any);
 }
 
@@ -32,17 +30,20 @@ export const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({
   data,
   disabled,
   errors,
-  onDescriptionChange,
-  onLongDescriptionChange,
-  onChange
+  onChange,
 }) => {
   const intl = useIntl();
+  const {
+    editorRef,
+    defaultValue,
+    isReadyForMount,
+    handleChange,
+  } = useRichTextContext();
 
   const formErrors = getFormErrors(
-    ["name", "description", "longDescription", "rating"],
-    errors
+    ["name", "shortDescription", "description", "rating"],
+    errors,
   );
-
   return (
     <Card>
       <CardTitle
@@ -55,33 +56,48 @@ export const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({
           disabled={disabled}
           fullWidth
           label={intl.formatMessage({
+            id: "6AMFki",
             defaultMessage: "Name",
-            description: "product name"
+            description: "product name",
           })}
           name="name"
           value={data.name}
           onChange={onChange}
         />
         <FormSpacer />
-        <RichTextEditor
-          data={data.description}
+        <TextField
+          error={!!formErrors.shortDescription}
+          helperText={getProductErrorMessage(formErrors.shortDescription, intl)}
           disabled={disabled}
-          error={!!formErrors.description}
-          helperText={getProductErrorMessage(formErrors.description, intl)}
-          label={intl.formatMessage(commonMessages.description)}
-          name="description"
-          onChange={onDescriptionChange}
+          fullWidth
+          label={intl.formatMessage({
+            id: "sFrYdP",
+            defaultMessage: "Short description",
+            description: "product short description",
+          })}
+          name="shortDescription"
+          value={data.shortDescription}
+          onChange={onChange}
+          multiline
         />
         <FormSpacer />
-        <RichTextEditor
-          data={data.longDescription}
-          disabled={disabled}
-          error={!!formErrors.longDescription}
-          helperText={getProductErrorMessage(formErrors.longDescription, intl)}
-          label={intl.formatMessage(commonMessages.longDescription)}
-          name="longDescription"
-          onChange={onLongDescriptionChange}
-        />
+        {isReadyForMount ? (
+          <RichTextEditor
+            editorRef={editorRef}
+            defaultValue={defaultValue}
+            onChange={handleChange}
+            disabled={disabled}
+            error={!!formErrors.description}
+            helperText={getProductErrorMessage(formErrors.description, intl)}
+            label={intl.formatMessage(commonMessages.description)}
+            name="description"
+          />
+        ) : (
+          <RichTextEditorLoading
+            label={intl.formatMessage(commonMessages.description)}
+            name="description"
+          />
+        )}
         <FormSpacer />
         <Hr />
         <FormSpacer />
@@ -92,8 +108,9 @@ export const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({
             helperText={getProductErrorMessage(formErrors.rating, intl)}
             disabled={disabled}
             label={intl.formatMessage({
+              id: "L7N+0y",
               defaultMessage: "Product Rating",
-              description: "product rating"
+              description: "product rating",
             })}
             name="rating"
             value={data.rating || ""}

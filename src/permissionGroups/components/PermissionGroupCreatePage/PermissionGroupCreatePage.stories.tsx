@@ -1,6 +1,6 @@
 import { permissions } from "@saleor/fixtures";
 import PermissionGroupCreatePage, {
-  PermissionGroupCreatePageProps
+  PermissionGroupCreatePageProps,
 } from "@saleor/permissionGroups/components/PermissionGroupCreatePage";
 import { errorsOfPermissionGroupCreate } from "@saleor/permissionGroups/fixtures";
 import Decorator from "@saleor/storybook/Decorator";
@@ -10,10 +10,9 @@ import React from "react";
 const props: PermissionGroupCreatePageProps = {
   disabled: false,
   errors: [],
-  onBack: () => undefined,
   onSubmit: () => undefined,
   permissions,
-  saveButtonBarState: undefined
+  saveButtonBarState: undefined,
 };
 
 storiesOf("Views / Permission Groups / Permission Group Create", module)

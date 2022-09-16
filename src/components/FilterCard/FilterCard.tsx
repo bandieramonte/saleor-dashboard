@@ -21,7 +21,8 @@ const FilterCard: React.FC<FilterCardProps> = ({ children, handleClear }) => {
             </IconButton>
           }
           title={intl.formatMessage({
-            defaultMessage: "Filters"
+            id: "zSOvI0",
+            defaultMessage: "Filters",
           })}
         />
         <CardContent>{children}</CardContent>
