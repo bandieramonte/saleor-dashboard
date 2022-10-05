@@ -25,6 +25,7 @@ import { MetadataFormData } from "@saleor/components/Metadata";
 import { MultiAutocompleteChoiceType } from "@saleor/components/MultiAutocompleteSelectField";
 import { SingleAutocompleteChoiceType } from "@saleor/components/SingleAutocompleteSelectField";
 import {
+  ProductErrorWithAttributesFragment,
   ProductTypeQuery,
   SearchPagesQuery,
   SearchProductsQuery,
@@ -55,6 +56,7 @@ import {
 import {
   validateCostPrice,
   validatePrice,
+  validateProductCreateData,
 } from "@saleor/products/utils/validation";
 import { PRODUCT_CREATE_FORM_ID } from "@saleor/products/views/ProductCreate/consts";
 import { FetchMoreProps, RelayToFlat, ReorderEvent } from "@saleor/types";
@@ -64,7 +66,7 @@ import useMetadataChangeTrigger from "@saleor/utils/metadata/useMetadataChangeTr
 import { RichTextContext } from "@saleor/utils/richText/context";
 import { useMultipleRichText } from "@saleor/utils/richText/useMultipleRichText";
 import useRichText from "@saleor/utils/richText/useRichText";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useIntl } from "react-intl";
 
 import { createPreorderEndDateChangeHandler } from "../../utils/handlers";
@@ -139,6 +141,7 @@ export interface UseProductCreateFormOutput
     RichTextProps {
   disabled: boolean;
   formErrors: FormErrors<ProductCreateData>;
+  validationErrors: ProductErrorWithAttributesFragment[];
 }
 
 export type UseProductCreateFormRenderProps = Omit<
@@ -186,6 +189,9 @@ function useProductCreateForm(
   opts: UseProductCreateFormOpts,
 ): UseProductCreateFormOutput {
   const intl = useIntl();
+  const [validationErrors, setValidationErrors] = useState<
+    ProductErrorWithAttributesFragment[]
+  >([]);
   const defaultInitialFormData: ProductCreateFormData &
     Record<"productType", string> = {
     category: "",
@@ -376,14 +382,39 @@ function useProductCreateForm(
     ),
   });
 
+  const handleSubmit = async (data: ProductCreateData) => {
+    const errors = validateProductCreateData(data);
+
+    setValidationErrors(errors);
+
+    if (errors.length) {
+      return errors;
+    }
+
+    return onSubmit(data);
+  };
+
   const handleFormSubmit = useHandleFormSubmit({
     formId,
-    onSubmit,
+    onSubmit: handleSubmit,
   });
 
-  const submit = async () => handleFormSubmit(await getData());
+  const submit = async () => {
+    const errors = await handleFormSubmit(await getData());
 
-  const { setExitDialogSubmitRef, setIsSubmitDisabled } = useExitFormDialog({
+    if (errors.length) {
+      setIsSubmitDisabled(isSubmitDisabled);
+      setIsDirty(true);
+    }
+
+    return errors;
+  };
+
+  const {
+    setExitDialogSubmitRef,
+    setIsSubmitDisabled,
+    setIsDirty,
+  } = useExitFormDialog({
     formId: PRODUCT_CREATE_FORM_ID,
   });
 
@@ -417,14 +448,20 @@ function useProductCreateForm(
     return true;
   };
 
-  const isSaveDisabled = loading || !onSubmit || !isValid();
-  setIsSubmitDisabled(isSaveDisabled);
+  const isSaveDisabled = loading || !onSubmit;
+  const isSubmitDisabled = isSaveDisabled || !isValid();
+
+  useEffect(() => {
+    setIsSubmitDisabled(isSubmitDisabled);
+    setIsDirty(true);
+  }, [isSubmitDisabled]);
 
   return {
     change: handleChange,
     data,
     disabled: isSaveDisabled,
     formErrors: form.errors,
+    validationErrors,
     handlers: {
       addStock: handleStockAdd,
       changeChannelPrice: handleChannelPriceChange,

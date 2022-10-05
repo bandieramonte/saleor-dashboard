@@ -66,20 +66,19 @@ export const PERMISSIONS_OPTIONS = {
     permissions: [PERMISSIONS.settings],
     testCase: "TC: SALEOR_3413",
   },
-  shipping: {
-    user: ONE_PERMISSION_USERS.shipping,
-    permissions: [PERMISSIONS.shipping],
-    testCase: "TC: SALEOR_3415",
-  },
   staff: {
     user: ONE_PERMISSION_USERS.staff,
     permissions: [PERMISSIONS.staff],
     testCase: "TC: SALEOR_3414",
   },
-  // },
-  // translations: {
-  //   user: ONE_PERMISSION_USERS.translations,
-  //   permissions: [PERMISSIONS.translations],
-  //   testCase: "TC: SALEOR_3416"
-  // } // commented as part of  SALEOR-6705 task. Need to be fixed in future. Klaudia Jaroszewicz
+  shipping: {
+    user: ONE_PERMISSION_USERS.shipping,
+    permissions: [PERMISSIONS.shipping],
+    testCase: "TC: SALEOR_3415",
+  },
+  translations: {
+    user: ONE_PERMISSION_USERS.translations,
+    permissions: [PERMISSIONS.translations],
+    testCase: "TC: SALEOR_3416",
+  },
 };

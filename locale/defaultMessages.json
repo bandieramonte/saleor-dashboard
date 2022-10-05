@@ -138,6 +138,9 @@
     "context": "order marked as paid event title",
     "string": "Order was marked as paid by"
   },
+  "/0gMCW": {
+    "string": "Try to refresh the page or go navigate to a different page and back."
+  },
   "/2OOMe": {
     "context": "product type shipping settings, section header",
     "string": "Shipping"
@@ -246,6 +249,10 @@
   "/w919H": {
     "context": "OrderCustomer Fulfillment from Local Warehouse",
     "string": "Fulfill from Local Stock"
+  },
+  "/yJJvI": {
+    "context": "dialog header",
+    "string": "Select a product type"
   },
   "/z9uo1": {
     "context": "order returned success message",
@@ -512,6 +519,10 @@
   "29L5Yq": {
     "context": "gift card not found message",
     "string": "Couldn't find gift card"
+  },
+  "2CBcub": {
+    "context": "CreateVariantTitle manage",
+    "string": "Manage"
   },
   "2E1xZ0": {
     "context": "page header",
@@ -1130,6 +1141,10 @@
   "7JAAul": {
     "context": "product field",
     "string": "Export Product Weight"
+  },
+  "7KRGqz": {
+    "context": "Payment card title",
+    "string": "Payment balance"
   },
   "7NFfmz": {
     "string": "Products"
@@ -2040,6 +2055,10 @@
     "context": "invoice create date prefix",
     "string": "created"
   },
+  "F0N1SC": {
+    "context": "dialog header",
+    "string": "Select a page type"
+  },
   "F3Upht": {
     "string": "Product type deleted"
   },
@@ -2581,6 +2600,10 @@
     "context": "section header",
     "string": "You are about to install {name}"
   },
+  "Id9vlh": {
+    "context": "page seo options description",
+    "string": "Add search engine title and description to make this page easier to find"
+  },
   "IeoGgH": {
     "context": "variant created success message",
     "string": "Variant created"
@@ -2802,10 +2825,6 @@
   "JyQoES": {
     "context": "delete attribute value",
     "string": "Are you sure you want to delete \"{name}\" value?"
-  },
-  "Jz/Cb+": {
-    "context": "product type",
-    "string": "Simple"
   },
   "K+ROF8": {
     "string": "Channels that don’t have assigned discounts will use their parent channel to define the price. Price will be converted to channel’s currency"
@@ -3813,10 +3832,6 @@
     "context": "select a warehouse to fulfill product from",
     "string": "Select warehouse..."
   },
-  "SC/eNC": {
-    "context": "Payment card title",
-    "string": "Payment status"
-  },
   "SHm7ee": {
     "string": "Search by product name, attribute, product type etc..."
   },
@@ -3894,6 +3909,10 @@
   "SqhC7g": {
     "context": "checkbox label, fulfillment approval",
     "string": "Send shipment details to customer"
+  },
+  "Sxzua5": {
+    "context": "order payment",
+    "string": "Settled"
   },
   "T/5OyA": {
     "string": "No translation yet"
@@ -4206,6 +4225,10 @@
   "V3fvcD": {
     "context": "dialog content",
     "string": "Removed sale"
+  },
+  "V45+rx": {
+    "context": "input label",
+    "string": "Page type"
   },
   "V8FhTt": {
     "context": "collection label",
@@ -5011,10 +5034,6 @@
   "bNw8PM": {
     "context": "number of products",
     "string": "Products ({quantity})"
-  },
-  "bP7ZLP": {
-    "context": "voucher discount",
-    "string": "Entire order"
   },
   "bPFp8B": {
     "context": "product type",
@@ -5886,9 +5905,6 @@
     "context": "product availability",
     "string": "Hide in product listings"
   },
-  "jZbT0O": {
-    "string": "Add search engine title and description to make this page easier to find"
-  },
   "jd/LWa": {
     "string": "Voucher applies to all countries"
   },
@@ -6246,6 +6262,10 @@
     "context": "voucher code, button",
     "string": "Generate Code"
   },
+  "mTEqYL": {
+    "context": "NoChannels content",
+    "string": "No channels to assign. Please first assign them for the product."
+  },
   "mUb8Gt": {
     "context": "section header",
     "string": "Taxes"
@@ -6536,9 +6556,6 @@
     "context": "unassign products from shipping rate and save, button",
     "string": "Unassign and save"
   },
-  "p0SUJj": {
-    "string": "Don’t worry we will fix it soon. Try to refresh the page or go back to dashboard."
-  },
   "p3eRUm": {
     "context": "indicator that feature is in preview mode",
     "string": "Preview"
@@ -6566,6 +6583,10 @@
     "context": "gift card history message",
     "string": "Gift card was activated"
   },
+  "pEMxyy": {
+    "context": "alert message",
+    "string": "This product does no longer exist."
+  },
   "pFVX6g": {
     "string": "Variant with these attributes already exists"
   },
@@ -6576,6 +6597,10 @@
   "pNrF72": {
     "context": "tab name",
     "string": "All Vouchers"
+  },
+  "pPef6L": {
+    "context": "order payment",
+    "string": "Included in subtotal"
   },
   "pRYGUR": {
     "context": "section description",
@@ -7243,6 +7268,10 @@
     "context": "voucher start date",
     "string": "Started"
   },
+  "ukYopn": {
+    "context": "order payment",
+    "string": "Included in prices"
+  },
   "ukdRUv": {
     "context": "delete variant dialog subtitle",
     "string": "{counter,plural,one{Are you sure you want to delete this variant?} other{Are you sure you want to delete {displayQuantity} variants?}}"
@@ -7426,6 +7455,10 @@
   "vzgZ3U": {
     "context": "card header",
     "string": "Sign In"
+  },
+  "w+3Q3e": {
+    "context": "input label",
+    "string": "Product type"
   },
   "w+5Djm": {
     "string": "Min. Order Weight"
@@ -7738,6 +7771,10 @@
   "ylobu9": {
     "context": "assign reference to product, button",
     "string": "Assign"
+  },
+  "ymo+cm": {
+    "context": "voucher discount",
+    "string": "All products"
   },
   "ypW4Mi": {
     "context": "button refreshing page",
