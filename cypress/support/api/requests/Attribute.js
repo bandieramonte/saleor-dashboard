@@ -4,8 +4,15 @@ export function createAttribute({
   type = "PRODUCT_TYPE",
   inputType = "DROPDOWN",
   filterableInDashboard = false,
+  values = [],
 }) {
-  const values = attributeValues.map(element => `{name:"${element}"}`);
+  if (
+    inputType === "MULTISELECT" ||
+    inputType === "DROPDOWN" ||
+    inputType === "SWATCH"
+  ) {
+    values = attributeValues.map(element => `{name:"${element}"}`);
+  }
   const mutation = `mutation{
     attributeCreate(input:{
       name:"${name}"

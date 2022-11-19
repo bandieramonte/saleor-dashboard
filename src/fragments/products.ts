@@ -147,7 +147,7 @@ export const productVariantAttributesFragment = gql`
     }
     productType {
       id
-      variantAttributes(variantSelection: VARIANT_SELECTION) {
+      variantAttributes {
         id
         name
         inputType
@@ -178,7 +178,16 @@ export const productDetailsVariant = gql`
     id
     sku
     name
-    margin
+    attributes {
+      attribute {
+        id
+        name
+      }
+      values {
+        id
+        name
+      }
+    }
     media {
       url(size: 200)
     }
@@ -309,6 +318,7 @@ export const fragmentVariant = gql`
         url
       }
       channelListings {
+        id
         publicationDate
         isPublished
         channel {
